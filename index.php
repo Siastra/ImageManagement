@@ -8,6 +8,6 @@
     <title>Image Management</title>
 </head>
 <body>
-
+    <p>lol</p>
 </body>
 </html>
