@@ -23,7 +23,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="index.php">User Administration</a>
+    <a class="navbar-brand" href="index.php">Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -35,18 +35,16 @@
                     <a class="nav-link" href="index.php?section=view">User Administration</a>
                 </li>';
             }
-            if(isset($_SESSION["username"])) {
-                echo '<li class="nav-item active">
-                    <a class="nav-link" href="index.php?section=register&edit=true&id=' . $_SESSION["username"] . '">Edit user</a>
-                </li>';
-            }
 
             ?>
         </ul>
         <ul class="navbar-nav navbar-right">
             <?php
             if(isset($_SESSION["username"])) {
-                echo '<li><a class="nav-link">logged in as: ' . $_SESSION["username"] . '</a></li><li class="nav-item">
+                echo '<li><a class="nav-link" href="index.php">' . $_SESSION["username"] . '\'s Posts</a></li>
+                    <li><a class="nav-link" href="index.php?section=register&edit=true&id=' . $_SESSION["username"] .
+                    '">Edit profile</a></li>
+                          <li class="nav-item">
                             <a class="nav-link" href="inc/backend.php?type=logout"><img src="res/img/logout.svg" 
                             alt="Logout" width="25px"> Logout</a>
                           </li>';
