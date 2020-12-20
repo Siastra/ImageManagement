@@ -14,8 +14,8 @@
 
     $db = new DB();
     if ($_REQUEST["type"] == "insert") {
-        $newUser = new User($_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["address"],
-            $_REQUEST["plz"], $_REQUEST["city"], $_REQUEST["username"], $_REQUEST["pwRepeat"], $_REQUEST["email"]);
+        $newUser = new User(1, $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["username"],
+            $_REQUEST["pwRepeat"], $_REQUEST["email"]);
 
         if ($db->registerUser($newUser)) {
             echo "New record created successfully";
@@ -30,8 +30,8 @@
         $db->deleteUser($_REQUEST["id"]);
         header("Location: ../index.php?section=view");
     }elseif ($_REQUEST["type"] == "update") {
-        $user = new User($_REQUEST["id"], $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["address"],
-            $_REQUEST["plz"], $_REQUEST["city"], $_REQUEST["username"], $_REQUEST["pwRepeat"], $_REQUEST["email"]);
+        $user = new User($_REQUEST["id"], $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"],
+            $_REQUEST["username"], $_REQUEST["email"]);
 
         if ($db->updateUser($user)) {
             echo "Record updated successfully";
@@ -53,9 +53,19 @@
     }elseif ($_REQUEST["type"] == "forgotPassword") {
         $newPw = generateRandomString();
         $user = $db->getUser($_REQUEST["username"]);
-        $user->setPw($newPw);
-
-        if ($db->updateUser($user)) {
+        $user->setPassword($newPw);
+        if ($db->updatePassword($user)) {
+            echo "Record updated successfully";
+            header("Location: ../index.php?action=success&newPw=" . $newPw);
+        } else {
+            echo "Error updating record";
+        }
+    }elseif ($_REQUEST["type"] == "changePassword") {
+        $newPw = $_REQUEST["pw"];
+        $user = $db->getUser($_REQUEST["username"]);
+        $user->setPassword($newPw);
+        print_r($user);
+        if ($db->updatePassword($user)) {
             echo "Record updated successfully";
             header("Location: ../index.php?action=success&newPw=" . $newPw);
         } else {

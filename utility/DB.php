@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/Ue10_Glavanits/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
 
 class DB
 {
@@ -18,7 +18,7 @@ class DB
             PDO::ATTR_EMULATE_PREPARES   => false,
         ];
 
-        $dsn = "mysql:host=localhost;dbname=Uebung8;charset=$charset";
+        $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$charset";
         try {
             $this->conn = new PDO($dsn, $this->username, $this->password, $options);
         } catch (PDOException $e) {
@@ -30,7 +30,7 @@ class DB
     public function getUserList(): array
     {
         $users = array();
-        $sql = "SELECT * FROM users";
+        $sql = "SELECT * FROM `user`";
 
         $result = $this->conn->query($sql);
         if ($result->rowCount() > 0) {
@@ -43,31 +43,28 @@ class DB
 
     public function getUser(string $username): ?User
     {
-        $stmt = $this->conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM `user` WHERE username = ?");
         if ($stmt->execute([$username])) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["address"], $row["plz"],
-                $row["city"], $row["username"], $row["password"], $row["email"]);
+            return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["username"], $row["password"],
+                $row["email"]);
         }
         return null;
     }
 
     public function registerUser(User $user): bool
     {
-        $stmt = $this->conn->prepare("INSERT INTO users (title, fname, lname, address, plz, city,
-                username, password, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->conn->prepare("INSERT INTO `user` (title, fname, lname, username, password, email, `admin`) 
+                                                VALUES (?, ?, ?, ?, ?, ?, '0')");
         $title = $user->getTitle();
         $fname = $user->getFname();
         $lname = $user->getLname();
-        $address = $user->getAddress();
-        $plz = $user->getPlz();
-        $city = $user->getCity();
         $username = $user->getUsername();
         $pw = $user->getPassword();
         $hash = password_hash($pw, PASSWORD_DEFAULT);
         $email = $user->getEmail();
         try {
-            $stmt->execute([$title, $fname, $lname, $address, $plz, $city, $username, $hash, $email]);
+            $stmt->execute([$title, $fname, $lname, $username, $hash, $email]);
             return true;
         }catch (PDOException $e) {
             $existingkey = "Integrity constraint violation: 1062 Duplicate entry";
@@ -81,21 +78,27 @@ class DB
 
     public function updateUser(User $user): bool
     {
-        $stmt = $this->conn->prepare("UPDATE users SET title=?, fname=?, lname=?, address=?, plz=?, city=?, 
-                                            username=?, password=?, email=? WHERE id=?");
+        $stmt = $this->conn->prepare("UPDATE `user` SET title=?, fname=?, lname=?, username=?, 
+                                                email=? WHERE id=?");
         $title = $user->getTitle();
         $fname = $user->getFname();
         $lname = $user->getLname();
-        $address = $user->getAddress();
-        $plz = $user->getPlz();
-        $city = $user->getCity();
         $username = $user->getUsername();
-        $pw = $user->getPassword();
-        $hash = password_hash($pw, PASSWORD_DEFAULT);
         $email = $user->getEmail();
         $id = $user->getId();
-        if (!$stmt->execute([$title, $fname, $lname, $address, $plz, $city, $username, $hash,
-            $email, $id])) {
+        if (!$stmt->execute([$title, $fname, $lname, $username, $email, $id])) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public function updatePassword(User $user) : bool {
+        $stmt = $this->conn->prepare("UPDATE `user` SET password=? WHERE id=?");
+        $pw = $user->getPassword();
+        $hash = password_hash($pw, PASSWORD_DEFAULT);
+        $id = $user->getId();
+        if (!$stmt->execute([$hash, $id])) {
             return false;
         }else{
             return true;
@@ -104,13 +107,13 @@ class DB
 
     public function deleteUser(int $id) : void
     {
-        $stmt = $this->conn->prepare("DELETE FROM users WHERE id=?");
+        $stmt = $this->conn->prepare("DELETE FROM `user` WHERE id=?");
         $stmt->execute([$id]);
     }
 
     public function loginUser(string $username, string $pw) : bool
     {
-        $stmt = $this->conn->prepare("SELECT password FROM users WHERE username = :username");
+        $stmt = $this->conn->prepare("SELECT password FROM `user` WHERE username = :username");
         $stmt->execute([$username]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         var_dump(password_verify($pw, $row["password"]));

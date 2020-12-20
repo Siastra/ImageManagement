@@ -37,7 +37,7 @@
             }
             if(isset($_SESSION["username"])) {
                 echo '<li class="nav-item active">
-                    <a class="nav-link" href="index.php?section=register&type=edit&id=' . $_SESSION["username"] . '">Edit user</a>
+                    <a class="nav-link" href="index.php?section=register&edit=true&id=' . $_SESSION["username"] . '">Edit user</a>
                 </li>';
             }
 

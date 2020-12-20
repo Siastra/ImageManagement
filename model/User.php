@@ -3,47 +3,41 @@
 
 class User
 {
-    private int $id, $plz;
-    private string $title, $fname, $lname, $address, $city, $username, $password, $email;
+    private int $id;
+    private string $title, $fname, $lname, $username, $password, $email;
 
     public function __construct()
     {
         $argv = func_get_args();
         switch( func_num_args() ) {
-            case 9:
-                self::__construct1($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5], $argv[6], $argv[7], $argv[8]);
+            case 6:
+                self::__construct1($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5]);
                 break;
-            case 10:
-                self::__construct2($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5], $argv[6], $argv[7], $argv[8], $argv[9]);
+            case 7:
+                self::__construct2($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5], $argv[6]);
                 break;
         }
     }
 
 
 
-    public function __construct1($title, $fname, $lname, $address, $plz, $city, $username, $password, $email)
+    public function __construct1($id, $title, $fname, $lname, $username, $email)
     {
         $this->email = $email;
         $this->fname = $fname;
         $this->lname = $lname;
         $this->title = $title;
-        $this->address = $address;
-        $this->city = $city;
-        $this->plz = $plz;
         $this->username = $username;
-        $this->password = $password;
+        $this->id = $id;
     }
 
-    public function __construct2($id, $title, $fname, $lname, $address, $plz, $city, $username, $password, $email)
+    public function __construct2($id, $title, $fname, $lname, $username, $password, $email)
     {
         $this->id = $id;
         $this->email = $email;
         $this->fname = $fname;
         $this->lname = $lname;
         $this->title = $title;
-        $this->address = $address;
-        $this->city = $city;
-        $this->plz = $plz;
         $this->username = $username;
         $this->password = $password;
     }
@@ -99,22 +93,6 @@ class User
     /**
      * @return string
      */
-    public function getAddress(): string
-    {
-        return $this->address;
-    }
-
-    /**
-     * @param string $address
-     */
-    public function setAddress(string $address): void
-    {
-        $this->address = $address;
-    }
-
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
@@ -126,22 +104,6 @@ class User
     public function setEmail(string $email): void
     {
         $this->email = $email;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPlz(): int
-    {
-        return $this->plz;
-    }
-
-    /**
-     * @param int $plz
-     */
-    public function setPlz(int $plz): void
-    {
-        $this->plz = $plz;
     }
 
     /**
@@ -158,22 +120,6 @@ class User
     public function setUsername(string $username): void
     {
         $this->username = $username;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCity(): string
-    {
-        return $this->city;
-    }
-
-    /**
-     * @param string $city
-     */
-    public function setCity(string $city): void
-    {
-        $this->city = $city;
     }
 
     /**
@@ -203,7 +149,7 @@ class User
     /**
      * @param string $password
      */
-    public function setPw(string $password): void
+    public function setPassword(string $password): void
     {
         $this->password = $password;
     }

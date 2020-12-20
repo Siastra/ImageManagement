@@ -3,36 +3,36 @@
 $db = new DB();
 $fill = false;
 $user = null;
-if (isset($_REQUEST["type"]) && ($_REQUEST["type"] == "edit")) {
+if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
     $user = $db->getUser($_REQUEST["id"]);
     $fill = true;
 }
 
-if(isset($_POST["pw"]) && ($_POST["pw"] == $_POST["pwRepeat"])) {
+if(isset($_POST["pw"]) && ($_POST["pw"] != $_POST["pwRepeat"])) {
+    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert"> Please make sure your password matches! 
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          </div>';
+    $user = new User(null,$_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["username"], " ",
+        $_REQUEST["email"]);
+    $fill = true;
+} else if (isset($_REQUEST["username"])){
     echo '<form id="myForm" action="inc/backend.php" method="post" enctype="multipart/form-data">';
     foreach ($_POST as $a => $b) {
         echo '<input type="hidden" name="' . $a . '" value="' . $b . '">';
     }
     echo '</form>';
     echo '<script type="text/javascript">document.getElementById("myForm").submit();</script>';
-}else if(isset($_POST["pw"])){
-    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert"> Please make sure your password matches! 
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          </div>';
-    $user = new User(null,$_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["address"], $_REQUEST["plz"],
-        $_REQUEST["city"], $_REQUEST["username"], " ", $_REQUEST["email"]);
-    $fill = true;
 }
 
 ?>
 
 <section class="container">
-    <h1><?php if (isset($_REQUEST["type"])) { echo 'Edit user'; } else{ echo 'User-Registration';}?></h1>
+    <h1><?php if (isset($_REQUEST["edit"])) { echo 'Edit user'; } else{ echo 'User-Registration';}?></h1>
     <hr>
     <form method="POST" action="index.php?section=register" enctype="multipart/form-data" class="was-validated">
-        <input type="hidden" name="type" value="<?php if (isset($_REQUEST["type"])) { echo 'update'; }
+        <input type="hidden" name="type" value="<?php if (isset($_REQUEST["edit"])) { echo 'update'; }
         else { echo 'insert'; }?>">
         <input type="hidden" name="id" <?php echo 'value="' . (($fill) ?  $user->getId() :  '') . '"';?>>
         <label for="title">Title</label><br>
@@ -77,31 +77,6 @@ if(isset($_POST["pw"]) && ($_POST["pw"] == $_POST["pwRepeat"])) {
             </div>
         </div>
         <div class="row">
-            <div class="form-group col-md-6">
-                <label for="address">Address</label>
-                <input type="text" class="form-control" id="address" name="address" required
-                       pattern="[A-Z]([a-z]|(ö|ß|ä|ü))+((\s|-)[A-Z]([a-z]|(ö|ß|ä|ü))+)?\s[0-9]{0,3}[a-z]?(/[0-9]+)*"
-                       placeholder="Address" <?php echo 'value="' . (($fill) ?  $user->getAddress() :  '') . '"';?>>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field correctly.</div>
-            </div>
-            <div class="form-group col-md-2">
-                <label for="plz">Postal code</label>
-                <input type="number" class="form-control" id="plz" name="plz" min="1000" max="9999" placeholder="1234"
-                       required <?php echo 'value="' . (($fill) ?  $user->getPlz() :  '') . '"';?>>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field correctly.</div>
-            </div>
-            <div class="form-group col-md-4">
-                <label for="city">City</label>
-                <input type="text" class="form-control" id="city" name="city"
-                       pattern="([A-Z]([a-z]|(ö|ß|ä|ü))+)((\s|-)[A-Z]([a-z]|(ö|ß|ä|ü))+)?" placeholder="City" required
-                       <?php echo 'value="' . (($fill) ?  $user->getCity() :  '') . '"';?>>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field correctly.</div>
-            </div>
-        </div>
-        <div class="row">
             <div class="form-group col">
                 <label for="email">Email address</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com"
@@ -123,8 +98,7 @@ if(isset($_POST["pw"]) && ($_POST["pw"] == $_POST["pwRepeat"])) {
             </div>
         </div>
             <?php
-                if(!isset($_REQUEST["type"])) {
-                    echo '<div class="row">
+            $passwordInput = '<div class="row">
                             <div class="form-group col">
                                 <label for="pw">Password</label>
                                 <input type="password" class="form-control" id="pw" placeholder="Password" name="pw"
@@ -143,11 +117,24 @@ if(isset($_POST["pw"]) && ($_POST["pw"] == $_POST["pwRepeat"])) {
                                 <div class="invalid-feedback">Please fill out this field correctly.</div>
                             </div>
                         </div>';
+                if(!isset($_REQUEST["edit"])) {
+                    echo $passwordInput;
                 }
                 ?>
 
         <button type="submit" class="btn btn-success" id="submit">Submit</button>
     </form>
+    <?php
+        if (isset($_REQUEST["edit"])) {
+                    echo '<hr><form id="myForm" action="inc/backend.php" method="post" enctype="multipart/form-data">
+                            <h1>Change password</h1>
+                            <input type="hidden" name="type" value="changePassword">
+                            <input type="hidden" name="username" value="' . $user->getUsername() . '">';
+                    echo $passwordInput;
+                    echo '<button type="submit" class="btn btn-success" id="submit">Submit</button> 
+                          </form>';
+                }
+    ?>
 </section>
 
 <script>
