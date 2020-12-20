@@ -12,7 +12,7 @@
 CREATE TABLE `Comment` (
     post_id  INTEGER NOT NULL,
     user_id  INTEGER NOT NULL,
-    text     VARCHAR2(128) NOT NULL
+    text     VARCHAR(128) NOT NULL
 );
 
 ALTER TABLE `Comment` ADD CONSTRAINT comment_pk PRIMARY KEY ( post_id,
@@ -20,20 +20,18 @@ ALTER TABLE `Comment` ADD CONSTRAINT comment_pk PRIMARY KEY ( post_id,
 
 CREATE TABLE is_assigned (
     post_id   INTEGER NOT NULL,
-    tag_name  VARCHAR2(32) NOT NULL
+    tag_name  VARCHAR(32) NOT NULL
 );
 
 ALTER TABLE is_assigned ADD CONSTRAINT is_assigned_pk PRIMARY KEY ( post_id,
                                                                     tag_name );
 
 CREATE TABLE Post (
-    id          INTEGER NOT NULL,
-    path        VARCHAR2(128) NOT NULL,
+    id          INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    path        VARCHAR(128) NOT NULL,
     restricted  CHAR(1) NOT NULL,
     user_id     INTEGER NOT NULL
 );
-
-ALTER TABLE Post ADD CONSTRAINT post_pk PRIMARY KEY ( id );
 
 CREATE TABLE Rating (
     user_id  INTEGER NOT NULL,
@@ -45,23 +43,21 @@ ALTER TABLE Rating ADD CONSTRAINT rating_pk PRIMARY KEY ( user_id,
                                                           post_id );
 
 CREATE TABLE tag (
-    name VARCHAR2(32) NOT NULL
+    name VARCHAR(32) NOT NULL
 );
 
 ALTER TABLE Tag ADD CONSTRAINT tag_pk PRIMARY KEY ( name );
 
 CREATE TABLE `User` (
-    id        INTEGER NOT NULL,
-    title     VARCHAR2(8) NOT NULL,
-    fname     VARCHAR2(32) NOT NULL,
-    lname     VARCHAR2(32) NOT NULL,
-    email     VARCHAR2(64) NOT NULL,
-    username  VARCHAR2(32) NOT NULL,
-    password  VARCHAR2(128) NOT NULL,
+    id        INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    title     VARCHAR(8) NOT NULL,
+    fname     VARCHAR(32) NOT NULL,
+    lname     VARCHAR(32) NOT NULL,
+    email     VARCHAR(64) NOT NULL,
+    username  VARCHAR(32) NOT NULL,
+    password  VARCHAR(128) NOT NULL,
     admin     CHAR(1) NOT NULL
 );
-
-ALTER TABLE `User` ADD CONSTRAINT user_pk PRIMARY KEY ( id );
 
 ALTER TABLE `Comment`
     ADD CONSTRAINT comment_post_fk FOREIGN KEY ( post_id )

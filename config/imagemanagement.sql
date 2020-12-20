@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2020 at 12:47 PM
+-- Generation Time: Dec 20, 2020 at 01:08 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -139,6 +139,22 @@ ALTER TABLE `tag`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `post`
+--
+ALTER TABLE `post`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
