@@ -1,5 +1,6 @@
 <?php
     include_once "../utility/DB.php";
+    include_once "../utility/Email.php";
     session_start();
 
     function generateRandomString($length = 10) : string {
@@ -56,7 +57,8 @@
         $user->setPassword($newPw);
         if ($db->updatePassword($user)) {
             echo "Record updated successfully";
-            header("Location: ../index.php?action=success&newPw=" . $newPw);
+            Email::sendnewPw($user);
+            header("Location: ../index.php");
         } else {
             echo "Error updating record";
         }
@@ -64,10 +66,9 @@
         $newPw = $_REQUEST["pw"];
         $user = $db->getUser($_REQUEST["username"]);
         $user->setPassword($newPw);
-        print_r($user);
         if ($db->updatePassword($user)) {
             echo "Record updated successfully";
-            header("Location: ../index.php?action=success&newPw=" . $newPw);
+            header("Location: ../index.php");
         } else {
             echo "Error updating record";
         }

@@ -3,6 +3,7 @@
     include_once "utility/DB.php";
     include_once "model/User.php";
     include_once "utility/MsgFactory.php";
+    include_once "utility/Email.php";
 ?>
 <!doctype html>
 <html lang="en">
@@ -67,8 +68,6 @@
         echo MsgFactory::getWarning("Login failed! Username or password incorrect!");
     }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && ($_GET["section"] == "register")) {
         echo MsgFactory::getWarning("Registration failed! Username not valid or exists!");
-    }elseif (isset($_GET["action"]) && ($_GET["action"] == "success") && isset($_GET["newPw"])) {
-        echo MsgFactory::getSuccess("<h4>Password changed successfully!</h4> <p>Your new password:\n" . $_GET["newPw"] . "</p><p>Best regards,<br>The Admin</p>");
     }
 
     //Section- Management
