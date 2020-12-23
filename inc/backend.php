@@ -16,7 +16,7 @@
     $db = new DB();
     if ($_REQUEST["type"] == "insert") {
         $newUser = new User(1, $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["username"],
-            $_REQUEST["pwRepeat"], $_REQUEST["email"]);
+            $_REQUEST["pwRepeat"], $_REQUEST["email"], 0, 1);
 
         if ($db->registerUser($newUser)) {
             echo "New record created successfully";
@@ -30,7 +30,7 @@
         header("Location: ../index.php?section=view");
     }elseif ($_REQUEST["type"] == "update") {
         $user = new User($_REQUEST["id"], $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"],
-            $_REQUEST["username"], $_REQUEST["email"]);
+            $_REQUEST["username"], '',  $_REQUEST["email"], 0, 1);
         $_SESSION["username"] = $_REQUEST["username"]; //if username is updated
         if ($db->updateUser($user)) {
             echo "Record updated successfully";

@@ -49,15 +49,15 @@ class DB
         if ($stmt->execute([$username])) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["username"], $row["password"],
-                $row["email"]);
+                $row["email"], $row["admin"], $row["activated"]);
         }
         return null;
     }
 
     public function registerUser(User $user): bool
     {
-        $stmt = $this->conn->prepare("INSERT INTO `user` (title, fname, lname, username, password, email, `admin`) 
-                                                VALUES (?, ?, ?, ?, ?, ?, '0')");
+        $stmt = $this->conn->prepare("INSERT INTO `user` (title, fname, lname, username, password, email, 
+                                        `admin`, `activated`) VALUES (?, ?, ?, ?, ?, ?, '0', '1')");
         $title = $user->getTitle();
         $fname = $user->getFname();
         $lname = $user->getLname();

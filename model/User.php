@@ -3,44 +3,22 @@
 
 class User
 {
-    private int $id;
+    private int $id ,$admin, $activated;
     private string $title, $fname, $lname, $username, $password, $email;
 
-    public function __construct()
-    {
-        $argv = func_get_args();
-        switch( func_num_args() ) {
-            case 6:
-                self::__construct1($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5]);
-                break;
-            case 7:
-                self::__construct2($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5], $argv[6]);
-                break;
-        }
-    }
-
-
-
-    public function __construct1($id, $title, $fname, $lname, $username, $email)
+    public function __construct($id, $title, $fname, $lname, $username, $password, $email, $admin, $activated)
     {
         $this->email = $email;
         $this->fname = $fname;
         $this->lname = $lname;
         $this->title = $title;
         $this->username = $username;
+        $this->admin = $admin;
+        $this->activated = $activated;
         $this->id = $id;
-    }
-
-    public function __construct2($id, $title, $fname, $lname, $username, $password, $email)
-    {
-        $this->id = $id;
-        $this->email = $email;
-        $this->fname = $fname;
-        $this->lname = $lname;
-        $this->title = $title;
-        $this->username = $username;
         $this->password = $password;
     }
+
 
     /**
      * @return int
@@ -56,6 +34,38 @@ class User
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getActivated(): int
+    {
+        return $this->activated;
+    }
+
+    /**
+     * @param int $activated
+     */
+    public function setActivated(int $activated): void
+    {
+        $this->activated = $activated;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAdmin(): int
+    {
+        return $this->admin;
+    }
+
+    /**
+     * @param int $admin
+     */
+    public function setAdmin(int $admin): void
+    {
+        $this->admin = $admin;
     }
 
     /**
