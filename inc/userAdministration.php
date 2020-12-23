@@ -11,9 +11,6 @@ $users = $db->getUserList();
             <th scope="col">Title</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
-            <th scope="col">Address</th>
-            <th scope="col">PLZ</th>
-            <th scope="col">City</th>
             <th scope="col">Username</th>
             <th scope="col">Password</th>
             <th scope="col">Email</th>
@@ -29,9 +26,6 @@ $users = $db->getUserList();
             echo '<td>' . $user->getTitle() . '</td>';
             echo '<td>' . $user->getFname() . '</td>';
             echo '<td>' . $user->getLname() . '</td>';
-            echo '<td>' . $user->getAddress() . '</td>';
-            echo '<td>' . $user->getPlz() . '</td>';
-            echo '<td>' . $user->getCity() . '</td>';
             echo '<td>' . $user->getUsername() . '</td>';
             echo '<td>[encrypted]</td>';
             echo '<td>' . $user->getEmail() . '</td>';

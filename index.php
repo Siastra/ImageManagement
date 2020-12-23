@@ -62,12 +62,14 @@
 
 <?php
     //Message Banner
-    if(isset($_GET["login"]) && ($_GET["action"] == "success")) {
+    if(isset($_GET["action"]) && ($_GET["action"] == "success")) {
         echo MsgFactory::getSuccess("Action performed successfully!");
-    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && ($_GET["section"] == "login")) {
+    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && (isset($_GET["section"]) && ($_GET["section"] == "login"))) {
         echo MsgFactory::getWarning("Login failed! Username or password incorrect!");
-    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && ($_GET["section"] == "register")) {
+    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && (isset($_GET["section"]) && ($_GET["section"] == "register"))) {
         echo MsgFactory::getWarning("Registration failed! Username not valid or exists!");
+    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && ($_GET["type"] == "edit")) {
+        echo MsgFactory::getWarning("Update failed! Password not valid!");
     }
 
     //Section- Management

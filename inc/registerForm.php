@@ -6,7 +6,8 @@ $user = null;
 
 if(isset($_POST["pw"]) && ($_POST["pw"] != $_POST["pwRepeat"])) {
     echo MsgFactory::getWarning("Please make sure your password matches!");
-} else if (isset($_POST["pw"]) && ($_POST["pw"] == $_POST["pwRepeat"])){
+} else if ((isset($_POST["type"]) && $_POST["type"] == "update") || //Update is performed
+    (isset($_POST["pw"]) && ($_POST["pw"] == $_POST["pwRepeat"]))){ //Password-Update or insert is performed
     echo '<form id="myForm" action="inc/backend.php" method="post" enctype="multipart/form-data">';
     foreach ($_POST as $a => $b) {
         echo '<input type="hidden" name="' . $a . '" value="' . $b . '">';
@@ -127,7 +128,15 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
                     echo '<hr><form id="myForm" action="index.php?section=register&edit=true&id=' . $_REQUEST["id"] . '" method="post" enctype="multipart/form-data">
                             <h1>Change password</h1>
                             <input type="hidden" name="type" value="changePassword">
-                            <input type="hidden" name="username" value="' . $user->getUsername() . '">';
+                            <input type="hidden" name="username" value="' . $user->getUsername() . '">
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label for="oldPw">Old Password</label>
+                                    <input type="password" class="form-control" id="oldPw" placeholder="Old Password" name="oldPw"
+                                           pattern="([A-Z]|[a-z]|(ö|ß|ä|ü)|[1-9]){1,32}" required>
+                                </div>
+                                <div class="col"></div>
+                            </div>';
                     echo $passwordInput;
                     echo '<button type="submit" class="btn btn-success submit">Submit</button> 
                           </form>';

@@ -25,21 +25,20 @@
             echo "Error: Something went wrong!";
             header("Location: ../index.php?section=register&action=fail");
         }
-
-
     }elseif ($_REQUEST["type"] == "delete") {
         $db->deleteUser($_REQUEST["id"]);
         header("Location: ../index.php?section=view");
     }elseif ($_REQUEST["type"] == "update") {
         $user = new User($_REQUEST["id"], $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"],
             $_REQUEST["username"], $_REQUEST["email"]);
-
+        $_SESSION["username"] = $_REQUEST["username"]; //if username is updated
         if ($db->updateUser($user)) {
             echo "Record updated successfully";
+            header("Location: ../index.php?action=success");
         } else {
             echo "Error updating record";
+            header("Location: ../index.php?type=edit&action=fail");
         }
-        header("Location: ../index.php");
     }elseif ($_REQUEST["type"] == "login") {
         if ($db->loginUser($_REQUEST["username"], $_REQUEST["pw"])) {
             $_SESSION["username"] = $_REQUEST["username"];
@@ -58,19 +57,23 @@
         if ($db->updatePassword($user)) {
             echo "Record updated successfully";
             Email::sendnewPw($user);
-            header("Location: ../index.php");
+            header("Location: ../index.php?action=success");
         } else {
             echo "Error updating record";
         }
     }elseif ($_REQUEST["type"] == "changePassword") {
-        $newPw = $_REQUEST["pw"];
-        $user = $db->getUser($_REQUEST["username"]);
-        $user->setPassword($newPw);
-        if ($db->updatePassword($user)) {
-            echo "Record updated successfully";
-            header("Location: ../index.php");
-        } else {
-            echo "Error updating record";
+        if ($db->loginUser($_REQUEST["username"], $_REQUEST["oldPw"])) {
+            $newPw = $_REQUEST["pw"];
+            $user = $db->getUser($_REQUEST["username"]);
+            $user->setPassword($newPw);
+            if ($db->updatePassword($user)) {
+                echo "Record updated successfully";
+                header("Location: ../index.php?action=success");
+            } else {
+                echo "Error updating record";
+            }
+        }else {
+            header("Location: ../index.php?type=edit&action=fail");
         }
     }
 

@@ -1,3 +1,7 @@
 {
-  "email" : "if20b235@technikum-wien.at"
+  "email" : "if20b235@technikum-wien.at",
+  "db" : {
+    "user" : "phpFormApplication",
+    "password" : "CuTXhYO9STA2j88w"
+  }
 }
