@@ -18,8 +18,8 @@ class DB
 
         $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
             true);
-        $username = "Sebastian";
-        $password = "QfrNGQfcCXua214D";
+        $username = $this->config["db"]["user"];
+        $password = $this->config["db"]["password"];
         $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$this->charset";
         try {
             $this->conn = new PDO($dsn, $username, $password, $this->options);
