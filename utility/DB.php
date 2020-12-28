@@ -18,8 +18,8 @@ class DB
 
         $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
             true);
-        $username = $this->config["db"]["user"];
-        $password = $this->config["db"]["password"];
+        $username = "Sebastian";
+        $password = "QfrNGQfcCXua214D";
         $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$this->charset";
         try {
             $this->conn = new PDO($dsn, $username, $password, $this->options);
@@ -77,7 +77,32 @@ class DB
             }
         }
     }
+  
+    public function createPost($path,$restricted){
+        $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`)
+         VALUES (?,?,?,?)");
+        $id = $user->getId();
+        if($sql->execute([NULL,$path,$restricted,$id])){
+            return true;
+        }else{
+            return false;
 
+        }
+
+        
+    }
+    public function showDashboard(): array{
+        $skrt = array();
+        $sql = "SELECT `path` FROM `post`";
+
+        $result = $this->conn->query($sql);
+        if ($result->rowCount() > 0) {
+            // output data of each row
+            $skrt = $result->fetchAll();
+        }
+
+        return $skrt;
+    }
     public function updateUser(User $user): bool
     {
         $stmt = $this->conn->prepare("UPDATE `user` SET title=?, fname=?, lname=?, username=?, 
