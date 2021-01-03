@@ -24,7 +24,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="index.php">Dashboard</a>
+    <a class="navbar-brand" href="index.php?section=dash">Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -42,7 +42,7 @@
         <ul class="navbar-nav navbar-right">
             <?php
             if(isset($_SESSION["username"])) {
-                echo '<li><a class="nav-link" href="index.php">' . $_SESSION["username"] . '\'s Posts</a></li>
+                echo '<li><a class="nav-link" href="index.php?section=create">' . $_SESSION["username"] . '\'s Posts</a></li>
                     <li><a class="nav-link" href="index.php?section=register&edit=true&id=' . $_SESSION["username"] .
                     '">Edit profile</a></li>
                           <li class="nav-item">
@@ -86,6 +86,12 @@
                 break;
             case 'forgotPw':
                 include "inc/forgotPassword.php";
+                break;
+            case 'create':
+                include "inc/createPost.php";
+                break;
+            case 'dash':
+                include "inc/dashboard.php";
                 break;
         }
     }
