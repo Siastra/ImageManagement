@@ -146,7 +146,7 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
 
 <script>
     $('#pw, #pwRepeat').on('keyup', function () {
-        if ($('#pw').val() == $('#pwRepeat').val()) {
+        if ($('#pw').val() === $('#pwRepeat').val()) {
             $('#message').html('Matching').css('color', '#28a745');
             $('.submit').disabled = false;
 

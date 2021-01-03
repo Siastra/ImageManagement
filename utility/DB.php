@@ -18,11 +18,8 @@ class DB
 
         $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
             true);
-      
-        $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$this->charset";
         try {
             $this->conn = new PDO($dsn, $username, $password, $this->options);
-        } catch (PDOException $e) {
             print "Error!: " . $e->getMessage() . "<br/>";
             die();
         }
