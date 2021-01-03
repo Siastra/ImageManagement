@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/User.php';
 
 class DB
 {
@@ -18,8 +18,7 @@ class DB
 
         $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
             true);
-        $username = "Sebastian";
-        $password = "QfrNGQfcCXua214D";
+      
         $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$this->charset";
         try {
             $this->conn = new PDO($dsn, $username, $password, $this->options);
@@ -77,32 +76,106 @@ class DB
             }
         }
     }
+public function checkTag($tag){
+    $sql = $this->conn->prepare("SELECT `name` FROM `tag` WHERE `name`  = ?");
+    $sql->execute([$tag]);
+    $result=$sql->fetch();
+    if($result==FALSE){
+        $sql2 = $this->conn->prepare("INSERT INTO `tag`(`name`) VALUES (?)");
+        $sql2->execute([$tag]);
+    }
+     return $result;
+}
+public function setTag($result,$tag){
+
+    $sql2 = $this->conn->prepare("INSERT INTO `is_assigned`(`post_id`,`tag_name`) VALUES (?,?)");
+    if($sql2->execute([$result,$tag])){
+        return true;
+    }
+    else{
+        return false;
+    }
+
+
+
+
+}
+   
+  public function bringUserId(): array{
+      $name = $_SESSION["username"];
+      $result = array();
+    $sql = $this->conn->prepare("SELECT `id` FROM `user` WHERE `username`  = ?");
+    $sql->execute([$name]);
+    $result=$sql->fetchAll();
+     return $result;
+
+  }
+  public function bringPostId($path): array{
+    $result = array();
+    $sql = $this->conn->prepare("SELECT `id` FROM `post` WHERE `path`  = ?");
+    $sql->execute([$path]);
+    $result=$sql->fetchAll();
+    print_r($result);
+    return $result;
+  }
   
     public function createPost($path,$restricted){
+        $name=$_SESSION["username"];
+        
         $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`)
          VALUES (?,?,?,?)");
-        $id = $user->getId();
-        if($sql->execute([NULL,$path,$restricted,$id])){
-            return true;
-        }else{
-            return false;
+        $id= $this->bringUserId();
+        foreach($id as $cont){
+            
+            if($sql->execute([NULL,$path,$restricted,$cont['id']])){  
+                $result = $this->bringPostId($path);
+                foreach($result as $answer){
+                    return $answer['id'];
 
+                }
+            }else{
+                return false;
+            }
         }
-
-        
     }
-    public function showDashboard(): array{
-        $skrt = array();
+    public function showDashboardall(): array{
+        $dashall = array();
         $sql = "SELECT `path` FROM `post`";
 
         $result = $this->conn->query($sql);
         if ($result->rowCount() > 0) {
-            // output data of each row
-            $skrt = $result->fetchAll();
+            $dashall = $result->fetchAll();
         }
 
-        return $skrt;
+        return $dashall;
     }
+    public function showDashboardself(): array{
+        $dashself = array();
+        $name=  $_SESSION["username"];
+        $id=$this->bringuserId();  
+        foreach($id as $way){
+            $endid = $way['id'];
+        }
+        $sql = "SELECT `path` FROM `post` WHERE `user_id`=$endid";
+        $result = $this->conn->query($sql);
+        if ($result->rowCount() > 0) {
+            $dashself= $result->fetchAll();
+        }
+
+        return $dashself;
+    }
+    public function showDashboardpublic(): array{
+        $dashpub = array();
+        $sql = "SELECT `path` FROM `post` WHERE `restricted`=0";
+
+        $result = $this->conn->query($sql);
+        if ($result->rowCount() > 0) {
+            $dashpub= $result->fetchAll();
+        }
+
+        return $dashpub;
+    }
+
     public function updateUser(User $user): bool
     {
         $stmt = $this->conn->prepare("UPDATE `user` SET title=?, fname=?, lname=?, username=?, 
