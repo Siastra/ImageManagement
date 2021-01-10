@@ -4,6 +4,7 @@
     include_once "model/User.php";
     include_once "utility/MsgFactory.php";
     include_once "utility/Email.php";
+    $db = new DB();
 ?>
 <!doctype html>
 <html lang="en">
@@ -31,7 +32,7 @@
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <?php
-            if(isset($_SESSION["username"]) && $_SESSION["username"] == "admin") {
+            if(isset($_SESSION["username"]) && $db->getUser($_SESSION["username"])->isAdmin()) {
                 echo '<li class="nav-item active">
                     <a class="nav-link" href="index.php?section=view">User Administration</a>
                 </li>';

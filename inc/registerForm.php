@@ -20,8 +20,8 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
     $user = $db->getUser($_REQUEST["id"]);
     $fill = true;
 }elseif (isset($_REQUEST["pw"])) {
-    $user = new User(null,$_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["username"], " ",
-        $_REQUEST["email"], 0, 1);
+    $user = new User(null, $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["email"],
+        $_REQUEST["username"], " ", 0, 1);
     $fill = true;
 }
 

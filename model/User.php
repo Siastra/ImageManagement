@@ -6,15 +6,15 @@ class User
     private int $id ,$admin, $activated;
     private string $title, $fname, $lname, $username, $password, $email;
 
-    public function __construct($id, $title, $fname, $lname, $username, $password, $email, $admin, $activated)
+    public function __construct($id, $title, $fname, $lname, $email, $username, $password, $admin, $activated)
     {
         $this->email = $email;
         $this->fname = $fname;
         $this->lname = $lname;
         $this->title = $title;
         $this->username = $username;
-        $this->admin = $admin;
-        $this->activated = $activated;
+        $this->admin = intval($admin);
+        $this->activated = intval($activated);
         $this->id = $id;
         $this->password = $password;
     }
@@ -55,7 +55,7 @@ class User
     /**
      * @return int
      */
-    public function getAdmin(): int
+    public function isAdmin(): int
     {
         return $this->admin;
     }
