@@ -16,13 +16,18 @@ class DB
     public function __construct()
     {
 
-        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
-            true);
+        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/ImageManagement/config/config.json"),true);
+        $username = $this->config["db"]["username"];
+        $password = $this->config["db"]["password"];
+        $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$this->charset";
         try {
+          
             $this->conn = new PDO($dsn, $username, $password, $this->options);
+         
+        }catch (PDOException $e) {
             print "Error!: " . $e->getMessage() . "<br/>";
-            die();
-        }
+            die();       
+         }
     }
 
     public function getUserList(): array
@@ -118,18 +123,17 @@ public function setTag($result,$tag){
   
     public function createPost($path,$restricted){
         $name=$_SESSION["username"];
-        
         $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`)
          VALUES (?,?,?,?)");
+
         $id= $this->bringUserId();
+       
         foreach($id as $cont){
-            
-            if($sql->execute([NULL,$path,$restricted,$cont['id']])){  
+             if($sql->execute([NULL,$path,$restricted,$cont['id']])){  
                 $result = $this->bringPostId($path);
                 foreach($result as $answer){
                     return $answer['id'];
-
-                }
+                 }
             }else{
                 return false;
             }
