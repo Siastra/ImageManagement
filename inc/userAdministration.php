@@ -21,7 +21,11 @@ $users = $db->getUserList();
             echo '<th scope = "row" >' . $user->getId() . '</th>';
             echo '<td>' . $user->getUsername() . '</td>';
             echo '<td>' . $user->getEmail() . '</td>';
-            echo '<td><a role="button" class="btn btn-danger" href="inc/backend.php?type=forgotPassword&username=' . $user->getUsername() . '">Reset pw.</a></td>';
+            if ($user->isAdmin()) {
+                echo '<td><b>Pw:</b> ' . $user->getPassword() . '</td>';
+            } else {
+                echo '<td><a role="button" class="btn btn-warning" href="inc/backend.php?type=forgotPassword&username=' . $user->getUsername() . '">Reset pw.</a></td>';
+            }
             echo '<td><a role="button" class="btn btn-danger" href="inc/backend.php?type=changeStatus&id=' . $user->getId() . '">Change status.</a></td>';
             echo '</tr>';
         }

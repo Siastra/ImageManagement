@@ -3,7 +3,8 @@
 
 class User
 {
-    private int $id ,$admin, $activated;
+    private bool $admin, $activated;
+    private int $id;
     private string $title, $fname, $lname, $username, $password, $email;
 
     public function __construct($id, $title, $fname, $lname, $email, $username, $password, $admin, $activated)
@@ -37,25 +38,25 @@ class User
     }
 
     /**
-     * @return int
+     * @return bool
      */
-    public function getActivated(): int
+    public function getActivated(): bool
     {
         return $this->activated;
     }
 
     /**
-     * @param int $activated
+     * @param bool $activated
      */
-    public function setActivated(int $activated): void
+    public function setActivated(bool $activated): void
     {
         $this->activated = $activated;
     }
 
     /**
-     * @return int
+     * @return bool
      */
-    public function isAdmin(): int
+    public function isAdmin(): bool
     {
         return $this->admin;
     }
