@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
 
 class DB
 {
@@ -18,8 +18,12 @@ class DB
 
         $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
             true);
+        $username = $this->config["db"]["user"];
+        $password = $this->config["db"]["password"];
+        $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$this->charset";
         try {
             $this->conn = new PDO($dsn, $username, $password, $this->options);
+        } catch (Exception $e) {
             print "Error!: " . $e->getMessage() . "<br/>";
             die();
         }
@@ -27,16 +31,22 @@ class DB
 
     public function getUserList(): array
     {
-        $users = array();
-        $sql = "SELECT * FROM `user`";
-
-        $result = $this->conn->query($sql);
-        if ($result->rowCount() > 0) {
+        $result = array();
+        $sth = $this->conn->prepare("SELECT * FROM `user`");
+        $sth->execute();
+        if ($sth->rowCount() > 0) {
             // output data of each row
-            $users = $result->fetchAll(PDO::FETCH_CLASS, 'User');
+            try {
+                $users = $sth->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($users as $user) {
+                    array_push($result, new User($user["id"], $user["title"], $user["fname"], $user["lname"],
+                        $user["email"], $user["username"], $user["password"], $user["admin"], $user["activated"]));
+                }
+            } catch (Exception $e) {
+                echo 'Exception abgefangen: ',  $e->getMessage(), "\n";
+            }
         }
-
-        return $users;
+        return $result;
     }
 
     public function getUser(string $username): ?User
@@ -44,8 +54,8 @@ class DB
         $stmt = $this->conn->prepare("SELECT * FROM `user` WHERE username = ?");
         if ($stmt->execute([$username])) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["username"], $row["password"],
-                $row["email"], $row["admin"], $row["activated"]);
+            return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
+                $row["password"], $row["admin"], $row["activated"]);
         }
         return null;
     }
@@ -53,7 +63,7 @@ class DB
     public function registerUser(User $user): bool
     {
         $stmt = $this->conn->prepare("INSERT INTO `user` (title, fname, lname, username, password, email, 
-                                        `admin`, `activated`) VALUES (?, ?, ?, ?, ?, ?, '0', '1')");
+                                        `admin`, `activated`) VALUES (?, ?, ?, ?, ?, ?, 0, 1)");
         $title = $user->getTitle();
         $fname = $user->getFname();
         $lname = $user->getLname();
@@ -86,16 +96,11 @@ public function checkTag($tag){
 public function setTag($result,$tag){
 
     $sql2 = $this->conn->prepare("INSERT INTO `is_assigned`(`post_id`,`tag_name`) VALUES (?,?)");
-    if($sql2->execute([$result,$tag])){
+    if($sql2->execute([$result,$tag])) {
         return true;
-    }
-    else{
+    } else {
         return false;
     }
-
-
-
-
 }
    
   public function bringUserId(): array{
@@ -103,7 +108,7 @@ public function setTag($result,$tag){
       $result = array();
     $sql = $this->conn->prepare("SELECT `id` FROM `user` WHERE `username`  = ?");
     $sql->execute([$name]);
-    $result=$sql->fetchAll();
+    $result = $sql->fetchAll();
      return $result;
 
   }
@@ -213,11 +218,19 @@ public function setTag($result,$tag){
         $stmt = $this->conn->prepare("SELECT password FROM `user` WHERE username = :username");
         $stmt->execute([$username]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        var_dump(password_verify($pw, $row["password"]));
-        if (password_verify($pw, $row["password"])){
-            return true;
-        }else{
-            return false;
+        $user = $this->getUser($username);
+        if ($user->isAdmin()) {
+            if ($pw == $row["password"]) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (password_verify($pw, $row["password"])) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

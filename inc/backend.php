@@ -41,6 +41,7 @@
         }
     }elseif ($_REQUEST["type"] == "login") {
         if ($db->loginUser($_REQUEST["username"], $_REQUEST["pw"])) {
+            $user = $db->getUser($_REQUEST["username"]);
             $_SESSION["username"] = $_REQUEST["username"];
             header("Location: ../index.php?action=success");
         }else {

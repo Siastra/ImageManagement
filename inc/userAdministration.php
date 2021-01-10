@@ -8,14 +8,10 @@ $users = $db->getUserList();
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Title</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
             <th scope="col">Username</th>
-            <th scope="col">Password</th>
             <th scope="col">Email</th>
-            <th scope="col">Edit?</th>
-            <th scope="col">Delete?</th>
+            <th scope="col">Reset Password?</th>
+            <th scope="col">Activate/Deactivate?</th>
         </tr>
         </thead>
         <tbody>
@@ -23,14 +19,10 @@ $users = $db->getUserList();
         foreach ($users as $user) {
             echo '<tr>';
             echo '<th scope = "row" >' . $user->getId() . '</th>';
-            echo '<td>' . $user->getTitle() . '</td>';
-            echo '<td>' . $user->getFname() . '</td>';
-            echo '<td>' . $user->getLname() . '</td>';
             echo '<td>' . $user->getUsername() . '</td>';
-            echo '<td>[encrypted]</td>';
             echo '<td>' . $user->getEmail() . '</td>';
-            echo '<td><a role="button" class="btn btn-warning" href="index.php?section=register&type=edit&id=' . $user->getUsername() . '">Edit.</a></td>';
-            echo '<td><a role="button" class="btn btn-danger" href="inc/backend.php?type=delete&id=' . $user->getId() . '">Delete.</a></td>';
+            echo '<td><a role="button" class="btn btn-danger" href="inc/backend.php?type=forgotPassword&username=' . $user->getUsername() . '">Reset pw.</a></td>';
+            echo '<td><a role="button" class="btn btn-danger" href="inc/backend.php?type=changeStatus&id=' . $user->getId() . '">Change status.</a></td>';
             echo '</tr>';
         }
         ?>
