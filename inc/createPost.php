@@ -74,7 +74,7 @@ if(isset($_POST["upload"])){
         if(isset($_POST["tags"])){
             $tag=$_POST["tags"];
                   $db->checkTag($tag);
-                $result=$db->createPost($folderPathDash,$restricted);
+                $result=$db->createPost($folderPathDash . $fileNewName . "." . $ext,$restricted);
                 $db->setTag($result,$tag);
 
             
