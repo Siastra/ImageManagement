@@ -22,12 +22,12 @@ class DB
         $password = $this->config["db"]["password"];
         $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$this->charset";
         try {
-          
+
             $this->conn = new PDO($dsn, $username, $password, $this->options);
         } catch (Exception $e) {
             print "Error!: " . $e->getMessage() . "<br/>";
-            die();       
-         }
+            die();
+        }
     }
 
     public function getUserList(): array
@@ -44,7 +44,7 @@ class DB
                         $user["email"], $user["username"], $user["password"], $user["admin"], $user["activated"]));
                 }
             } catch (Exception $e) {
-                echo 'Exception abgefangen: ',  $e->getMessage(), "\n";
+                echo 'Exception abgefangen: ', $e->getMessage(), "\n";
             }
         }
         return $result;
@@ -75,7 +75,7 @@ class DB
         try {
             $stmt->execute([$title, $fname, $lname, $username, $hash, $email]);
             return true;
-        }catch (PDOException $e) {
+        } catch (PDOException $e) {
             $existingkey = "Integrity constraint violation: 1062 Duplicate entry";
             if (strpos($e->getMessage(), $existingkey) !== FALSE) {
                 return false;
@@ -84,98 +84,91 @@ class DB
             }
         }
     }
-public function checkTag($tag){
-    $sql = $this->conn->prepare("SELECT `name` FROM `tag` WHERE `name`  = ?");
-    $sql->execute([$tag]);
-    $result=$sql->fetch();
-    if($result==FALSE){
-        $sql2 = $this->conn->prepare("INSERT INTO `tag`(`name`) VALUES (?)");
-        $sql2->execute([$tag]);
+    
+    public function checkTag($tag)
+    {
+        $sql = $this->conn->prepare("SELECT `name` FROM `tag` WHERE `name`  = ?");
+        $sql->execute([$tag]);
+        $result = $sql->fetch();
+        if ($result == FALSE) {
+            $sql2 = $this->conn->prepare("INSERT INTO `tag`(`name`) VALUES (?)");
+            $sql2->execute([$tag]);
+        }
+        return $result;
     }
-     return $result;
-}
-public function setTag($result,$tag){
 
-    $sql2 = $this->conn->prepare("INSERT INTO `is_assigned`(`post_id`,`tag_name`) VALUES (?,?)");
-    if($sql2->execute([$result,$tag])) {
-        return true;
-    } else {
-        return false;
+    public function setTag($result, $tag)
+    {
+
+        $sql2 = $this->conn->prepare("INSERT INTO `is_assigned`(`post_id`,`tag_name`) VALUES (?,?)");
+        if ($sql2->execute([$result, $tag])) {
+            return true;
+        } else {
+            return false;
+        }
     }
-}
-   
-  public function bringUserId(): array{
-      $name = $_SESSION["username"];
-      $result = array();
-    $sql = $this->conn->prepare("SELECT `id` FROM `user` WHERE `username`  = ?");
-    $sql->execute([$name]);
-    $result = $sql->fetchAll();
-     return $result;
 
-  }
-  public function bringPostId($path): array{
-    $result = array();
-    $sql = $this->conn->prepare("SELECT `id` FROM `post` WHERE `path`  = ?");
-    $sql->execute([$path]);
-    $result=$sql->fetchAll();
-    print_r($result);
-    return $result;
-  }
-  
-    public function createPost($path,$restricted){
-        $name=$_SESSION["username"];
+    public function getPostId($path): array
+    {
+        $sql = $this->conn->prepare("SELECT `id` FROM `post` WHERE `path`  = ?");
+        $sql->execute([$path]);
+        $result = $sql->fetchAll();
+        print_r($result);
+        return $result;
+    }
+
+    public function createPost($path, $restricted) : string
+    {
         $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`)
          VALUES (?,?,?,?)");
 
-        $id= $this->bringUserId();
-       
-        foreach($id as $cont){
-             if($sql->execute([NULL,$path,$restricted,$cont['id']])){  
-                $result = $this->bringPostId($path);
-                foreach($result as $answer){
-                    return $answer['id'];
-                 }
-            }else{
-                return false;
-            }
+        $id = $this->getUser($_SESSION["username"])->getId();
+
+        try {
+            $sql->execute([NULL, $path, $restricted, $id]);
+            return $this->getPostId($path)[0]["id"];
+        } catch (PDOException $e) {
+                throw $e;
         }
     }
-    public function showDashboardall(): array{
-        $dashall = array();
+
+    public function showDashboardAll(): array
+    {
+        $dashAll = array();
         $sql = "SELECT `path` FROM `post`";
 
         $result = $this->conn->query($sql);
         if ($result->rowCount() > 0) {
-            $dashall = $result->fetchAll();
+            $dashAll = $result->fetchAll();
         }
 
-        return $dashall;
+        return $dashAll;
     }
-    public function showDashboardself(): array{
-        $dashself = array();
-        $name=  $_SESSION["username"];
-        $id=$this->bringuserId();  
-        foreach($id as $way){
-            $endid = $way['id'];
-        }
-        $sql = "SELECT `path` FROM `post` WHERE `user_id`=$endid";
+
+    public function showDashboardSelf(): array
+    {
+        $dashSelf = array();
+        $u_id = $this->getUser($_SESSION["username"])->getId();
+        $sql = "SELECT `path` FROM `post` WHERE `user_id`=$u_id";
         $result = $this->conn->query($sql);
         if ($result->rowCount() > 0) {
-            $dashself= $result->fetchAll();
+            $dashSelf = $result->fetchAll();
         }
 
-        return $dashself;
+        return $dashSelf;
     }
-    public function showDashboardpublic(): array{
-        $dashpub = array();
+
+    public function showDashboardPublic(): array
+    {
+        $dashPub = array();
         $sql = "SELECT `path` FROM `post` WHERE `restricted`=0";
 
         $result = $this->conn->query($sql);
         if ($result->rowCount() > 0) {
-            $dashpub= $result->fetchAll();
+            $dashPub = $result->fetchAll();
         }
 
-        return $dashpub;
+        return $dashPub;
     }
 
     public function updateUser(User $user): bool
@@ -190,30 +183,31 @@ public function setTag($result,$tag){
         $id = $user->getId();
         if (!$stmt->execute([$title, $fname, $lname, $username, $email, $id])) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-    public function updatePassword(User $user) : bool {
+    public function updatePassword(User $user): bool
+    {
         $stmt = $this->conn->prepare("UPDATE `user` SET password=? WHERE id=?");
         $pw = $user->getPassword();
         $hash = password_hash($pw, PASSWORD_DEFAULT);
         $id = $user->getId();
         if (!$stmt->execute([$hash, $id])) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-    public function deleteUser(int $id) : void
+    public function deleteUser(int $id): void
     {
         $stmt = $this->conn->prepare("DELETE FROM `user` WHERE id=?");
         $stmt->execute([$id]);
     }
 
-    public function loginUser(string $username, string $pw) : bool
+    public function loginUser(string $username, string $pw): bool
     {
         $stmt = $this->conn->prepare("SELECT password FROM `user` WHERE username = :username");
         $stmt->execute([$username]);

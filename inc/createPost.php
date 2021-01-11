@@ -1,12 +1,14 @@
 
 <form method="post" action="index.php?section=create" enctype="multipart/form-data">
 	<input type="file" name="picture">
-    </br>
-    <input type="text" placeholder="Tags " name="tags" id="tags">
-    </br>
+    <br/>
+    <label for="tags">Tags:</label>
+    <input type="text" placeholder="Tags " name="tags" id="tags" />
+    <br/>
     <div class="slidecontainer">
-    <input type="range" min="0" max="1" value="0" class="slider" id="myRange" name="restriction">
-     <p>Restriction:<span id="demo"></span></p>
+        <label for="myRange">Restriction:</label>
+        <input type="range" min="0" max="1" value="0" class="slider" id="myRange" name="restriction" />
+        <p>Restriction:<span id="demo"></span></p>
     </div>
 	<input type="submit" name="upload" value="Upload" />
 
@@ -65,7 +67,6 @@ if(isset($_POST["upload"])){
             default:
                 echo "Invalid Image type.";
                 exit;
-                break;
         }
 
 
@@ -74,7 +75,7 @@ if(isset($_POST["upload"])){
         if(isset($_POST["tags"])){
             $tag=$_POST["tags"];
                   $db->checkTag($tag);
-                $result=$db->createPost($folderPathDash . $fileNewName . "." . $ext,$restricted);
+                $result= $db->createPost($folderPathDash . $fileNewName . "." . $ext,$restricted);
                 $db->setTag($result,$tag);
 
             
@@ -117,8 +118,8 @@ function imageResizeDash($imageResourceId, $width, $height)
 }
 ?>
 <script>
-var slider = document.getElementById("myRange");
-var output = document.getElementById("demo");
+let slider = document.getElementById("myRange");
+let output = document.getElementById("demo");
 output.innerHTML = slider.value;
 
 slider.oninput = function() {

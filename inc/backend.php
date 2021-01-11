@@ -76,6 +76,8 @@
         }else {
             header("Location: ../index.php?type=edit&action=fail");
         }
+    }elseif ($_REQUEST["type"] == "changeStatus") {
+        if ($db->) {}
     }
 
 ?>

@@ -43,7 +43,7 @@
         <ul class="navbar-nav navbar-right">
             <?php
             if(isset($_SESSION["username"])) {
-                echo '<li><a class="nav-link" href="index.php?section=create">' . $_SESSION["username"] . '\'s Posts</a></li>
+                echo '<li><a class="nav-link" href="index.php">' . $_SESSION["username"] . '\'s Posts</a></li>
                 <li><a class="nav-link" href="index.php?section=create">Upload Post</a></li>
                     <li><a class="nav-link" href="index.php?section=register&edit=true&id=' . $_SESSION["username"] .
                     '">Edit profile</a></li>
