@@ -48,6 +48,7 @@ CREATE TABLE `User` (
     password  VARCHAR(128) NOT NULL,
     admin     CHAR(1) NOT NULL,
     activated CHAR(1) NOT NULL,
+    picture   VARCHAR(128) NULL,
     UNIQUE(username)
 );
 

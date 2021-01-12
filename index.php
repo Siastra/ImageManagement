@@ -4,6 +4,7 @@
     include_once "model/User.php";
     include_once "utility/MsgFactory.php";
     include_once "utility/Email.php";
+    include_once "utility/Upload.php";
     $db = new DB();
 ?>
 <!doctype html>
