@@ -43,7 +43,9 @@
         <ul class="navbar-nav navbar-right">
             <?php
             if(isset($_SESSION["username"])) {
-                echo '<li><a class="nav-link" href="index.php">' . $_SESSION["username"] . '\'s Posts</a></li>
+                echo '<li><a class="nav-link" href="index.php">' .
+                    (($db->getUser($_SESSION["username"])->isAdmin()) ? '<b>[admin]</b>' : '') .
+                    $_SESSION["username"] . '\'s Posts</a></li>
                 <li><a class="nav-link" href="index.php?section=create">Upload Post</a></li>
                     <li><a class="nav-link" href="index.php?section=register&edit=true&id=' . $_SESSION["username"] .
                     '">Edit profile</a></li>
@@ -66,8 +68,10 @@
     //Message Banner
     if(isset($_GET["action"]) && ($_GET["action"] == "success")) {
         echo MsgFactory::getSuccess("Action performed successfully!");
-    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && (isset($_GET["section"]) && ($_GET["section"] == "login"))) {
+    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail1") && (isset($_GET["section"]) && ($_GET["section"] == "login"))) {
         echo MsgFactory::getWarning("Login failed! Username or password incorrect!");
+    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail2") && (isset($_GET["section"]) && ($_GET["section"] == "login"))) {
+        echo MsgFactory::getWarning("Login failed! User account deactivated!");
     }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && (isset($_GET["section"]) && ($_GET["section"] == "register"))) {
         echo MsgFactory::getWarning("Registration failed! Username not valid or exists!");
     }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && ($_GET["type"] == "edit")) {

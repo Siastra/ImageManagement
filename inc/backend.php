@@ -40,12 +40,18 @@
             header("Location: ../index.php?type=edit&action=fail");
         }
     }elseif ($_REQUEST["type"] == "login") {
-        if ($db->loginUser($_REQUEST["username"], $_REQUEST["pw"])) {
-            $user = $db->getUser($_REQUEST["username"]);
-            $_SESSION["username"] = $_REQUEST["username"];
-            header("Location: ../index.php?action=success");
-        }else {
-            header("Location: ../index.php?section=login&action=fail");
+        switch ($db->loginUser($_REQUEST["username"], $_REQUEST["pw"])) {
+            case 0:
+                header("Location: ../index.php?section=login&action=fail1");
+                break;
+            case 1:
+                $user = $db->getUser($_REQUEST["username"]);
+                $_SESSION["username"] = $_REQUEST["username"];
+                header("Location: ../index.php?action=success");
+                break;
+            case -1:
+                header("Location: ../index.php?section=login&action=fail2");
+                break;
         }
     }elseif ($_REQUEST["type"] == "logout") {
         $_SESSION = array();
@@ -77,7 +83,9 @@
             header("Location: ../index.php?type=edit&action=fail");
         }
     }elseif ($_REQUEST["type"] == "changeStatus") {
-        if ($db->) {}
+        if ($db->changeStatus($_REQUEST["username"])) {
+            header("Location: ../index.php?section=view");
+        }
     }
 
 ?>

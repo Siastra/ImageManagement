@@ -84,6 +84,18 @@ class DB
             }
         }
     }
+
+    public function changeStatus(string $username): bool
+    {
+        $value = !($this->getUser($username)->getActivated());
+        $stmt = $this->conn->prepare("UPDATE `user` SET activated=? WHERE username=?");
+
+        if (!$stmt->execute([$value, $username])) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     
     public function checkTag($tag)
     {
@@ -97,27 +109,26 @@ class DB
         return $result;
     }
 
-    public function setTag($result, $tag)
+    public function setTag(int $p_id, $tag) : bool
     {
 
         $sql2 = $this->conn->prepare("INSERT INTO `is_assigned`(`post_id`,`tag_name`) VALUES (?,?)");
-        if ($sql2->execute([$result, $tag])) {
+        if ($sql2->execute([$p_id, $tag])) {
             return true;
         } else {
             return false;
         }
     }
 
-    public function getPostId($path): array
+    public function getPostId(string $path): int
     {
         $sql = $this->conn->prepare("SELECT `id` FROM `post` WHERE `path`  = ?");
         $sql->execute([$path]);
-        $result = $sql->fetchAll();
-        print_r($result);
-        return $result;
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        return $result["id"];
     }
 
-    public function createPost($path, $restricted) : string
+    public function createPost(string $path, $restricted) : int
     {
         $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`)
          VALUES (?,?,?,?)");
@@ -126,7 +137,7 @@ class DB
 
         try {
             $sql->execute([NULL, $path, $restricted, $id]);
-            return $this->getPostId($path)[0]["id"];
+            return $this->getPostId($path);
         } catch (PDOException $e) {
                 throw $e;
         }
@@ -207,9 +218,9 @@ class DB
         $stmt->execute([$id]);
     }
 
-    public function loginUser(string $username, string $pw): bool
+    public function loginUser(string $username, string $pw): int
     {
-        $stmt = $this->conn->prepare("SELECT password FROM `user` WHERE username = :username");
+        $stmt = $this->conn->prepare("SELECT password, activated FROM `user` WHERE username = :username");
         $stmt->execute([$username]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         $user = $this->getUser($username);
@@ -220,6 +231,9 @@ class DB
                 return false;
             }
         } else {
+            if ($row["activated"] == 0) {
+                return -1;
+            }
             if (password_verify($pw, $row["password"])) {
                 return true;
             } else {
