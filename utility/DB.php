@@ -116,28 +116,36 @@ class DB
             return false;
         }
     }
-    
+
     public function checkTag($tag)
     {
+        $size = count($tag);
         $sql = $this->conn->prepare("SELECT `name` FROM `tag` WHERE `name`  = ?");
-        $sql->execute([$tag]);
-        $result = $sql->fetch();
-        if ($result == FALSE) {
-            $sql2 = $this->conn->prepare("INSERT INTO `tag`(`name`) VALUES (?)");
-            $sql2->execute([$tag]);
+        for($i=0;$i<$size;$i++){
+            if($tag[$i]!=NULL){
+            $sql->execute([$tag[$i]]);
+            $result = $sql->fetch();
+            if ($result == FALSE) {
+                $sql2 = $this->conn->prepare("INSERT INTO `tag`(`name`) VALUES (?)");
+                $sql2->execute([$tag[$i]]);
+            }
+            }
+
         }
+
         return $result;
     }
 
     public function setTag(int $p_id, $tag) : bool
     {
-
+        $size = count($tag);
         $sql2 = $this->conn->prepare("INSERT INTO `is_assigned`(`post_id`,`tag_name`) VALUES (?,?)");
-        if ($sql2->execute([$p_id, $tag])) {
-            return true;
-        } else {
-            return false;
+        for($i=0;$i<$size;$i++){
+            if($tag[$i]!=NULL){
+            $sql2->execute([$p_id, $tag[$i]]);
+            }
         }
+      return true;
     }
 
     public function getPostId(string $path): int

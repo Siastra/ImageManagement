@@ -52,6 +52,43 @@ class Upload
         move_uploaded_file($file, $fullPath . $fileNewName . "." . $ext);
         return true;
     }
+    private static function imageResizeThump($imageResourceId, $width, $height)
+{
+
+
+    $targetWidth = 500;
+    $targetHeight = 250;
+
+
+    $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
+    imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
+
+
+    return $targetLayer;
+
+}
+
+private static function imageResizeDash($imageResourceId, $width, $height)
+{
+
+
+
+    if($height>(2*$width)){
+        $targetWidth = 750;
+        $targetHeight = 1500;
+    }else{
+        $targetWidth = 1500;
+        $targetHeight = 750;
+    }
+
+
+    $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
+    imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
+
+
+    return $targetLayer;
+
+}
 
     public static function uploadProfilePicture(array $files) : bool
     {
