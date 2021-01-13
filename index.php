@@ -51,7 +51,7 @@
                 echo '<li><a class="nav-link" href="index.php?section=register&edit=true&id=' . $_SESSION["username"] .
                     '"><img src="res/img/edit.svg" alt="Edit icon" width="25px">
                          Edit profile</a></li>';
-            }else {
+            }else if (isset($_SESSION["username"]) && (isset($_GET["section"]) && ($_GET["section"] != "userPage"))) {
                 echo '<li><a class="nav-link" href="index.php?section=userPage"><img src="res/img/user.svg" 
                         alt="User icon" width="25px"> ' .
                     (($db->getUser($_SESSION["username"])->isAdmin()) ? '<b>[admin]</b>' : '') .

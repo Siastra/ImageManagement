@@ -40,6 +40,8 @@ if(isset($_POST["upload"])){
         header("Location: index.php?section=dash");
     
 }
+
+
 ?>
 <script>
 let slider = document.getElementById("myRange");
