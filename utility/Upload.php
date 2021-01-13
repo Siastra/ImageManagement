@@ -53,4 +53,9 @@ class Upload
         return true;
     }
 
+    public static function uploadProfilePicture(array $files) : bool
+    {
+
+    }
+
 }
