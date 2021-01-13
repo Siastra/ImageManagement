@@ -23,52 +23,22 @@ $spath = "pictures\\full\\$z\\";
 
 if(isset($_POST["upload"])){
     Upload::uploadPost($_FILES);
-    $restricted = $_POST["restriction"];
-    if(isset($_POST["tags"])){
-        $tag=$_POST["tags"];
-        $db = new DB();
-        $db->checkTag($tag);
-        $result= $db->createPost('pictures/dashboard/' . explode(".", $_FILES['picture']['name'])[0]
+
+        $restricted = $_POST["restriction"];
+        if(isset($_POST["tags"])){
+          
+            $tag=$_POST["tags"];
+            $divide="/[-\s:]/";
+            $tag2=preg_split($divide,$tag);
+            $db->checkTag($tag2);
+            $result= $db->createPost('pictures/dashboard/' . explode(".", $_FILES['picture']['name'])[0]
             . "." . (pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION)),$restricted);
-        $db->setTag($result,$tag);
+            $db->setTag($result,$tag2);
 
-
-    }
+            
+        }
         header("Location: index.php?section=dash");
     
-}
-
-
-function imageResizeThump($imageResourceId, $width, $height)
-{
-
-
-    $targetWidth = 500;
-    $targetHeight = 250;
-
-
-    $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
-    imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
-
-
-    return $targetLayer;
-
-}
-
-function imageResizeDash($imageResourceId, $width, $height)
-{
-
-
-    $targetWidth = 1500;
-    $targetHeight = 750;
-
-
-    $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
-    imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
-
-
-    return $targetLayer;
-
 }
 ?>
 <script>

@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/User.php';
 
 class DB
 {
@@ -16,9 +16,9 @@ class DB
     public function __construct()
     {
 
-        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
+        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/ImageManagement/config/config.json"),
             true);
-        $username = $this->config["db"]["user"];
+        $username = $this->config["db"]["username"];
         $password = $this->config["db"]["password"];
         $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$this->charset";
         try {
@@ -99,25 +99,33 @@ class DB
     
     public function checkTag($tag)
     {
+        $size = count($tag);
         $sql = $this->conn->prepare("SELECT `name` FROM `tag` WHERE `name`  = ?");
-        $sql->execute([$tag]);
-        $result = $sql->fetch();
-        if ($result == FALSE) {
-            $sql2 = $this->conn->prepare("INSERT INTO `tag`(`name`) VALUES (?)");
-            $sql2->execute([$tag]);
+        for($i=0;$i<$size;$i++){
+            if($tag[$i]!=NULL){
+            $sql->execute([$tag[$i]]);
+            $result = $sql->fetch();
+            if ($result == FALSE) {
+                $sql2 = $this->conn->prepare("INSERT INTO `tag`(`name`) VALUES (?)");
+                $sql2->execute([$tag[$i]]);
+            }
+            }
+           
         }
+       
         return $result;
     }
 
     public function setTag(int $p_id, $tag) : bool
     {
-
+        $size = count($tag);
         $sql2 = $this->conn->prepare("INSERT INTO `is_assigned`(`post_id`,`tag_name`) VALUES (?,?)");
-        if ($sql2->execute([$p_id, $tag])) {
-            return true;
-        } else {
-            return false;
+        for($i=0;$i<$size;$i++){
+            if($tag[$i]!=NULL){
+            $sql2->execute([$p_id, $tag[$i]]);
+            }
         }
+      return true;
     }
 
     public function getPostId(string $path): int
