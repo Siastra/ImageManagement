@@ -23,10 +23,10 @@ class Upload
 
             case IMAGETYPE_PNG:
                 $imageResourceId = imagecreatefrompng($file);
-                $targetLayer = imageResizeThump($imageResourceId, $sourceProperties[0], $sourceProperties[1]);
+                $targetLayer = self::imageResizeThump($imageResourceId, $sourceProperties[0], $sourceProperties[1]);
                 imagepng($targetLayer, $fullpathThumb . $fileNewName . ".". $ext);
                 $imageResourceId1 = imagecreatefrompng($file);
-                $targetLayer1 = imageResizeDash($imageResourceId1, $sourceProperties[0], $sourceProperties[1]);
+                $targetLayer1 = self::imageResizeDash($imageResourceId1, $sourceProperties[0], $sourceProperties[1]);
                 imagepng($targetLayer1, $fullpathDash . $fileNewName . ".". $ext);
 
                 break;
@@ -34,10 +34,10 @@ class Upload
 
             case IMAGETYPE_JPEG:
                 $imageResourceId = imagecreatefromjpeg($file);
-                $targetLayer = imageResizeThump($imageResourceId, $sourceProperties[0], $sourceProperties[1]);
+                $targetLayer = self::imageResizeThump($imageResourceId, $sourceProperties[0], $sourceProperties[1]);
                 imagejpeg($targetLayer, $fullpathThumb . $fileNewName .".". $ext);
                 $imageResourceId1 = imagecreatefromjpeg($file);
-                $targetLayer1 = imageResizeDash($imageResourceId1, $sourceProperties[0], $sourceProperties[1]);
+                $targetLayer1 = self::imageResizeDash($imageResourceId1, $sourceProperties[0], $sourceProperties[1]);
                 imagejpeg($targetLayer1, $fullpathDash . $fileNewName .".".  $ext);
 
                 break;
@@ -55,6 +55,38 @@ class Upload
 
     public static function uploadProfilePicture(array $files) : bool
     {
+
+    }
+
+    private static function imageResizeThump($imageResourceId, $width, $height)
+    {
+
+
+        $targetWidth = 500;
+        $targetHeight = 250;
+
+
+        $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
+        imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
+
+
+        return $targetLayer;
+
+    }
+
+    private static function imageResizeDash($imageResourceId, $width, $height)
+    {
+
+
+        $targetWidth = 1500;
+        $targetHeight = 750;
+
+
+        $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
+        imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
+
+
+        return $targetLayer;
 
     }
 

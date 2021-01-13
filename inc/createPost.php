@@ -39,37 +39,6 @@ if(isset($_POST["upload"])){
 }
 
 
-function imageResizeThump($imageResourceId, $width, $height)
-{
-
-
-    $targetWidth = 500;
-    $targetHeight = 250;
-
-
-    $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
-    imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
-
-
-    return $targetLayer;
-
-}
-
-function imageResizeDash($imageResourceId, $width, $height)
-{
-
-
-    $targetWidth = 1500;
-    $targetHeight = 750;
-
-
-    $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
-    imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
-
-
-    return $targetLayer;
-
-}
 ?>
 <script>
 let slider = document.getElementById("myRange");
