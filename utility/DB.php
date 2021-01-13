@@ -1,5 +1,6 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
 
 class DB
 {
@@ -41,7 +42,8 @@ class DB
                 $users = $sth->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($users as $user) {
                     array_push($result, new User($user["id"], $user["title"], $user["fname"], $user["lname"],
-                        $user["email"], $user["username"], $user["password"], $user["admin"], $user["activated"]));
+                        $user["email"], $user["username"], $user["password"], $user["admin"], $user["activated"],
+                        $user["picture"]));
                 }
             } catch (Exception $e) {
                 echo 'Exception abgefangen: ', $e->getMessage(), "\n";
@@ -56,7 +58,7 @@ class DB
         if ($stmt->execute([$username])) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
-                $row["password"], $row["admin"], $row["activated"]);
+                $row["password"], $row["admin"], $row["activated"], $row["picture"]);
         }
         return null;
     }
@@ -64,7 +66,8 @@ class DB
     public function registerUser(User $user): bool
     {
         $stmt = $this->conn->prepare("INSERT INTO `user` (title, fname, lname, username, password, email, 
-                                        `admin`, `activated`) VALUES (?, ?, ?, ?, ?, ?, 0, 1)");
+                                        `admin`, `activated`, picture) 
+                                        VALUES (?, ?, ?, ?, ?, ?, 0, 1, 'res/img/user.svg')");
         $title = $user->getTitle();
         $fname = $user->getFname();
         $lname = $user->getLname();
@@ -94,6 +97,23 @@ class DB
             return false;
         } else {
             return true;
+        }
+    }
+
+    public function uploadIcon(array $files) : bool
+    {
+        if(isset($_POST["upload"])) {
+            $stmt = $this->conn->prepare("UPDATE `user` SET picture=? WHERE username=?");
+            $path = 'pictures/thumbnail/' . $_SESSION["username"] . ".". pathinfo($files['picture']['name'],
+                    PATHINFO_EXTENSION);
+            Upload::uploadProfilePicture($files);
+            if (!$stmt->execute([$path, $_SESSION["username"]])) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
         }
     }
     

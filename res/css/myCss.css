@@ -1,93 +1,95 @@
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
-#LoginBody{
+#LoginBody {
     height: 100%;
     font-family: 'Numans', sans-serif;
 }
 
-.container{
+.container {
     height: 100%;
     align-content: center;
 }
 
-.card{
+.card {
     height: 370px;
     margin-top: auto;
     margin-bottom: auto;
     width: 400px;
-    background-color: rgba(0,0,0,0.5) !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
-.card-header h3{
+.card-header h3 {
     color: white;
 }
 
-.social_icon{
+.social_icon {
     position: absolute;
     right: 20px;
     top: -45px;
 }
 
-.input-group-prepend span{
+.input-group-prepend span {
     width: 50px;
     background-color: #FFC312;
     color: black;
-    border:0 !important;
+    border: 0 !important;
 }
 
-input:focus{
+input:focus {
     outline: 0 0 0 0 !important;
     box-shadow: 0 0 0 0 !important;
 
 }
 
-.login_btn{
+.login_btn {
     color: black;
     background-color: #FFC312 !important;
     width: 100px;
 }
 
-.forgot_btn{
+.forgot_btn {
     color: black;
     background-color: #FFC312 !important;
     width: 200px;
 }
 
-.login_btn:hover{
+.login_btn:hover {
     color: black;
     background-color: white;
 }
 
-.links{
+.links {
     color: white;
 }
 
-.links a{
+.links a {
     margin-left: 4px;
 }
 
-.container{
+.container {
     margin: 2% 2% 2% 2%;
 }
-.pic{
+
+.pic {
     height: 20%;
-    width:15%;
+    width: 15%;
     margin-top: 2%;
     margin-left: 5px;
     border: 2px solid black;
-    }
+}
 
-.ldl{
-    margin-top:1px;
-    height:10%;
+.ldl {
+    margin-top: 1px;
+    height: 10%;
     width: 10%;
 }
+
 .slidecontainer {
     margin-top: 2px;
     width: 100%;
-  }
-  
-  .slider {
+}
+
+.slider {
     -webkit-appearance: none;
     width: 4%;
     height: 20px;
@@ -96,26 +98,30 @@ input:focus{
     opacity: 0.7;
     -webkit-transition: .2s;
     transition: opacity .2s;
-  }
-  
-  .slider:hover {
+}
+
+.slider:hover {
     opacity: 1;
-  }
-  
-  .slider::-webkit-slider-thumb {
+}
+
+.slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 25px;
     height: 25px;
     background: #4CAF50;
     cursor: pointer;
-  }
-  
-  .imgdash{
-                width:70%;
-                height:200px;
-                margin-top: 2px;
-                border: 2px solid gray;
+}
 
-  }
+.imgdash {
+    width: 70%;
+    height: 200px;
+    margin-top: 2px;
+    border: 2px solid gray;
+
+}
+
+#previewImg, #profilePic {
+    border-radius: 50%;
+}
   

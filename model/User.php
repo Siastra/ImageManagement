@@ -5,9 +5,10 @@ class User
 {
     private bool $admin, $activated;
     private int $id;
+    private ?string $picture;
     private string $title, $fname, $lname, $username, $password, $email;
 
-    public function __construct($id, $title, $fname, $lname, $email, $username, $password, $admin, $activated)
+    public function __construct($id, $title, $fname, $lname, $email, $username, $password, $admin, $activated, $picture)
     {
         $this->email = $email;
         $this->fname = $fname;
@@ -18,6 +19,7 @@ class User
         $this->activated = intval($activated);
         $this->id = $id;
         $this->password = $password;
+        $this->picture = $picture;
     }
 
 
@@ -163,6 +165,22 @@ class User
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    /**
+     * @param string $picture
+     */
+    public function setPicture(string $picture): void
+    {
+        $this->picture = $picture;
     }
 
 }

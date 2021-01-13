@@ -35,9 +35,11 @@
         <ul class="navbar-nav mr-auto">
             <?php
             if(isset($_SESSION["username"])) {
+                $user = $db->getUser($_SESSION["username"]);
                 echo '<li><a class="nav-link" href="index.php?section=create">
                        <img src="res/img/upload.svg" alt="Upload icon" width="25px"> Upload Post</a></li>';
-            }elseif(isset($_SESSION["username"]) && $db->getUser($_SESSION["username"])->isAdmin()) {
+            }
+            if(isset($_SESSION["username"]) && $user->isAdmin()) {
                 echo '<li class="nav-item active">
                     <a class="nav-link" href="index.php?section=view">User Administration</a>
                 </li>';
@@ -48,13 +50,13 @@
         <ul class="navbar-nav navbar-right">
             <?php
             if (isset($_SESSION["username"]) && (isset($_GET["section"]) && ($_GET["section"] == "userPage"))) {
-                echo '<li><a class="nav-link" href="index.php?section=register&edit=true&id=' . $_SESSION["username"] .
-                    '"><img src="res/img/edit.svg" alt="Edit icon" width="25px">
+                echo '<li><a class="nav-link" href="index.php?section=register&edit=true">
+                        <img src="res/img/edit.svg" alt="Edit icon" width="25px">
                          Edit profile</a></li>';
-            }else if (isset($_SESSION["username"]) && (isset($_GET["section"]) && ($_GET["section"] != "userPage"))) {
-                echo '<li><a class="nav-link" href="index.php?section=userPage"><img src="res/img/user.svg" 
-                        alt="User icon" width="25px"> ' .
-                    (($db->getUser($_SESSION["username"])->isAdmin()) ? '<b>[admin]</b>' : '') .
+            }else if (isset($_SESSION["username"])) {
+                echo '<li><a class="nav-link" href="index.php?section=userPage"><img src="' . $user->getPicture() . '" 
+                        alt="User icon" width="25px" height="25px" id="profilePic"> ' .
+                    (($user->isAdmin()) ? '<b>[admin]</b>' : '') .
                     $_SESSION["username"] . '\'s Profile</a></li>';
             }
             if(isset($_SESSION["username"])) {
@@ -86,6 +88,8 @@
         echo MsgFactory::getWarning("Registration failed! Username not valid or exists!");
     }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && ($_GET["type"] == "edit")) {
         echo MsgFactory::getWarning("Update failed! Password not valid!");
+    }elseif (isset($_GET["action"]) && ($_GET["action"] == "UploadFail") && ($_GET["type"] == "edit")) {
+        echo MsgFactory::getWarning("Update failed! Image upload failed!");
     }
 
     //Section- Management
