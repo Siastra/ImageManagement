@@ -67,7 +67,7 @@ class DB
     {
         $stmt = $this->conn->prepare("INSERT INTO `user` (title, fname, lname, username, password, email, 
                                         `admin`, `activated`, picture) 
-                                        VALUES (?, ?, ?, ?, ?, ?, 0, 1, 'res/img/user.svg')");
+                                        VALUES (?, ?, ?, ?, ?, ?, 0, 1, 'res/images/user.svg')");
         $title = $user->getTitle();
         $fname = $user->getFname();
         $lname = $user->getLname();
@@ -100,14 +100,22 @@ class DB
         }
     }
 
-    public function uploadIcon(array $files) : bool
+    public function uploadIcon(array $files): bool
     {
-        if(isset($_POST["upload"])) {
+        if (isset($_POST["upload"])) {
             $stmt = $this->conn->prepare("UPDATE `user` SET picture=? WHERE username=?");
-            $path = 'pictures/thumbnail/' . $_SESSION["username"] . ".". pathinfo($files['picture']['name'],
-                    PATHINFO_EXTENSION);
+            $pathThumb = 'pictures/thumbnail/' . $_SESSION["username"] . ".";
+            $pathFull = 'pictures/full/' . $_SESSION["username"] . ".";
+            if (file_exists($_SERVER["DOCUMENT_ROOT"] . '/' . $pathThumb . 'jpg')) {
+                unlink($_SERVER["DOCUMENT_ROOT"] . '/' . $pathThumb . 'jpg');
+                unlink($_SERVER["DOCUMENT_ROOT"] . '/' . $pathFull . 'jpg');
+            } elseif (file_exists($_SERVER["DOCUMENT_ROOT"] . '/' . $pathThumb . 'png')) {
+                unlink($_SERVER["DOCUMENT_ROOT"] . '/' . $pathThumb . 'png');
+                unlink($_SERVER["DOCUMENT_ROOT"] . '/' . $pathFull . 'png');
+            }
             Upload::uploadProfilePicture($files);
-            if (!$stmt->execute([$path, $_SESSION["username"]])) {
+            if (!$stmt->execute([$pathThumb . pathinfo($files['picture']['name'],
+                    PATHINFO_EXTENSION), $_SESSION["username"]])) {
                 return false;
             } else {
                 return true;
@@ -121,14 +129,14 @@ class DB
     {
         $size = count($tag);
         $sql = $this->conn->prepare("SELECT `name` FROM `tag` WHERE `name`  = ?");
-        for($i=0;$i<$size;$i++){
-            if($tag[$i]!=NULL){
-            $sql->execute([$tag[$i]]);
-            $result = $sql->fetch();
-            if ($result == FALSE) {
-                $sql2 = $this->conn->prepare("INSERT INTO `tag`(`name`) VALUES (?)");
-                $sql2->execute([$tag[$i]]);
-            }
+        for ($i = 0; $i < $size; $i++) {
+            if ($tag[$i] != NULL) {
+                $sql->execute([$tag[$i]]);
+                $result = $sql->fetch();
+                if ($result == FALSE) {
+                    $sql2 = $this->conn->prepare("INSERT INTO `tag`(`name`) VALUES (?)");
+                    $sql2->execute([$tag[$i]]);
+                }
             }
 
         }
@@ -136,16 +144,16 @@ class DB
         return $result;
     }
 
-    public function setTag(int $p_id, $tag) : bool
+    public function setTag(int $p_id, $tag): bool
     {
         $size = count($tag);
         $sql2 = $this->conn->prepare("INSERT INTO `is_assigned`(`post_id`,`tag_name`) VALUES (?,?)");
-        for($i=0;$i<$size;$i++){
-            if($tag[$i]!=NULL){
-            $sql2->execute([$p_id, $tag[$i]]);
+        for ($i = 0; $i < $size; $i++) {
+            if ($tag[$i] != NULL) {
+                $sql2->execute([$p_id, $tag[$i]]);
             }
         }
-      return true;
+        return true;
     }
 
     public function getPostId(string $path): int
@@ -156,7 +164,7 @@ class DB
         return $result["id"];
     }
 
-    public function createPost(string $path, $restricted) : int
+    public function createPost(string $path, $restricted): int
     {
         $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`)
          VALUES (?,?,?,?)");
@@ -167,7 +175,7 @@ class DB
             $sql->execute([NULL, $path, $restricted, $id]);
             return $this->getPostId($path);
         } catch (PDOException $e) {
-                throw $e;
+            throw $e;
         }
     }
 

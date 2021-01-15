@@ -4,15 +4,16 @@
 class Upload
 {
 
-    public static function uploadPost(array $files) : bool {
+    public static function uploadPost(array $files): bool
+    {
         $file = $files['picture']['tmp_name'];
         $sourceProperties = getimagesize($file);
         $fileNewName = explode(".", $files['picture']['name'])[0];
-        $folderPathDash =  'pictures/dashboard/';
+        $folderPathDash = 'pictures/dashboard/';
         $folderPathThumb = 'pictures/thumbnail/';
         $folderPathFull = 'pictures/full/';
         $fullPathDash = getcwd() . "/" . $folderPathDash;
-        $fullPathThumb = getcwd() . "/".$folderPathThumb;
+        $fullPathThumb = getcwd() . "/" . $folderPathThumb;
         $fullPath = getcwd() . "/" . $folderPathFull;
         $ext = pathinfo($files['picture']['name'], PATHINFO_EXTENSION);
         $imageType = $sourceProperties[2];
@@ -24,10 +25,10 @@ class Upload
             case IMAGETYPE_PNG:
                 $imageResourceId = imagecreatefrompng($file);
                 $targetLayer = self::imageResizeThump($imageResourceId, $sourceProperties[0], $sourceProperties[1]);
-                imagepng($targetLayer, $fullPathThumb . $fileNewName . ".". $ext);
+                imagepng($targetLayer, $fullPathThumb . $fileNewName . "." . $ext);
                 $imageResourceId1 = imagecreatefrompng($file);
                 $targetLayer1 = self::imageResizeDash($imageResourceId1, $sourceProperties[0], $sourceProperties[1]);
-                imagepng($targetLayer1, $fullPathDash . $fileNewName . ".". $ext);
+                imagepng($targetLayer1, $fullPathDash . $fileNewName . "." . $ext);
 
                 break;
 
@@ -35,10 +36,10 @@ class Upload
             case IMAGETYPE_JPEG:
                 $imageResourceId = imagecreatefromjpeg($file);
                 $targetLayer = self::imageResizeThump($imageResourceId, $sourceProperties[0], $sourceProperties[1]);
-                imagejpeg($targetLayer, $fullPathThumb . $fileNewName .".". $ext);
+                imagejpeg($targetLayer, $fullPathThumb . $fileNewName . "." . $ext);
                 $imageResourceId1 = imagecreatefromjpeg($file);
                 $targetLayer1 = self::imageResizeDash($imageResourceId1, $sourceProperties[0], $sourceProperties[1]);
-                imagejpeg($targetLayer1, $fullPathDash . $fileNewName .".".  $ext);
+                imagejpeg($targetLayer1, $fullPathDash . $fileNewName . "." . $ext);
 
                 break;
 
@@ -52,51 +53,14 @@ class Upload
         move_uploaded_file($file, $fullPath . $fileNewName . "." . $ext);
         return true;
     }
-    private static function imageResizeThump($imageResourceId, $width, $height)
-{
 
-
-    $targetWidth = 500;
-    $targetHeight = 250;
-
-
-    $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
-    imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
-
-
-    return $targetLayer;
-
-}
-
-private static function imageResizeDash($imageResourceId, $width, $height)
-{
-
-
-
-    if($height>(2*$width)){
-        $targetWidth = 750;
-        $targetHeight = 1500;
-    }else{
-        $targetWidth = 1500;
-        $targetHeight = 750;
-    }
-
-
-    $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);
-    imagecopyresampled($targetLayer, $imageResourceId, 0, 0, 0, 0, $targetWidth, $targetHeight, $width, $height);
-
-
-    return $targetLayer;
-
-}
-
-    public static function uploadProfilePicture(array $files) : bool
+    public static function uploadProfilePicture(array $files): bool
     {
         $file = $files['picture']['tmp_name'];
         $sourceProperties = getimagesize($file);
         $folderPathThumb = 'pictures/thumbnail/';
         $folderPathFull = 'pictures/full/';
-        $fullPathThumb = $_SERVER['DOCUMENT_ROOT'] . "/".$folderPathThumb;
+        $fullPathThumb = $_SERVER['DOCUMENT_ROOT'] . "/" . $folderPathThumb;
         $fullPath = $_SERVER['DOCUMENT_ROOT'] . "/" . $folderPathFull;
         $ext = pathinfo($files['picture']['name'], PATHINFO_EXTENSION);
         $imageType = $sourceProperties[2];
@@ -108,14 +72,14 @@ private static function imageResizeDash($imageResourceId, $width, $height)
             case IMAGETYPE_PNG:
                 $imageResourceId = imagecreatefrompng($file);
                 $targetLayer = self::imageResizeThump($imageResourceId, $sourceProperties[0], $sourceProperties[1]);
-                imagepng($targetLayer, $fullPathThumb . $_SESSION["username"] . ".". $ext);
+                imagepng($targetLayer, $fullPathThumb . $_SESSION["username"] . "." . $ext);
                 break;
 
 
             case IMAGETYPE_JPEG:
                 $imageResourceId = imagecreatefromjpeg($file);
                 $targetLayer = self::imageResizeThump($imageResourceId, $sourceProperties[0], $sourceProperties[1]);
-                imagejpeg($targetLayer, $fullPathThumb . $_SESSION["username"] .".". $ext);
+                imagejpeg($targetLayer, $fullPathThumb . $_SESSION["username"] . "." . $ext);
                 break;
 
 
@@ -132,8 +96,8 @@ private static function imageResizeDash($imageResourceId, $width, $height)
     {
 
 
-        $targetWidth = 250;
-        $targetHeight = 250;
+        $targetWidth = 200;
+        $targetHeight = 200;
 
 
         $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);

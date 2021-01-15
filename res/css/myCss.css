@@ -124,4 +124,16 @@ input:focus {
 #previewImg, #profilePic {
     border-radius: 50%;
 }
+
+.user-header {
+    padding: 5% 0 3% 0;
+    border-bottom: black solid 2px;
+    margin-bottom: 3%;
+}
+
+.user-picture {
+    margin: 0 0 0 15%;
+    border-radius: 50%;
+}
+
   

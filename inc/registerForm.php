@@ -58,7 +58,7 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
                 </div>
                 <div class="form-group col">
                     <label for="previewImg">Preview</label><br><br>
-                    <img id="previewImg" src="' . $user->getPicture() . '" alt="Placeholder" width="150px"  
+                    <images id="previewImg" src="' . $user->getPicture() . '" alt="Placeholder" width="150px"  
                     height="150px">
                 </div>
             </div>
