@@ -166,8 +166,8 @@ class DB
 
     public function createPost(string $path, $restricted): int
     {
-        $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`)
-         VALUES (?,?,?,?)");
+        $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`, `createdAt`)
+         VALUES (?,?,?,?, LOCALTIMESTAMP())");
 
         $id = $this->getUser($_SESSION["username"])->getId();
 
