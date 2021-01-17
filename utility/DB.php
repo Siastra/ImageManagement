@@ -277,6 +277,14 @@ class DB
         }
     }
 
+    public function showRatings($path, $type): int
+    {
+        $postid = $this->getPostId($path);
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM `rating` WHERE post_id = ? AND type = ?");
+        $stmt->execute([$postid, $type]);
+        return $stmt->fetchColumn();
+    }
+
     public function addRating($path, $type){
         $id = $this->getUser($_SESSION["username"])->getId();
         $postid = $this->getPostId($path);
