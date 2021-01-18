@@ -192,7 +192,6 @@ class DB
     {
         $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`, `createdAt`)
          VALUES (?,?,?,?, LOCALTIMESTAMP())");
-
         $id = $this->getUser($_SESSION["username"])->getId();
 
         try {
@@ -302,4 +301,26 @@ class DB
         }
     }
 
+    public function showRatings($path, $type): int
+    {
+        $postid = $this->getPostId($path);
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM `rating` WHERE post_id = ? AND type = ?");
+        $stmt->execute([$postid, $type]);
+        return $stmt->fetchColumn();
+    }
+
+    public function addRating($path, $type){
+        $id = $this->getUser($_SESSION["username"])->getId();
+        $postid = $this->getPostId($path);
+        $stmt = $this->conn->prepare("SELECT * FROM `rating` WHERE user_id = ? AND post_id = ?");
+        $stmt->execute([$id, $postid]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($result){
+            $delete = $this->conn->prepare("DELETE FROM `rating` WHERE user_id = ? AND post_id = ?");
+            $delete->execute([$id,$postid]);
+        }
+        $sql = $this->conn->prepare("INSERT INTO `rating`(`user_id`, `post_id`, `type`)
+         VALUES (?,?,?)");
+        $sql->execute([$id, $postid, $type]);
+    }
 }

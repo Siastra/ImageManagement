@@ -122,7 +122,12 @@
     }
 ?>
 <script src="res/js/lightbox-plus-jquery.js"></script>
+<<<<<<< HEAD
 <script src="res/js/bootstrap.bundle.min.js" ></script>
 
+=======
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+>>>>>>> 4945386075ce4a3df854c93515c7d3b06c2ce3f7
 </body>
+
 </html>

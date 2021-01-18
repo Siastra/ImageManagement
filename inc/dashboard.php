@@ -64,4 +64,23 @@ foreach($post2 as $dash) {
       ?>    
        
       
+  
+    <script>
+        function upvote(x) {
+            $.ajax({
+                type: "POST",
+                url: 'ajax/upvote.php',
+                data:{action:'upvote', path:x},
+            });
+        }
+    </script>
+    <script>
+        function downVote(x) {
+            $.ajax({
+                type: "POST",
+                url: 'ajax/downvote.php',
+                data:{action:'downvote', path:x},
+            });
+        }
+    </script>
 </div>
