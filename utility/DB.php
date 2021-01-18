@@ -241,17 +241,20 @@ class DB
         $sql->execute([$id]);
     }
 
-    public function showDashboardAll(): array
+    public function showDashboardPublic(): array
     {
-        $dashAll = array();
-        $sql = "SELECT `path` FROM `post`";
-
-        $result = $this->conn->query($sql);
-        if ($result->rowCount() > 0) {
-            $dashAll = $result->fetchAll();
+        $result = array();
+        $sql = $this->conn->prepare("SELECT * FROM `post`");
+        $sql->execute();
+        if ($sql->rowCount() > 0) {
+            $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($posts as $post) {
+                array_push($result, new Post($post["id"], $post["path"], $post["restricted"],
+                    $post["user_id"], $post["createdAt"]));
+            }
         }
 
-        return $dashAll;
+        return $result;
     }
 
     public function getPostsByUserID(int $id): array
@@ -274,17 +277,20 @@ class DB
         return $result;
     }
 
-    public function showDashboardPublic(): array
+    public function showDashboardPrivate(): array
     {
-        $dashPub = array();
-        $sql = "SELECT `path` FROM `post` WHERE `restricted`=0";
-
-        $result = $this->conn->query($sql);
-        if ($result->rowCount() > 0) {
-            $dashPub = $result->fetchAll();
+        $result = array();
+        $sql = $this->conn->prepare("SELECT * FROM `post` WHERE `restricted`=0");
+        $sql->execute();
+        if ($sql->rowCount() > 0) {
+            $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($posts as $post) {
+                array_push($result, new Post($post["id"], $post["path"], $post["restricted"],
+                    $post["user_id"], $post["createdAt"]));
+            }
         }
 
-        return $dashPub;
+        return $result;
     }
 
     public function updateUser(User $user): bool
