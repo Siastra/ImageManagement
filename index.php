@@ -40,7 +40,7 @@
                        <img src="res/images/upload.svg" alt="Upload icon" width="25px">Upload Post</a></li>';
             }
             if(isset($_SESSION["username"]) && $user->isAdmin()) {
-                echo '<li class="nav-item active">
+                echo '<li class="nav-item">
                     <a class="nav-link" href="index.php?section=view">
                     <img src="res/images/administrator.svg" alt="Administration icon" width="25px">User Administration</a>
                 </li>';
@@ -126,5 +126,14 @@
 <script src="res/js/lightbox-plus-jquery.js"></script>
 <script src="res/js/bootstrap.bundle.min.js" ></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var url = window.location;
+        $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
+        $('ul.nav a').filter(function() {
+            return this.href == url;
+        }).parent().addClass('active');
+    });
+</script>
 </body>
 </html>

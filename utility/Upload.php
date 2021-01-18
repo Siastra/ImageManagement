@@ -111,9 +111,13 @@ class Upload
     private static function imageResizeDash($imageResourceId, $width, $height)
     {
 
-
-        $targetWidth = 1500;
-        $targetHeight = 750;
+        if (($width * 1.5) < $height) {
+            $targetWidth = 600;
+            $targetHeight = 800;
+        } else {
+            $targetWidth = 1500;
+            $targetHeight = 750;
+        }
 
 
         $targetLayer = imagecreatetruecolor($targetWidth, $targetHeight);

@@ -28,7 +28,7 @@
         echo "</div></div>";
 
 
-        echo "<div class=row>";
+        echo "<div class=\"row picBackground\">";
         echo "<a class=\" col-12\" href=" . $post->getFullPath() . " data-lightbox=" . $post->getName() .
             " data-title=" . $post->getName() . ">";
         echo "<img class=img-fluid src=" . $post->getDashPath() . " alt=" . $post->getName() . ">";

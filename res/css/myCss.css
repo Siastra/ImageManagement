@@ -144,6 +144,12 @@ input:focus {
 .post{
     margin-bottom: 5%;
 }
+
+.picBackground {
+    background-color: #d0c7ff;
+    text-align: center;
+}
+
 .profilepic{
     max-width: 100px;
     max-height:25px ;
