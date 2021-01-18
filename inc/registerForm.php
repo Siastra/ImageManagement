@@ -8,7 +8,8 @@ if (isset($_POST["pw"]) && ($_POST["pw"] != $_POST["pwRepeat"])) {
     echo MsgFactory::getWarning("Please make sure your password matches!");
 } else if ((isset($_POST["type"]) && $_POST["type"] == "update") || //Update is performed
     (isset($_POST["pw"]) && ($_POST["pw"] == $_POST["pwRepeat"]))) { //Password-Update or insert is performed
-    echo '<form id="myForm" action="inc/backend.php" method="post" enctype="multipart/form-data">';
+    echo '<form id="myForm" action="' . $_SERVER["DOCUMENT_ROOT"] . '/inc/backend.php" 
+    method="post" enctype="multipart/form-data">';
     foreach ($_POST as $a => $b) {
         echo '<input type="hidden" name="' . $a . '" value="' . $b . '">';
     }

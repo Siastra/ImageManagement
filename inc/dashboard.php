@@ -3,7 +3,7 @@
 <?php
     include_once "utility/DB.php";
     $db = new DB();
-    if($_SESSION["username"]!=""){
+    if(isset($_SESSION["username"])){
         $post = $db->showDashboardAll();
     }else{
         $post = $db->showDashboardPublic();
@@ -26,8 +26,7 @@ echo "</div>"
                 data:{action:'upvote', path:x},
             });
         }
-    </script>
-    <script>
+
         function downVote(x) {
             $.ajax({
                 type: "POST",

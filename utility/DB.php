@@ -1,5 +1,6 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
 
 class DB
@@ -59,6 +60,27 @@ class DB
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
                 $row["password"], $row["admin"], $row["activated"], $row["picture"]);
+        }
+        return null;
+    }
+
+    public function getUserByID(int $id): ?User
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM `user` WHERE id = ?");
+        if ($stmt->execute([$id])) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
+                $row["password"], $row["admin"], $row["activated"], $row["picture"]);
+        }
+        return null;
+    }
+
+    public function getPostById(int $id): ?Post
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM `post` WHERE id = ?");
+        if ($stmt->execute([$id])) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return new Post($row["id"], $row["path"], $row["restricted"], $row["user_id"], $row["createdAt"]);
         }
         return null;
     }
@@ -178,6 +200,23 @@ class DB
         }
     }
 
+    public function deletePostById(int $id) : void
+    {
+        $post = $this->getPostById($id);
+        unlink($_SERVER["DOCUMENT_ROOT"] . "/" . $post->getDashPath());
+        unlink($_SERVER["DOCUMENT_ROOT"] . "/" . $post->getThumbnailPath());
+        unlink($_SERVER["DOCUMENT_ROOT"] . "/" . $post->getFullPath());
+
+        $sql = $this->conn->prepare("DELETE FROM `rating` WHERE `post_id`=?");
+        $sql->execute([$id]);
+        $sql = $this->conn->prepare("DELETE FROM `comment` WHERE `post_id`=?");
+        $sql->execute([$id]);
+        $sql = $this->conn->prepare("DELETE FROM `is_assigned` WHERE `post_id`=?");
+        $sql->execute([$id]);
+        $sql = $this->conn->prepare("DELETE FROM `post` WHERE `id`=?");
+        $sql->execute([$id]);
+    }
+
     public function showDashboardAll(): array
     {
         $dashAll = array();
@@ -191,17 +230,24 @@ class DB
         return $dashAll;
     }
 
-    public function showDashboardSelf(): array
+    public function getPostsByUserID(int $id): array
     {
-        $dashSelf = array();
-        $u_id = $this->getUser($_SESSION["username"])->getId();
-        $sql = "SELECT `path` FROM `post` WHERE `user_id`=$u_id";
-        $result = $this->conn->query($sql);
-        if ($result->rowCount() > 0) {
-            $dashSelf = $result->fetchAll();
+        $result = array();
+        $sql = $this->conn->prepare("SELECT * FROM `post` WHERE `user_id`=?");
+        $sql->execute([$id]);
+        if ($sql->rowCount() > 0) {
+            // output data of each row
+            try {
+                $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($posts as $post) {
+                    array_push($result, new Post($post["id"], $post["path"], $post["restricted"],
+                        $post["user_id"], $post["createdAt"]));
+                }
+            } catch (Exception $e) {
+                echo 'Exception abgefangen: ', $e->getMessage(), "\n";
+            }
         }
-
-        return $dashSelf;
+        return $result;
     }
 
     public function showDashboardPublic(): array

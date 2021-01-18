@@ -12,14 +12,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Author: Marcel Glavanits,
+    Sebastian Schramm, Lukas Koller | A basic social network">
     <link rel="stylesheet" href="res/css/myCss.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="res/css/lightbox.css" rel="stylesheet">
-
 
     <title>Usermanagement</title>
 </head>
@@ -36,11 +37,12 @@
             if(isset($_SESSION["username"])) {
                 $user = $db->getUser($_SESSION["username"]);
                 echo '<li><a class="nav-link" href="index.php?section=create">
-                       <img src="res/images/upload.svg" alt="Upload icon" width="25px"> Upload Post</a></li>';
+                       <img src="res/images/upload.svg" alt="Upload icon" width="25px">Upload Post</a></li>';
             }
             if(isset($_SESSION["username"]) && $user->isAdmin()) {
                 echo '<li class="nav-item active">
-                    <a class="nav-link" href="index.php?section=view">User Administration</a>
+                    <a class="nav-link" href="index.php?section=view">
+                    <img src="res/images/administrator.svg" alt="Administration icon" width="25px">User Administration</a>
                 </li>';
             }
 
@@ -50,8 +52,7 @@
             <?php
             if (isset($_SESSION["username"]) && (isset($_GET["section"]) && ($_GET["section"] == "userPage"))) {
                 echo '<li><a class="nav-link" href="index.php?section=register&edit=true">
-                        <img src="res/images/edit.svg" alt="Edit icon" width="25px">
-                         Edit profile</a></li>';
+                        <img src="res/images/edit.svg" alt="Edit icon" width="25px">Edit profile</a></li>';
             }else if (isset($_SESSION["username"])) {
                 echo '<li><a class="nav-link" href="index.php?section=userPage"><img src="' . $user->getPicture() . '" 
                         alt="User icon" width="25px" height="25px" id="profilePic"> ' .
@@ -74,7 +75,7 @@
         </ul>
     </div>
 </nav>
-
+<header>
 <?php
     //Message Banner
     if(isset($_GET["action"]) && ($_GET["action"] == "success")) {
@@ -90,7 +91,10 @@
     }elseif (isset($_GET["action"]) && ($_GET["action"] == "UploadFail") && ($_GET["type"] == "edit")) {
         echo MsgFactory::getWarning("Update failed! Image upload failed!");
     }
-
+    ?>
+</header>
+<main>
+<?php
     //Section- Management
     if (isset($_GET["section"])) {
         switch ($_GET["section"]) {
@@ -118,8 +122,8 @@
         }
     }
 ?>
+</main>
 <script src="res/js/lightbox-plus-jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 </body>
-
 </html>
