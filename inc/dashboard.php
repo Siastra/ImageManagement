@@ -31,17 +31,17 @@
         echo "<div class=row>";
         echo "<a class=\" col-12\" href=" . $post->getFullPath() . " data-lightbox=" . $post->getName() .
             " data-title=" . $post->getName() . ">";
-        echo "<img class=img-fluid src=" . $post->getDashPath() . ">";
+        echo "<img class=img-fluid src=" . $post->getDashPath() . " alt=" . $post->getName() . ">";
         echo "</a>";
         echo "</div>";
 
         echo "<div class=row>";
         echo '<div class="col-1">';
-        echo "<img  src=\"res/images/thumb-up.svg\" />";
+        echo "<img alt=\"Like Button\" src=\"res/images/thumb-up.svg\" />";
         echo "<p>5</p>";
         echo '</div>';
         echo '<div class="col-1">';
-        echo "<img   src=\"res/images/thumb-down.svg\"/>";
+        echo "<img alt=\"Dislike Button\" src=\"res/images/thumb-down.svg\"/>";
         echo "<p>4</p>";
         echo "</div>";
         echo "<div class=col-4>";
