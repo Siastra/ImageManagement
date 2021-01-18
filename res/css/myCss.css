@@ -79,9 +79,8 @@ input:focus {
 }
 
 .ldl {
-    margin-top: 1px;
-    height: 10%;
-    width: 10%;
+    min-width: 75px;
+    min-height: 75px;
 }
 
 .slidecontainer {
@@ -136,4 +135,16 @@ input:focus {
     border-radius: 50%;
 }
 
-  
+.commsection{
+    overflow:auto;
+    height:15%;
+}
+.post{
+    margin-bottom: 5%;
+}
+.profilepic{
+    max-width: 100px;
+    max-height:25px ;
+    border-radius: 50%;
+    margin-bottom: 2%;
+}
