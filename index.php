@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="res/css/myCss.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="res/css/bootstrap.min.css">
     <link href="res/css/lightbox.css" rel="stylesheet">
 
     <title>Usermanagement</title>
@@ -119,11 +119,19 @@
             case 'userPage':
                 include "inc/userPage.php";
                 break;
+            default :
+                include "inc/dashboard.php";
+                break;
         }
     }
 ?>
 </main>
 <script src="res/js/lightbox-plus-jquery.js"></script>
+<<<<<<< HEAD
+<script src="res/js/bootstrap.bundle.min.js" ></script>
+
+=======
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+>>>>>>> 4945386075ce4a3df854c93515c7d3b06c2ce3f7
 </body>
 </html>

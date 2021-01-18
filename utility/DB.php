@@ -147,6 +147,30 @@ class DB
         }
     }
 
+    public function getPicCreaterId($path)   {
+
+        $sql=$this->conn->prepare("SELECT `user_id` FROM `post` WHERE `path`=?");
+        $sql->execute([$path]);
+        $id=$sql->fetch();
+        return $id;
+    }
+
+    public function getPostPic($picuserid){
+        $sql =$this->conn->prepare("SELECT `picture` from `user` WHERE `id` = ?");
+        $sql->execute([$picuserid["user_id"]]);
+        $profilpic = $sql->fetch();
+        return $profilpic["picture"];
+    }
+    public function getPostCreater($picuserid){
+
+
+        $sql=$this->conn->prepare("SELECT `username` FROM `user` WHERE `id` = ?");
+        $sql->execute([$picuserid["user_id"]]);
+        $creatername=$sql->fetch();
+
+
+        return $creatername["username"];
+    }
     public function checkTag($tag)
     {
         $size = count($tag);
@@ -321,6 +345,14 @@ class DB
                 return false;
             }
         }
+    }
+
+    public function showRatings($path, $type): int
+    {
+        $postid = $this->getPostId($path);
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM `rating` WHERE post_id = ? AND type = ?");
+        $stmt->execute([$postid, $type]);
+        return $stmt->fetchColumn();
     }
 
     public function addRating($path, $type){
