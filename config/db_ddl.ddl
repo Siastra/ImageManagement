@@ -22,6 +22,7 @@ CREATE TABLE is_assigned (
 
 CREATE TABLE Post (
     id          INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    title       VARCHAR(64) NOT NULL,
     path        VARCHAR(128) NOT NULL,
     restricted  CHAR(1) NOT NULL,
     user_id     INTEGER NOT NULL,

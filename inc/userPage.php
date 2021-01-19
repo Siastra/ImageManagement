@@ -4,7 +4,7 @@
     $posts = $db->getPostsByUserID($user->getId());
 ?>
 
-<section class="container-fluid">
+<section class="container">
     <div class="row user-header">
         <div class="col-3">
             <img src="<?php echo $user->getPicture(); ?>" alt="Profile Picture" class="img-fluid user-picture">
@@ -20,13 +20,12 @@
     </div>
 
     <?php
-
         for ($i = 0; $i < sizeof($posts); $i++) {
-            if (($i % 6) == 0) {
-                echo '<div class="row galleryRow row-cols-auto">';
+            if ($i == 0) {
+                echo '<div class="galleryRow row">';
             }
 
-            echo '<div class="col galleryItem">
+            echo '<div class="galleryItem">
                     <div class="row itemHeader">
                         <input type="checkbox" ' . (($posts[$i]->getRestricted()) ? '' : 'checked') . ' 
                         data-toggle="toggle" data-on="Public" data-off="Restricted" 
@@ -44,9 +43,6 @@
                     </div>
                 </div>';
             if (($i == (sizeof($posts)-1)) && (sizeof($posts) % 6) != 0) {
-                echo '<div class="offset-' . (sizeof($posts) % 6) . '"></div>';
-            }
-            if (($i % 6) == 5) {
                 echo '</div>';
             }
         }

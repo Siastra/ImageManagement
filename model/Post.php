@@ -4,18 +4,19 @@
 class Post
 {
     private int $id, $restricted;
-    private string $path;
+    private string $path, $title;
     private User $user;
     private DateTime $date;
 
-public function __construct(int $id, string $path, int $restricted, int $user, string $date)
+public function __construct(int $id, string $title, string $path, int $restricted, int $user, string $date)
 {
     $db = new DB();
     $this->id = $id;
+    $this->title = $title;
     $this->path = $path;
     $this->restricted = $restricted;
     $this->user = $db->getUserByID($user);
-    $this->date = date_create($date);;
+    $this->date = date_create($date);
 }
 
     /**
@@ -35,6 +36,22 @@ public function __construct(int $id, string $path, int $restricted, int $user, s
     }
 
     /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
      * @param string $path
      */
     public function setPath(string $path): void
@@ -51,9 +68,9 @@ public function __construct(int $id, string $path, int $restricted, int $user, s
     }
 
     /**
-     * @param string $date
+     * @param DateTime $date
      */
-    public function setDate(string $date): void
+    public function setDate(DateTime $date): void
     {
         $this->date = $date;
     }
@@ -104,7 +121,7 @@ public function __construct(int $id, string $path, int $restricted, int $user, s
     }
 
     public function getName(): string {
-        return explode(".", $this->getFilename())[0];
+        return $this->getTitle();
     }
 
     public function getThumbnailPath(): string {

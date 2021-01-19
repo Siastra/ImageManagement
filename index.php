@@ -82,20 +82,40 @@
 </nav>
 <header>
 <?php
-    //Message Banner
-    if(isset($_GET["action"]) && ($_GET["action"] == "success")) {
-        echo MsgFactory::getSuccess("Action performed successfully!");
-    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail1") && (isset($_GET["section"]) && ($_GET["section"] == "login"))) {
-        echo MsgFactory::getWarning("Login failed! Username or password incorrect!");
-    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail2") && (isset($_GET["section"]) && ($_GET["section"] == "login"))) {
+    //Message Banner - Fails
+    if (isset($_GET["fail"]) && ($_GET["fail"] == "updatePasswordFailed")) {
+        echo MsgFactory::getWarning("Password-Update failed!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "updatePasswordFailedWrong")) {
+        echo MsgFactory::getWarning("Password-Update failed! Wrong password given!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "userNotFound")) {
+        echo MsgFactory::getWarning("Password-Update failed! User not found!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "loginUserNotFound")) {
+        echo MsgFactory::getWarning("Login failed! User account does not exist!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "accountDeactivated")) {
         echo MsgFactory::getWarning("Login failed! User account deactivated!");
-    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && (isset($_GET["section"]) && ($_GET["section"] == "register"))) {
-        echo MsgFactory::getWarning("Registration failed! Username not valid or exists!");
-    }elseif (isset($_GET["action"]) && ($_GET["action"] == "fail") && ($_GET["type"] == "edit")) {
-        echo MsgFactory::getWarning("Update failed! Password not valid!");
-    }elseif (isset($_GET["action"]) && ($_GET["action"] == "UploadFail") && ($_GET["type"] == "edit")) {
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "wrongPassword")) {
+        echo MsgFactory::getWarning("Login failed! Password incorrect!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "UploadFail")) {
         echo MsgFactory::getWarning("Update failed! Image upload failed!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "UpdateFail")) {
+        echo MsgFactory::getWarning("Update failed!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "registerFail")) {
+        echo MsgFactory::getWarning("Registration failed! Username not valid or exists!");
     }
+
+    //Message Banner - Successes
+    if(isset($_GET["success"]) && ($_GET["success"] == "update")) {
+        echo MsgFactory::getSuccess("Update on user data performed successfully!");
+    }elseif(isset($_GET["success"]) && ($_GET["success"] == "login")) {
+        echo MsgFactory::getSuccess("Login performed successfully!");
+    }elseif(isset($_GET["success"]) && ($_GET["success"] == "logout")) {
+        echo MsgFactory::getSuccess("Logout performed successfully!");
+    }elseif(isset($_GET["success"]) && ($_GET["success"] == "updatePassword")) {
+        echo MsgFactory::getSuccess("Update on user password performed successfully!");
+    }elseif(isset($_GET["success"]) && ($_GET["success"] == "uploadIcon")) {
+        echo MsgFactory::getSuccess("Upload of user picture performed successfully!");
+    }
+
     ?>
 </header>
 <main>

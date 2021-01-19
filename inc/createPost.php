@@ -1,54 +1,81 @@
-
-<form method="post" action="index.php?section=create" enctype="multipart/form-data">
-	<input type="file" name="picture">
-    <br/>
-    <label for="tags">Tags:</label>
-    <input type="text" placeholder="Tags " name="tags" id="tags" />
-    <br/>
-    <div class="slidecontainer">
-        <label for="myRange">Restriction:</label>
-        <input type="range" min="0" max="1" value="0" class="slider" id="myRange" name="restriction" />
-        <p>Restriction:<span id="demo"></span></p>
-    </div>
-	<input type="submit" name="upload" value="Upload" />
-
-</form>
 <?php
 $db = new DB();
-include_once "utility/DB.php";
-include_once "model/User.php";
-$z=$_SESSION["username"];
-$spath = "pictures\\full\\$z\\";
+if (isset($_POST["upload"])) {
+    $newName = strval($db->getNextPostId());
+    $restricted = ((isset($_POST["restriction"])) ? 0 : 1);
+    $ext = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
+    Upload::uploadPost($_FILES, $newName);
 
+    if (isset($_POST["tags"])) {
 
-if(isset($_POST["upload"])){
-    Upload::uploadPost($_FILES);
+        $tag = $_POST["tags"];
+        $divide = "/[-\s:]/";
+        $tag2 = preg_split($divide, $tag);
+        #
+        $db->checkTag($tag2);
+        $result = $db->createPost($_POST["title"], 'pictures/dashboard/' . $newName . "." . $ext, $restricted);
+        $db->setTag($result, $tag2);
+    }
+    header("Location: index.php?section=dash");
 
-        $restricted = $_POST["restriction"];
-        if(isset($_POST["tags"])){
-          
-            $tag=$_POST["tags"];
-            $divide="/[-\s:]/";
-            $tag2=preg_split($divide,$tag);
-            $db->checkTag($tag2);
-            $result= $db->createPost('pictures/dashboard/' . explode(".", $_FILES['picture']['name'])[0]
-            . "." . (pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION)),$restricted);
-            $db->setTag($result,$tag2);
-
-            
-        }
-        header("Location: index.php?section=dash");
-    
 }
-
-
 ?>
-<script>
-let slider = document.getElementById("myRange");
-let output = document.getElementById("demo");
-output.innerHTML = slider.value;
+    <section class="container">
+        <h1>Upload your post!</h1><br><br>
+        <form method="post" action="index.php?section=create" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col form-group">
+                            <label for="picture">Post image</label><br><br>
+                            <input type="file" id="picture" name="picture" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col form-group">
+                            <label for="title">Title:</label>
+                            <input type="text" placeholder="Title" name="title" id="title" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col form-group">
+                            <label for="tags">Tags:</label>
+                            <input type="text" placeholder="Tags " name="tags" id="tags"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col form-group">
+                            <label for="restriction">Restriction:</label>
+                            <input type="checkbox" data-toggle="toggle" data-on="Public" data-off="Restricted"
+                                   data-onstyle="success" data-offstyle="danger" class="col-1" data-size="small"
+                                   id="restriction" checked name="restriction">
+                        </div>
+                    </div>
+                    <button class="btn btn-success submit" type="submit" name="upload">Upload</button>
+                </div>
+                <div class="form-group col">
+                    <label for="previewPost">Preview</label><br><br>
+                    <img id="previewPost" src="res/images/user.svg" alt="Placeholder" width="450px"
+                         height="450px">
+                </div>
+            </div>
+        </form>
+    </section>
 
-slider.oninput = function() {
-  output.innerHTML = this.value;
-}
-</script>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#previewPost').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]); // convert to base64 string
+            }
+        }
+
+        $("#picture").change(function () {
+            readURL(this);
+        });
+    </script>

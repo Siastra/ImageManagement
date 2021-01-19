@@ -20,11 +20,9 @@ if ($_REQUEST["type"] == "insert") {
         $_REQUEST["username"], $_REQUEST["pwRepeat"], 0, 1, $_REQUEST["picture"]);
 
     if ($db->registerUser($newUser)) {
-        echo "New record created successfully";
         header("Location: ../index.php?action=success");
     } else {
-        echo "Error: Something went wrong!";
-        header("Location: ../index.php?section=register&action=fail");
+        header("Location: ../index.php?section=register&fail=registerFail");
     }
 } elseif ($_REQUEST["type"] == "delete") {
     $db->deleteUser($_REQUEST["id"]);
@@ -34,40 +32,44 @@ if ($_REQUEST["type"] == "insert") {
         $_REQUEST["username"], '', $_REQUEST["email"], 0, 1, NULL);
     $_SESSION["username"] = $_REQUEST["username"]; //if username is updated
     if ($db->updateUser($user)) {
-        echo "Record updated successfully";
-        header("Location: ../index.php?action=success");
+        header("Location: ../index.php?success=update");
     } else {
-        echo "Error updating record";
-        header("Location: ../index.php?type=edit&action=fail");
+        header("Location: ../index.php?section=register&type=edit&fail=updateFail");
     }
 } elseif ($_REQUEST["type"] == "login") {
     switch ($db->loginUser($_REQUEST["username"], $_REQUEST["pw"])) {
         case 0:
-            header("Location: ../index.php?section=login&action=fail1");
+            header("Location: ../index.php?section=login&fail=wrongPassword");
             break;
         case 1:
             $user = $db->getUser($_REQUEST["username"]);
             $_SESSION["username"] = $_REQUEST["username"];
-            header("Location: ../index.php?action=success");
+            header("Location: ../index.php?success=login");
             break;
         case -1:
-            header("Location: ../index.php?section=login&action=fail2");
+            header("Location: ../index.php?section=login&fail=accountDeactivated");
+            break;
+        case -2:
+            header("Location: ../index.php?section=login&fail=loginUserNotFound");
             break;
     }
 } elseif ($_REQUEST["type"] == "logout") {
     $_SESSION = array();
     session_destroy();
-    header("Location: ../index.php?section=dash");
+    header("Location: ../index.php?success=logout");
 } elseif ($_REQUEST["type"] == "forgotPassword") {
     $newPw = generateRandomString();
     $user = $db->getUser($_REQUEST["username"]);
-    $user->setPassword($newPw);
-    if ($db->updatePassword($user)) {
-        echo "Record updated successfully";
-        Email::sendnewPw($user);
-        header("Location: ../index.php?action=success");
-    } else {
-        echo "Error updating record";
+    if ($user != NULL) {
+        $user->setPassword($newPw);
+        if ($db->updatePassword($user)) {
+            Email::sendnewPw($user);
+            header("Location: ../index.php?success=updatePassword");
+        } else {
+            header("Location: ../index.php?section=forgotPw&fail=updatePasswordFailed");
+        }
+    }else {
+        header("Location: ../index.php?section=forgotPw&fail=userNotFound");
     }
 } elseif ($_REQUEST["type"] == "changePassword") {
     if ($db->loginUser($_REQUEST["username"], $_REQUEST["oldPw"])) {
@@ -76,12 +78,12 @@ if ($_REQUEST["type"] == "insert") {
         $user->setPassword($newPw);
         if ($db->updatePassword($user)) {
             echo "Record updated successfully";
-            header("Location: ../index.php?action=success");
+            header("Location: ../index.php?success=updatePassword");
         } else {
-            echo "Error updating record";
+            header("Location: ../index.php?fail=updatePasswordFailed");
         }
     } else {
-        header("Location: ../index.php?type=edit&action=fail");
+        header("Location: ../index.php?section=register&edit=true&fail=updatePasswordFailedWrong");
     }
 } elseif ($_REQUEST["type"] == "changeStatus") {
     if ($db->changeStatus($_REQUEST["username"])) {
@@ -89,9 +91,9 @@ if ($_REQUEST["type"] == "insert") {
     }
 } elseif ($_REQUEST["type"] == "uploadIcon") {
     if ($db->uploadIcon($_FILES)) {
-        header("Location: ../index.php?section=register&edit=true&action=success");
+        header("Location: ../index.php?section=register&edit=true&success=uploadIcon");
     }else{
-        header("Location: ../index.php?section=register&edit=true&action=UploadFail");
+        header("Location: ../index.php?section=register&edit=true&fail=UploadFail");
     }
 }
 

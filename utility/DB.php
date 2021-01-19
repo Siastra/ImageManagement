@@ -1,7 +1,7 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/User.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/Post.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/utility/Upload.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
 
 class DB
 {
@@ -18,7 +18,7 @@ class DB
     public function __construct()
     {
 
-        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/ImageManagement/config/config.json"),
+        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
             true);
         $username = $this->config["db"]["user"];
         $password = $this->config["db"]["password"];
@@ -58,8 +58,12 @@ class DB
         $stmt = $this->conn->prepare("SELECT * FROM `user` WHERE username = ?");
         if ($stmt->execute([$username])) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
-                $row["password"], $row["admin"], $row["activated"], $row["picture"]);
+            if (empty($row)) {
+                return null;
+            }else {
+                return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
+                    $row["password"], $row["admin"], $row["activated"], $row["picture"]);
+            }
         }
         return null;
     }
@@ -80,7 +84,8 @@ class DB
         $stmt = $this->conn->prepare("SELECT * FROM `post` WHERE id = ?");
         if ($stmt->execute([$id])) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            return new Post($row["id"], $row["path"], $row["restricted"], $row["user_id"], $row["createdAt"]);
+            return new Post($row["id"], $row["title"], $row["path"], $row["restricted"], $row["user_id"],
+                $row["createdAt"]);
         }
         return null;
     }
@@ -147,32 +152,9 @@ class DB
         }
     }
 
-    public function getPicCreaterId($path)   {
-
-        $sql=$this->conn->prepare("SELECT `user_id` FROM `post` WHERE `path`=?");
-        $sql->execute([$path]);
-        $id=$sql->fetch();
-        return $id;
-    }
-
-    public function getPostPic($picuserid){
-        $sql =$this->conn->prepare("SELECT `picture` from `user` WHERE `id` = ?");
-        $sql->execute([$picuserid["user_id"]]);
-        $profilpic = $sql->fetch();
-        return $profilpic["picture"];
-    }
-    public function getPostCreater($picuserid){
-
-
-        $sql=$this->conn->prepare("SELECT `username` FROM `user` WHERE `id` = ?");
-        $sql->execute([$picuserid["user_id"]]);
-        $creatername=$sql->fetch();
-
-
-        return $creatername["username"];
-    }
     public function checkTag($tag)
     {
+        $result = array();
         $size = count($tag);
         $sql = $this->conn->prepare("SELECT `name` FROM `tag` WHERE `name`  = ?");
         for ($i = 0; $i < $size; $i++) {
@@ -202,13 +184,13 @@ class DB
         return true;
     }
 
-    public function readTags($p_id): array{
-        $tags=array();
+    public function readTags($p_id): array
+    {
         $sql = $this->conn->prepare("SELECT `tag_name` FROM `is_assigned` WHERE `post_id` = ?");
         $sql->execute([$p_id]);
-        $tags=$sql->fetchAll();
-        return $tags;
+        return $sql->fetchAll();
     }
+
     public function getPostId(string $path): int
     {
         $sql = $this->conn->prepare("SELECT `id` FROM `post` WHERE `path`  = ?");
@@ -217,21 +199,35 @@ class DB
         return $result["id"];
     }
 
-    public function createPost(string $path, $restricted): int
+    public function getNextPostId(): int
     {
-        $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `path`, `restricted`, `user_id`, `createdAt`)
-         VALUES (?,?,?,?, LOCALTIMESTAMP())");
+        $sql = $this->conn->prepare("SELECT AUTO_INCREMENT FROM information_schema.TABLES
+                                               WHERE TABLE_SCHEMA = \"imagemanagement\" 
+                                               AND TABLE_NAME = \"post\"");
+        $sql->execute();
+        $res = $sql->fetchColumn();
+        if (empty($res)){
+            return 1;
+        }else {
+            return $res;
+        }
+    }
+
+    public function createPost(string $title, string $path, int $restricted): int
+    {
+        $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `title`, `path`, `restricted`, `user_id`, 
+                                                `createdAt`) VALUES (?,?,?,?,?, LOCALTIMESTAMP())");
         $id = $this->getUser($_SESSION["username"])->getId();
 
         try {
-            $sql->execute([NULL, $path, $restricted, $id]);
-            return $this->getPostId($path);
+            $sql->execute([NULL, $title, $path, $restricted, $id]);
+            return $this->conn->lastInsertId();
         } catch (PDOException $e) {
             throw $e;
         }
     }
 
-    public function deletePostById(int $id) : void
+    public function deletePostById(int $id): void
     {
         $post = $this->getPostById($id);
         unlink($_SERVER["DOCUMENT_ROOT"] . "/" . $post->getDashPath());
@@ -256,7 +252,7 @@ class DB
         if ($sql->rowCount() > 0) {
             $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
             foreach ($posts as $post) {
-                array_push($result, new Post($post["id"], $post["path"], $post["restricted"],
+                array_push($result, new Post($post["id"], $post["title"], $post["path"], $post["restricted"],
                     $post["user_id"], $post["createdAt"]));
             }
         }
@@ -274,8 +270,8 @@ class DB
             try {
                 $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($posts as $post) {
-                    array_push($result, new Post($post["id"], $post["path"], intval($post["restricted"]),
-                        $post["user_id"], $post["createdAt"]));
+                    array_push($result, new Post($post["id"], $post["title"], $post["path"],
+                        intval($post["restricted"]), $post["user_id"], $post["createdAt"]));
                 }
             } catch (Exception $e) {
                 echo 'Exception abgefangen: ', $e->getMessage(), "\n";
@@ -292,7 +288,7 @@ class DB
         if ($sql->rowCount() > 0) {
             $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
             foreach ($posts as $post) {
-                array_push($result, new Post($post["id"], $post["path"], $post["restricted"],
+                array_push($result, new Post($post["id"], $post["title"], $post["path"], $post["restricted"],
                     $post["user_id"], $post["createdAt"]));
             }
         }
@@ -309,19 +305,20 @@ class DB
             $res = intval($row["restricted"]);
             $val = ($res ? 0 : 1);
             $stmt = $this->conn->prepare("UPDATE `post` SET `restricted`=? WHERE id=?");
-            if (!$stmt->execute([$val , $id])) {
+            if (!$stmt->execute([$val, $id])) {
                 return false;
             } else {
                 return true;
             }
+        } else {
+            return false;
         }
-
     }
 
     public function updateUser(User $user): bool
     {
-        $stmt = $this->conn->prepare("UPDATE `user` SET title=?, fname=?, lname=?, username=?, 
-                                                email=? WHERE id=?");
+        $stmt = $this->conn->prepare("UPDATE `user` SET title=?, fname=?, lname=?, username=?, email=? 
+                                                WHERE id=?");
         $title = $user->getTitle();
         $fname = $user->getFname();
         $lname = $user->getLname();
@@ -359,45 +356,49 @@ class DB
         $stmt = $this->conn->prepare("SELECT password, activated FROM `user` WHERE username = :username");
         $stmt->execute([$username]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $user = $this->getUser($username);
-        if ($user->isAdmin()) {
-            if ($pw == $row["password"]) {
-                return true;
+        if (empty($row)) {
+            return -2;
+        }else {
+            $user = $this->getUser($username);
+            if ($user->isAdmin()) {
+                if ($pw == $row["password"]) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
-                return false;
-            }
-        } else {
-            if ($row["activated"] == 0) {
-                return -1;
-            }
-            if (password_verify($pw, $row["password"])) {
-                return true;
-            } else {
-                return false;
+                if ($row["activated"] == 0) {
+                    return -1;
+                }
+                if (password_verify($pw, $row["password"])) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }
 
     public function showRatings($path, $type): int
     {
-        $postid = $this->getPostId($path);
-        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM `rating` WHERE post_id = ? AND type = ?");
-        $stmt->execute([$postid, $type]);
+        $post_id = $this->getPostId($path);
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM `rating` WHERE post_id = ? AND `type` = ?");
+        $stmt->execute([$post_id, $type]);
         return $stmt->fetchColumn();
     }
 
-    public function addRating($path, $type){
+    public function addRating($path, $type)
+    {
         $id = $this->getUser($_SESSION["username"])->getId();
-        $postid = $this->getPostId($path);
+        $post_id = $this->getPostId($path);
         $stmt = $this->conn->prepare("SELECT * FROM `rating` WHERE user_id = ? AND post_id = ?");
-        $stmt->execute([$id, $postid]);
+        $stmt->execute([$id, $post_id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if($result){
+        if ($result) {
             $delete = $this->conn->prepare("DELETE FROM `rating` WHERE user_id = ? AND post_id = ?");
-            $delete->execute([$id,$postid]);
+            $delete->execute([$id, $post_id]);
         }
-        $sql = $this->conn->prepare("INSERT INTO `rating`(`user_id`, `post_id`, `type`)
-         VALUES (?,?,?)");
-        $sql->execute([$id, $postid, $type]);
+        $sql = $this->conn->prepare("INSERT INTO `rating`(`user_id`, `post_id`, `type`) VALUES (?,?,?)");
+        $sql->execute([$id, $post_id, $type]);
     }
 }

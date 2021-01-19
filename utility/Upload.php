@@ -4,11 +4,10 @@
 class Upload
 {
 
-    public static function uploadPost(array $files): bool
+    public static function uploadPost(array $files, string $fileNewName): bool
     {
         $file = $files['picture']['tmp_name'];
         $sourceProperties = getimagesize($file);
-        $fileNewName = explode(".", $files['picture']['name'])[0];
         $folderPathDash = 'pictures/dashboard/';
         $folderPathThumb = 'pictures/thumbnail/';
         $folderPathFull = 'pictures/full/';

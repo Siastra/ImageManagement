@@ -8,7 +8,7 @@ if (isset($_POST["pw"]) && ($_POST["pw"] != $_POST["pwRepeat"])) {
     echo MsgFactory::getWarning("Please make sure your password matches!");
 } else if ((isset($_POST["type"]) && $_POST["type"] == "update") || //Update is performed
     (isset($_POST["pw"]) && ($_POST["pw"] == $_POST["pwRepeat"]))) { //Password-Update or insert is performed
-    echo '<form id="myForm" action="' . $_SERVER["DOCUMENT_ROOT"] . '/inc/backend.php" 
+    echo '<form id="myForm" action="inc/backend.php" 
     method="post" enctype="multipart/form-data">';
     foreach ($_POST as $a => $b) {
         echo '<input type="hidden" name="' . $a . '" value="' . $b . '">';
@@ -27,25 +27,6 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
 }
 
 ?>
-
-<script>
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            let reader = new FileReader();
-
-            reader.onload = function(e) {
-                $('#previewImg').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(input.files[0]); // convert to base64 string
-        }
-    }
-
-    $("#picture").change(function() {
-        readURL(this);
-    });
-</script>
-
 <section class="container">
     <?php
     if (isset($_REQUEST["edit"])) {
@@ -206,5 +187,21 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
         } else
             $('#message').html('Not Matching').css('color', '#dc3545');
         $('.submit').disabled = false;
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#previewImg').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+
+    $("#picture").change(function() {
+        readURL(this);
     });
 </script>

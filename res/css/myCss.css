@@ -62,14 +62,6 @@ input:focus {
     background-color: white;
 }
 
-.links {
-    color: white;
-}
-
-.links a {
-    margin-left: 4px;
-}
-
 .container {
     margin: 2% 2% 2% 2%;
 }
@@ -85,35 +77,6 @@ input:focus {
 .ldl {
     min-width: 75px;
     min-height: 75px;
-}
-
-.slidecontainer {
-    margin-top: 2px;
-    width: 100%;
-}
-
-.slider {
-    -webkit-appearance: none;
-    width: 4%;
-    height: 20px;
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
-
-.slider:hover {
-    opacity: 1;
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    background: #4CAF50;
-    cursor: pointer;
 }
 
 .imgdash {
@@ -150,12 +113,23 @@ input:focus {
 }
 
 .galleryItem{
-    margin-top: 2%;
+    margin: 1%;
     background-color: #d0c7ff;
 }
 
+@media screen and (max-width: 800px){
+    .galleryItem{
+        margin: 1% auto;
+        background-color: #d0c7ff;
+    }
+
+    #previewPost{
+        width: 200px;
+        height: 200px;
+    }
+}
+
 .itemHeader{
-    padding-right: 15px;
     padding-left: 15px;
     justify-content: end;
 }
@@ -169,8 +143,4 @@ input:focus {
     max-width: 40px;
     max-height:40px ;
     border-radius: 50%;
-}
-
-#myRange {
-    display: block;
 }
