@@ -267,7 +267,7 @@ class DB
             try {
                 $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($posts as $post) {
-                    array_push($result, new Post($post["id"], $post["path"], $post["restricted"],
+                    array_push($result, new Post($post["id"], $post["path"], intval($post["restricted"]),
                         $post["user_id"], $post["createdAt"]));
                 }
             } catch (Exception $e) {
@@ -291,6 +291,24 @@ class DB
         }
 
         return $result;
+    }
+
+    public function changeRestriction(int $id): bool
+    {
+        $sql = $this->conn->prepare("SELECT `restricted` FROM `post` WHERE id=?");
+        $sql->execute([$id]);
+        if ($sql->rowCount() > 0) {
+            $row = $sql->fetch(PDO::FETCH_ASSOC);
+            $res = intval($row["restricted"]);
+            $val = ($res ? 0 : 1);
+            $stmt = $this->conn->prepare("UPDATE `post` SET `restricted`=? WHERE id=?");
+            if (!$stmt->execute([$val , $id])) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
     }
 
     public function updateUser(User $user): bool

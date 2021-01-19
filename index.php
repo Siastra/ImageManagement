@@ -21,8 +21,11 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="res/css/bootstrap.min.css">
     <link href="res/css/lightbox.css" rel="stylesheet">
+
     <script src="res/js/lightbox-plus-jquery.js"></script>
     <script src="res/js/bootstrap.bundle.min.js" ></script>
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
     <title>Usermanagement</title>
 </head>
@@ -118,10 +121,12 @@
             case 'userPage':
                 include "inc/userPage.php";
                 break;
-            default :
+            default:
                 include "inc/dashboard.php";
                 break;
         }
+    }else {
+        include "inc/dashboard.php";
     }
 ?>
 </main>

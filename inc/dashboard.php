@@ -14,16 +14,16 @@
 
         echo "<div class=\"post\">";
         echo "<div class=row>";
-        echo "<div class=\"profilepic col-1 img-fluid\" >";
-        echo "<img src=".$post->getUser()->getPicture()." width=25px height=25px >";
+        echo "<div class=\"col-1 img-fluid\" >";
+        echo "<img class=profilepic src=".$post->getUser()->getPicture()." >";
         echo "</div>";
-        echo "<div class=col-2>";
+        echo "<div class=col>";
         echo $post->getUser()->getUsername();
         echo "</div>";
-        echo "<div class=\" col-2  offset-3\" >";
+        echo "<div class=\" col \" >";
         echo "restriction";
         echo "</div>";
-        echo "<div class=\"col-2 offset-2\" >" ;
+        echo "<div class=\"col\" >" ;
         echo "<button>Lösch dich </button>";
         echo "</div></div>";
 
