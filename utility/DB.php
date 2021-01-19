@@ -54,6 +54,7 @@ class DB
         return $result;
     }
 
+    //Get a specific user by username
     public function getUser(string $username): ?User
     {
         $stmt = $this->conn->prepare("SELECT * FROM `user` WHERE username = ?");
