@@ -133,6 +133,8 @@ input:focus {
 .user-picture {
     margin: 0 0 0 15%;
     border-radius: 50%;
+    width: 200px;
+    height: 200px;
 }
 
 .commsection{
@@ -142,9 +144,29 @@ input:focus {
 .post{
     margin-bottom: 5%;
 }
+
+.galleryItem{
+    margin-top: 2%;
+    background-color: #d0c7ff;
+}
+
+.itemHeader{
+    padding-right: 15px;
+    padding-left: 15px;
+    justify-content: end;
+}
+
+.picBackground {
+    background-color: #d0c7ff;
+    text-align: center;
+}
+
 .profilepic{
-    max-width: 100px;
-    max-height:25px ;
+    max-width: 40px;
+    max-height:40px ;
     border-radius: 50%;
-    margin-bottom: 2%;
+}
+
+#myRange {
+    display: block;
 }

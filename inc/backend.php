@@ -57,7 +57,7 @@ if ($_REQUEST["type"] == "insert") {
 } elseif ($_REQUEST["type"] == "logout") {
     $_SESSION = array();
     session_destroy();
-    header("Location: ../index.php");
+    header("Location: ../index.php?section=dash");
 } elseif ($_REQUEST["type"] == "forgotPassword") {
     $newPw = generateRandomString();
     $user = $db->getUser($_REQUEST["username"]);

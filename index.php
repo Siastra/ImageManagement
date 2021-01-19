@@ -12,14 +12,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Author: Marcel Glavanits,
+    Sebastian Schramm, Lukas Koller | A basic social network">
     <link rel="stylesheet" href="res/css/myCss.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="res/css/bootstrap.min.css">
     <link href="res/css/lightbox.css" rel="stylesheet">
 
+    <script src="res/js/lightbox-plus-jquery.js"></script>
+    <script src="res/js/bootstrap.bundle.min.js" ></script>
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
     <title>Usermanagement</title>
 </head>
@@ -36,11 +42,12 @@
             if(isset($_SESSION["username"])) {
                 $user = $db->getUser($_SESSION["username"]);
                 echo '<li><a class="nav-link" href="index.php?section=create">
-                       <img src="res/images/upload.svg" alt="Upload icon" width="25px"> Upload Post</a></li>';
+                       <img src="res/images/upload.svg" alt="Upload icon" width="25px">Upload Post</a></li>';
             }
             if(isset($_SESSION["username"]) && $user->isAdmin()) {
-                echo '<li class="nav-item active">
-                    <a class="nav-link" href="index.php?section=view">User Administration</a>
+                echo '<li class="nav-item">
+                    <a class="nav-link" href="index.php?section=view">
+                    <img src="res/images/administrator.svg" alt="Administration icon" width="25px">User Administration</a>
                 </li>';
             }
 
@@ -50,8 +57,7 @@
             <?php
             if (isset($_SESSION["username"]) && (isset($_GET["section"]) && ($_GET["section"] == "userPage"))) {
                 echo '<li><a class="nav-link" href="index.php?section=register&edit=true">
-                        <img src="res/images/edit.svg" alt="Edit icon" width="25px">
-                         Edit profile</a></li>';
+                        <img src="res/images/edit.svg" alt="Edit icon" width="25px">Edit profile</a></li>';
             }else if (isset($_SESSION["username"])) {
                 echo '<li><a class="nav-link" href="index.php?section=userPage"><img src="' . $user->getPicture() . '" 
                         alt="User icon" width="25px" height="25px" id="profilePic"> ' .
@@ -74,7 +80,7 @@
         </ul>
     </div>
 </nav>
-
+<header>
 <?php
     //Message Banner
     if(isset($_GET["action"]) && ($_GET["action"] == "success")) {
@@ -90,7 +96,10 @@
     }elseif (isset($_GET["action"]) && ($_GET["action"] == "UploadFail") && ($_GET["type"] == "edit")) {
         echo MsgFactory::getWarning("Update failed! Image upload failed!");
     }
-
+    ?>
+</header>
+<main>
+<?php
     //Section- Management
     if (isset($_GET["section"])) {
         switch ($_GET["section"]) {
@@ -109,20 +118,28 @@
             case 'create':
                 include "inc/createPost.php";
                 break;
-            case 'dash':
-                include "inc/dashboard.php";
-                break;
             case 'userPage':
                 include "inc/userPage.php";
                 break;
-            default :
+            default:
                 include "inc/dashboard.php";
                 break;
         }
+    }else {
+        include "inc/dashboard.php";
     }
 ?>
 <script src="res/js/lightbox-plus-jquery.js"></script>
 <script src="res/js/bootstrap.bundle.min.js" ></script>
+</main>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var url = window.location;
+        $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
+        $('ul.nav a').filter(function() {
+            return this.href == url;
+        }).parent().addClass('active');
+    });
+</script>
 </body>
-
 </html>

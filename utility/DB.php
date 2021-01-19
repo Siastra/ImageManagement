@@ -1,6 +1,7 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/User.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/utility/Upload.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
 
 class DB
 {
@@ -17,7 +18,7 @@ class DB
     public function __construct()
     {
 
-        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/ImageManagement/config/config.json"),
+        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
             true);
         $username = $this->config["db"]["user"];
         $password = $this->config["db"]["password"];
@@ -59,6 +60,27 @@ class DB
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
                 $row["password"], $row["admin"], $row["activated"], $row["picture"]);
+        }
+        return null;
+    }
+
+    public function getUserByID(int $id): ?User
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM `user` WHERE id = ?");
+        if ($stmt->execute([$id])) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
+                $row["password"], $row["admin"], $row["activated"], $row["picture"]);
+        }
+        return null;
+    }
+
+    public function getPostById(int $id): ?Post
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM `post` WHERE id = ?");
+        if ($stmt->execute([$id])) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return new Post($row["id"], $row["path"], $row["restricted"], $row["user_id"], $row["createdAt"]);
         }
         return null;
     }
@@ -140,7 +162,7 @@ class DB
         return $profilpic["picture"];
     }
     public function getPostCreater($picuserid){
-        
+
 
         $sql=$this->conn->prepare("SELECT `username` FROM `user` WHERE `id` = ?");
         $sql->execute([$picuserid["user_id"]]);
@@ -167,7 +189,7 @@ class DB
 
         return $result;
     }
- 
+
     public function setTag(int $p_id, $tag): bool
     {
         $size = count($tag);
@@ -201,44 +223,92 @@ class DB
             throw $e;
         }
     }
-    
-    public function showDashboardAll(): array
+
+    public function deletePostById(int $id) : void
     {
-        $dashAll = array();
-        $sql = "SELECT `path` FROM `post`";
+        $post = $this->getPostById($id);
+        unlink($_SERVER["DOCUMENT_ROOT"] . "/" . $post->getDashPath());
+        unlink($_SERVER["DOCUMENT_ROOT"] . "/" . $post->getThumbnailPath());
+        unlink($_SERVER["DOCUMENT_ROOT"] . "/" . $post->getFullPath());
 
-        $result = $this->conn->query($sql);
-        if ($result->rowCount() > 0) {
-            $dashAll = $result->fetchAll();
-        }
-
-        return $dashAll;
-    }
-
-    public function showDashboardSelf(): array
-    {
-        $dashSelf = array();
-        $u_id = $this->getUser($_SESSION["username"])->getId();
-        $sql = "SELECT `path` FROM `post` WHERE `user_id`=$u_id";
-        $result = $this->conn->query($sql);
-        if ($result->rowCount() > 0) {
-            $dashSelf = $result->fetchAll();
-        }
-
-        return $dashSelf;
+        $sql = $this->conn->prepare("DELETE FROM `rating` WHERE `post_id`=?");
+        $sql->execute([$id]);
+        $sql = $this->conn->prepare("DELETE FROM `comment` WHERE `post_id`=?");
+        $sql->execute([$id]);
+        $sql = $this->conn->prepare("DELETE FROM `is_assigned` WHERE `post_id`=?");
+        $sql->execute([$id]);
+        $sql = $this->conn->prepare("DELETE FROM `post` WHERE `id`=?");
+        $sql->execute([$id]);
     }
 
     public function showDashboardPublic(): array
     {
-        $dashPub = array();
-        $sql = "SELECT `path` FROM `post` WHERE `restricted`=0";
-
-        $result = $this->conn->query($sql);
-        if ($result->rowCount() > 0) {
-            $dashPub = $result->fetchAll();
+        $result = array();
+        $sql = $this->conn->prepare("SELECT * FROM `post`");
+        $sql->execute();
+        if ($sql->rowCount() > 0) {
+            $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($posts as $post) {
+                array_push($result, new Post($post["id"], $post["path"], $post["restricted"],
+                    $post["user_id"], $post["createdAt"]));
+            }
         }
 
-        return $dashPub;
+        return $result;
+    }
+
+    public function getPostsByUserID(int $id): array
+    {
+        $result = array();
+        $sql = $this->conn->prepare("SELECT * FROM `post` WHERE `user_id`=?");
+        $sql->execute([$id]);
+        if ($sql->rowCount() > 0) {
+            // output data of each row
+            try {
+                $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($posts as $post) {
+                    array_push($result, new Post($post["id"], $post["path"], intval($post["restricted"]),
+                        $post["user_id"], $post["createdAt"]));
+                }
+            } catch (Exception $e) {
+                echo 'Exception abgefangen: ', $e->getMessage(), "\n";
+            }
+        }
+        return $result;
+    }
+
+    public function showDashboardPrivate(): array
+    {
+        $result = array();
+        $sql = $this->conn->prepare("SELECT * FROM `post` WHERE `restricted`=0");
+        $sql->execute();
+        if ($sql->rowCount() > 0) {
+            $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($posts as $post) {
+                array_push($result, new Post($post["id"], $post["path"], $post["restricted"],
+                    $post["user_id"], $post["createdAt"]));
+            }
+        }
+
+        return $result;
+    }
+
+    public function changeRestriction(int $id): bool
+    {
+        $sql = $this->conn->prepare("SELECT `restricted` FROM `post` WHERE id=?");
+        $sql->execute([$id]);
+        if ($sql->rowCount() > 0) {
+            $row = $sql->fetch(PDO::FETCH_ASSOC);
+            $res = intval($row["restricted"]);
+            $val = ($res ? 0 : 1);
+            $stmt = $this->conn->prepare("UPDATE `post` SET `restricted`=? WHERE id=?");
+            if (!$stmt->execute([$val , $id])) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
     }
 
     public function updateUser(User $user): bool
