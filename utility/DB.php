@@ -70,6 +70,7 @@ class DB
         return null;
     }
 
+    //Get a specific user by id.
     public function getUserByID(int $id): ?User
     {
         $stmt = $this->conn->prepare("SELECT * FROM `user` WHERE id = ?");
