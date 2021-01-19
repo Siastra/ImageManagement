@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 17, 2021 at 02:44 PM
+-- Generation Time: Jan 19, 2021 at 09:13 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -52,6 +52,7 @@ CREATE TABLE `is_assigned` (
 
 CREATE TABLE `post` (
   `id` int(11) NOT NULL,
+  `title` varchar(64) NOT NULL,
   `path` varchar(128) NOT NULL,
   `restricted` char(1) NOT NULL,
   `user_id` int(11) NOT NULL,
