@@ -32,6 +32,7 @@ class DB
         }
     }
 
+    //Get a list of all users
     public function getUserList(): array
     {
         $result = array();
