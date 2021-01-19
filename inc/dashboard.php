@@ -45,7 +45,12 @@
         echo "<p>4</p>";
         echo "</div>";
         echo "<div class=col-4>";
-        echo "TAGS";
+        echo "TAGS:";
+        $tags=$db->readTags($post->getId());
+        $size=count($tags);
+        for($i=0;$i<$size;$i++){
+            echo "<span class=\"tags\" >".$tags[$i]["tag_name"]."</span>";
+        }
         echo "</div>";
         echo "<input class= \"col-3\" type=\"text\"  placeholder=\"Comments\" name=\"comment\"  />";
         echo "<input class= \"col-2\"  type=\"submit\" name=\"sendcomment\"  />";

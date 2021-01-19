@@ -1,7 +1,7 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/Post.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/utility/Upload.php';
 
 class DB
 {
@@ -18,7 +18,7 @@ class DB
     public function __construct()
     {
 
-        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
+        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/ImageManagement/config/config.json"),
             true);
         $username = $this->config["db"]["user"];
         $password = $this->config["db"]["password"];
@@ -202,6 +202,13 @@ class DB
         return true;
     }
 
+    public function readTags($p_id): array{
+        $tags=array();
+        $sql = $this->conn->prepare("SELECT `tag_name` FROM `is_assigned` WHERE `post_id` = ?");
+        $sql->execute([$p_id]);
+        $tags=$sql->fetchAll();
+        return $tags;
+    }
     public function getPostId(string $path): int
     {
         $sql = $this->conn->prepare("SELECT `id` FROM `post` WHERE `path`  = ?");
