@@ -37,11 +37,13 @@
 
         echo "<div class=row>";
         echo '<div class="col-1">';
-        echo "<img alt=\"Like Button\" src=\"res/images/thumb-up.svg\" />";
+        echo "<img alt=\"Like Button\" src=\"res/images/thumb-up.svg\" onclick=\"upVote('" . $post->getDashPath()
+            . "')\" />";
         echo "<p>5</p>";
         echo '</div>';
         echo '<div class="col-1">';
-        echo "<img alt=\"Dislike Button\" src=\"res/images/thumb-down.svg\"/>";
+        echo "<img alt=\"Dislike Button\" src=\"res/images/thumb-down.svg\" onclick=\"downVote('" . $post->getDashPath()
+            . "')\"/>";
         echo "<p>4</p>";
         echo "</div>";
         echo "<div class=col-4>";
@@ -64,7 +66,7 @@
       
   
     <script>
-        function upvote(x) {
+        function upVote(x) {
             $.ajax({
                 type: "POST",
                 url: 'ajax/upvote.php',

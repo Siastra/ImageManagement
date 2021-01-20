@@ -114,6 +114,8 @@
         echo MsgFactory::getSuccess("Update on user password performed successfully!");
     }elseif(isset($_GET["success"]) && ($_GET["success"] == "uploadIcon")) {
         echo MsgFactory::getSuccess("Upload of user picture performed successfully!");
+    }elseif(isset($_GET["success"]) && ($_GET["success"] == "registerSuccess")) {
+        echo MsgFactory::getSuccess("Registration performed successfully!");
     }
 
     ?>

@@ -78,9 +78,17 @@ public function __construct(int $id, string $title, string $path, int $restricte
     /**
      * @return string
      */
-    public function getDate(): string
+    public function getDateTime(): string
     {
         return date_format($this->date, 'd.m.Y H:i:s');
+    }
+
+    /**
+     * @return string
+     */
+    public function getDate(): string
+    {
+        return date_format($this->date, 'd.m.Y');
     }
 
     /**

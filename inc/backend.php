@@ -20,7 +20,7 @@ if ($_REQUEST["type"] == "insert") {
         $_REQUEST["username"], $_REQUEST["pwRepeat"], 0, 1, $_REQUEST["picture"]);
 
     if ($db->registerUser($newUser)) {
-        header("Location: ../index.php?action=success");
+        header("Location: ../index.php?success=registerSuccess");
     } else {
         header("Location: ../index.php?section=register&fail=registerFail");
     }
