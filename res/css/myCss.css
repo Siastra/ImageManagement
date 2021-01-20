@@ -117,17 +117,7 @@ input:focus {
     background-color: #d0c7ff;
 }
 
-@media screen and (max-width: 800px){
-    .galleryItem{
-        margin: 1% auto;
-        background-color: #d0c7ff;
-    }
 
-    #previewPost{
-        width: 200px;
-        height: 200px;
-    }
-}
 
 .itemHeader{
     padding-left: 15px;
@@ -143,4 +133,82 @@ input:focus {
     max-width: 40px;
     max-height:40px ;
     border-radius: 50%;
+}
+
+.headerBox{
+    float:left;
+    padding: 20px;
+    width: 33%;
+    box-sizing: border-box;
+}
+
+.headerBox3{
+    text-align: right;
+}
+
+.headerBox2{
+    text-align: center;
+}
+
+.username{
+    margin-left: 2%;
+}
+
+.ratingBox{
+  
+    width: 5%;
+
+}
+
+.ratingPic{
+    width: 40px;
+    height: 40px;
+    margin-right:1%;
+}
+
+.tagBox{
+    width:20%;
+  
+}
+
+.footerBox{
+    padding-left: 2%;
+    float: left;
+    margin-top: 1%;
+}
+
+.textBox{
+width:30%;
+}
+
+.commentTextBox{
+width:30%;
+}
+
+.commentSendBox{
+width:10%;
+text-align:left;
+height:10%;
+}
+
+.commSection{
+    margin-top:1%;
+    height: 200px;
+    background-color: greenyellow;
+}
+
+@media screen and (max-width: 800px){
+    .galleryItem{
+        margin: 1% auto;
+        background-color: #d0c7ff;
+    }
+
+    #previewPost{
+        width: 200px;
+        height: 200px;
+    }
+    .ratingPic{
+        width: 25px;
+        height: 25px;
+    }
 }

@@ -1,7 +1,8 @@
 <?php
 session_start();
-include_once $_SERVER["DOCUMENT_ROOT"]."/utility/DB.php";
+include_once $_SERVER["DOCUMENT_ROOT"]."/ImageManagement/utility/DB.php";
 $db = new DB;
-if($_POST['action'] == 'downvote'){
-    $db->addRating($_POST["path"], 0);
-}
+    $db->addRating($_POST["id"], 0);
+    $like=$db->getRating($_POST["id"],1);
+    $dislike=$db->getRating($_POST["id"],0);
+    echo json_encode(array($like,$dislike));
