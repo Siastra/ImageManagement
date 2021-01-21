@@ -6,8 +6,9 @@
 }
 .tags{
     margin-left: 1%;
-    background-color: #d9d9d9
-    ;
+    background-color: #d9d9d9;
+    word-wrap:break-word;
+
 }
 .container {
     height: 100%;
@@ -168,7 +169,6 @@ input:focus {
 
 .tagBox{
     width:20%;
-  
 }
 
 .footerBox{
@@ -179,10 +179,14 @@ input:focus {
 
 .textBox{
 width:30%;
+    border: 2px solid gray;
+    word-wrap:break-word;
+
 }
 
 .commentTextBox{
 width:30%;
+
 }
 
 .commentSendBox{
@@ -219,4 +223,32 @@ height:10%;
         width: 25px;
         height: 25px;
     }
+    .ratingBox{
+  
+        width: 8%;
+    
+    }
+    .tagBox{
+        width:32%;
+        overflow: auto;
+    }
+    .textBox{
+        width:50%;
+            border: 2px solid gray;
+            word-wrap:break-word;
+            height:50px;
+            overflow: auto;
+        
+        }
+        .commentSendBox{
+            width:20%;
+            text-align:left;
+            height:10%;
+            }
+        
+.commentTextBox{
+    width:80%;
+    
+    }
+        
 }

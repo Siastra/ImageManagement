@@ -109,7 +109,7 @@ class DB
         if ($stmt->execute([$id])) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return new Post($row["id"], $row["title"], $row["path"], $row["restricted"], $row["user_id"],
-                $row["createdAt"]);
+                $row["createdAt"], $row["text"]);
         }
         return null;
     }
@@ -237,14 +237,14 @@ class DB
         }
     }
 
-    public function createPost(string $title, string $path, int $restricted): int
+    public function createPost(string $title, string $path, int $restricted, string $text): int
     {
         $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `title`, `path`, `restricted`, `user_id`, 
-                                                `createdAt`) VALUES (?,?,?,?,?, LOCALTIMESTAMP())");
+                                                `createdAt`,`text`) VALUES (?,?,?,?,?, LOCALTIMESTAMP(),?)");
         $id = $this->getUser($_SESSION["username"])->getId();
 
         try {
-            $sql->execute([NULL, $title, $path, $restricted, $id]);
+            $sql->execute([NULL, $title, $path, $restricted, $id, $text]);
             return $this->conn->lastInsertId();
         } catch (PDOException $e) {
             throw $e;
@@ -291,7 +291,7 @@ class DB
             $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
             foreach ($posts as $post) {
                 array_push($result, new Post($post["id"], $post["title"], $post["path"], $post["restricted"],
-                    $post["user_id"], $post["createdAt"]));
+                    $post["user_id"], $post["createdAt"], $post["text"]));
             }
         }
 
@@ -309,7 +309,7 @@ class DB
                 $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($posts as $post) {
                     array_push($result, new Post($post["id"], $post["title"], $post["path"],
-                        intval($post["restricted"]), $post["user_id"], $post["createdAt"]));
+                        intval($post["restricted"]), $post["user_id"], $post["createdAt"], $post["text"]));
                 }
             } catch (Exception $e) {
                 echo 'Exception abgefangen: ', $e->getMessage(), "\n";
@@ -327,7 +327,7 @@ class DB
             $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
             foreach ($posts as $post) {
                 array_push($result, new Post($post["id"], $post["title"], $post["path"], $post["restricted"],
-                    $post["user_id"], $post["createdAt"]));
+                    $post["user_id"], $post["createdAt"], $post["text"]));
             }
         }
 

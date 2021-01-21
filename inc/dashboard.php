@@ -63,8 +63,12 @@
             echo "<span class=\"tags \" >".$tags[$i]["tag_name"]."</span>";
         }
         echo "</div>";
-        echo "<div class=\"textBox footerBox\">";
-        echo "askdondposakndpasndpüna";
+        echo "<div class=\" footerBox textBox\" >";
+        if($post->getText()!=""){
+            echo $post->getText();
+        }else{
+            echo "This Picture has no Caption!";
+        }
         echo "</div>";
         echo "<input class=\"commentTextBox footerBox\" type=\"text\"  placeholder=\"Comments\" name=\"comment\"
                      id=\"commentBox" . $post_id . "\"/>";
