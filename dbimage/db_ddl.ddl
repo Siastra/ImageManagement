@@ -6,10 +6,12 @@ DROP TABLE Post;
 DROP TABLE `User`;
 
 CREATE TABLE `Comment` (
-    post_id  INTEGER NOT NULL,
-    user_id  INTEGER NOT NULL,
-    text     VARCHAR(128) NOT NULL,
-    PRIMARY KEY(post_id, user_id)
+    id        INTEGER NOT NULL AUTO_INCREMENT,
+    post_id   INTEGER NOT NULL,
+    user_id   INTEGER NOT NULL,
+    text      VARCHAR(128) NOT NULL,
+    createdAt DATE NOT NULL,
+    PRIMARY KEY(id)
 );
 
 
@@ -26,7 +28,8 @@ CREATE TABLE Post (
     path        VARCHAR(128) NOT NULL,
     restricted  CHAR(1) NOT NULL,
     user_id     INTEGER NOT NULL,
-    createdAt   DATE NOT NULL
+    createdAt   DATE NOT NULL,
+    text        VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE Rating (

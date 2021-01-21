@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Comment.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
 
 class DB
@@ -46,6 +47,26 @@ class DB
                     array_push($result, new User($user["id"], $user["title"], $user["fname"], $user["lname"],
                         $user["email"], $user["username"], $user["password"], $user["admin"], $user["activated"],
                         $user["picture"]));
+                }
+            } catch (Exception $e) {
+                echo 'Exception abgefangen: ', $e->getMessage(), "\n";
+            }
+        }
+        return $result;
+    }
+
+    public function getAllCommentsByPost(int $post_id): array
+    {
+        $result = array();
+        $sth = $this->conn->prepare("SELECT * FROM `comment` WHERE post_id=?");
+        $sth->execute([$post_id]);
+        if ($sth->rowCount() > 0) {
+            // output data of each row
+            try {
+                $comments = $sth->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($comments as $comment) {
+                    array_push($result, new Comment($comment["post_id"], $comment["user_id"], $comment["text"],
+                new DateTime($comment["createdAt"])));
                 }
             } catch (Exception $e) {
                 echo 'Exception abgefangen: ', $e->getMessage(), "\n";
@@ -227,6 +248,20 @@ class DB
             return $this->conn->lastInsertId();
         } catch (PDOException $e) {
             throw $e;
+        }
+    }
+
+    public function postComment(int $post_id, string $comment, DateTime $date) : ?Comment
+    {
+        $sql = $this->conn->prepare("INSERT INTO `comment`(`post_id`, `user_id`, `text`, `createdAt`) 
+                                            VALUES (?,?,?,?)");
+        $user_id = $this->getUser($_SESSION["username"])->getId();
+
+        try {
+            $sql->execute([$post_id, $user_id, $comment, (date_format($date, 'Y-m-d H:i:s'))]);
+            return new Comment($post_id, $user_id, $comment, $date);
+        } catch (PDOException $e) {
+            return null;
         }
     }
 

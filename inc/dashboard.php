@@ -11,7 +11,7 @@
     $posts = array_reverse($posts);
 
     foreach($posts as $post) {
-
+        $post_id = $post->getId();
         echo "<div class=\"post\">";
         echo "<div class=row>";
         echo "<div class=\"headerBox\" >";
@@ -45,33 +45,38 @@
         echo "<div class=row>";
         echo '<div class="ratingBox footerBox">';
         echo "<img class=\"ratingPic\" alt=\"Like Button\" src=\"res/images/thumb-up.svg\" 
-        onclick=\"upVote(" . $post->getId() . ")\" />";
-        echo "<span id=likeCounter" . $post->getId() . ">".$db->showRatings($post->getId(),1)."</span>";
+        onclick=\"upVote(" . $post_id . ")\" />";
+        echo "<span id=likeCounter" . $post_id . ">".$db->showRatings($post_id,1)."</span>";
         echo '</div>';
 
         echo '<div class="ratingBox footerBox">';
         echo "<img class=\"ratingPic\" alt=\"Dislike Button\" src=\"res/images/thumb-down.svg\" 
-        onclick=\"downVote(" . $post->getId() . ")\"/>";
-        echo "<span id=dislikeCounter" . $post->getId() . ">".$db->showRatings($post->getId(),0)."</span>";
+        onclick=\"downVote(" . $post_id . ")\"/>";
+        echo "<span id=dislikeCounter" . $post_id . ">".$db->showRatings($post_id,0)."</span>";
         echo "</div>";
 
         echo "<div class=\"tagBox footerBox\" >";
         echo "TAGS:";
-        $tags=$db->readTags($post->getId());
+        $tags=$db->readTags($post_id);
         $size=count($tags);
         for($i=0;$i<$size;$i++){
             echo "<span class=\"tags \" >".$tags[$i]["tag_name"]."</span>";
         }
         echo "</div>";
-        echo "<div class=\"textBox footerBox\" >";
+        echo "<div class=\"textBox footerBox\">";
         echo "askdondposakndpasndpüna";
         echo "</div>";
-        echo "<input class=\"commentTextBox footerBox\" type=\"text\"  placeholder=\"Comments\" name=\"comment\"  />";
-        echo "<button class=\"commentSendBox footerBox btn btn-success\"  type=\"submit\" name=\"sendcomment\"  > Send!</button>";
+        echo "<input class=\"commentTextBox footerBox\" type=\"text\"  placeholder=\"Comments\" name=\"comment\"
+                     id=\"commentBox" . $post_id . "\"/>";
+        echo "<button class=\"commentSendBox footerBox btn btn-success\"  type=\"submit\" name=\"sendcomment\"
+                      onclick=\"postComment(" . $post_id . ")\"> Send!</button>";
         echo "</div>";
-
-        echo "<div class=\"row commSection\" >";
-
+        $comments = array_reverse($db->getAllCommentsByPost($post_id));
+        echo "<div class=\"row commSection\" id=\"commentSection" . $post_id . "\" >";
+        foreach ($comments as $comment) {
+            echo '<div class="comment">' . $comment->getUser()->getUsername() . '(' . $comment->getDate() . '): ' .
+                                $comment->getText() . '</div>';
+        }
         echo "</div>";
         echo "</div>";
     }
@@ -82,18 +87,18 @@
   
     <script>
 
-        function upVote(x) {
+        function upVote(post_id) {
             $.ajax({
                 type: "POST",
                 url: 'ajax/upvote.php',
-                data:{id:x}
+                data:{id:post_id}
             }).then(
                 // resolve/success callback
                 function(rating)
                 {
                     let jsonData = JSON.parse(rating);
-                    $('#likeCounter'+x).html(jsonData.like);
-                    $('#dislikeCounter'+x).html(jsonData.dislike);
+                    $('#likeCounter'+post_id).html(jsonData.like);
+                    $('#dislikeCounter'+post_id).html(jsonData.dislike);
                 },
                 // reject/failure callback
                 function()
@@ -104,18 +109,18 @@
 
         }
 
-        function downVote(x) {
+        function downVote(post_id) {
             $.ajax({
                 type: "POST",
                 url: 'ajax/downvote.php',
-                data:{id:x}
+                data:{id:post_id}
             }).then(
                 // resolve/success callback
                 function(rating)
                 {
                     let jsonData = JSON.parse(rating);
-                    $('#likeCounter'+x).html(jsonData.like);
-                    $('#dislikeCounter'+x).html(jsonData.dislike);
+                    $('#likeCounter'+post_id).html(jsonData.like);
+                    $('#dislikeCounter'+post_id).html(jsonData.dislike);
                 },
                 // reject/failure callback
                 function()
@@ -123,8 +128,39 @@
                     alert('There was some error!');
                 }
             );
-            
+        }
 
+        function postComment(post_id) {
+            let comment = $('#commentBox'+post_id).val();
+            if (comment !== "") {
+                $.ajax({
+                    type: "POST",
+                    url: 'ajax/postComment.php',
+                    data:{
+                        id:post_id,
+                        comment: comment
+                    },
+                    success: function(response)
+                    {
+                        let jsonData = JSON.parse(response);
+
+                        // user is logged in successfully in the back-end
+                        // let's redirect
+                        if (jsonData.success === '1')
+                        {
+                            let old =  $('#commentSection'+post_id).html();
+                            $('#commentSection'+post_id).html("<div class='comment'>" + jsonData.commentUser + "(" +
+                                jsonData.date + "): " +
+                                jsonData.commentText + "</div>" + old);
+                            $('#commentBox'+post_id).val("");
+                        }
+                        else
+                        {
+                            alert('Comment not posted!');
+                        }
+                    }
+                });
+            }
         }
     </script>
 </div>
