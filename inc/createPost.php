@@ -13,7 +13,7 @@ if (isset($_POST["upload"])) {
         $tag2 = preg_split($divide, $tag);
         #
         $db->checkTag($tag2);
-        $result = $db->createPost($_POST["title"], 'pictures/dashboard/' . $newName . "." . $ext, $restricted);
+        $result = $db->createPost($_POST["title"], 'pictures/dashboard/' . $newName . "." . $ext, $restricted,$_POST["text"]);
         $db->setTag($result, $tag2);
     }
     header("Location: index.php?section=dash");
@@ -41,6 +41,12 @@ if (isset($_POST["upload"])) {
                         <div class="col form-group">
                             <label for="tags">Tags:</label>
                             <input type="text" placeholder="Tags " name="tags" id="tags"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col form-group">
+                            <label for="tags">Text:</label>
+                            <input type="text" placeholder="Text " name="text" id="text"/>
                         </div>
                     </div>
                     <div class="row">
