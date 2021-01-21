@@ -43,18 +43,16 @@
 
 
         echo "<div class=row>";
-        $currLike=$db->showRatings($post->getId(),1);
         echo '<div class="ratingBox footerBox">';
-        echo "<img class=\"ratingPic\" alt=\"Like Button\" src=\"res/images/thumb-up.svg\" onclick=\"upVote(" . $post->getId()
-            . ")\" />";
-        echo "<span id=likeCounter>".$db->showRatings($post->getId(),1)."</span>";
+        echo "<img class=\"ratingPic\" alt=\"Like Button\" src=\"res/images/thumb-up.svg\" 
+        onclick=\"upVote(" . $post->getId() . ")\" />";
+        echo "<span id=likeCounter" . $post->getId() . ">".$db->showRatings($post->getId(),1)."</span>";
         echo '</div>';
 
         echo '<div class="ratingBox footerBox">';
-        $currDislike=$db->showRatings($post->getId(),0);
-        echo "<img class=\"ratingPic\" alt=\"Dislike Button\" src=\"res/images/thumb-down.svg\" onclick=\"downVote(" . $post->getId()
-            . ")\"/>";
-        echo "<span id=dislikeCounter>".$db->showRatings($post->getId(),0)."</span>";
+        echo "<img class=\"ratingPic\" alt=\"Dislike Button\" src=\"res/images/thumb-down.svg\" 
+        onclick=\"downVote(" . $post->getId() . ")\"/>";
+        echo "<span id=dislikeCounter" . $post->getId() . ">".$db->showRatings($post->getId(),0)."</span>";
         echo "</div>";
 
         echo "<div class=\"tagBox footerBox\" >";
@@ -92,14 +90,21 @@
             $.ajax({
                 type: "POST",
                 url: 'ajax/upvote.php',
-                data:{id:x},
-                success: function(rating){
-                    var jsonData = JSON.parse(rating);
-                    $("#likeCounter").html(jsonData[0])
-                    $("#dislikeCounter").html(jsonData[1]);
-
+                data:{id:x}
+            }).then(
+                // resolve/success callback
+                function(rating)
+                {
+                    let jsonData = JSON.parse(rating);
+                    $('#likeCounter'+x).html(jsonData.like);
+                    $('#dislikeCounter'+x).html(jsonData.dislike);
+                },
+                // reject/failure callback
+                function()
+                {
+                    alert('There was some error!');
                 }
-            });
+            );
 
         }
 
@@ -107,14 +112,21 @@
             $.ajax({
                 type: "POST",
                 url: 'ajax/downvote.php',
-                data:{id:x},
-                success: function(rating){
-                    var jsonData = JSON.parse(rating);
-                    $("#likeCounter").html(jsonData[0]);
-                    $("#dislikeCounter").html(jsonData[1]);
-
+                data:{id:x}
+            }).then(
+                // resolve/success callback
+                function(rating)
+                {
+                    let jsonData = JSON.parse(rating);
+                    $('#likeCounter'+x).html(jsonData.like);
+                    $('#dislikeCounter'+x).html(jsonData.dislike);
+                },
+                // reject/failure callback
+                function()
+                {
+                    alert('There was some error!');
                 }
-            });
+            );
             
 
         }
