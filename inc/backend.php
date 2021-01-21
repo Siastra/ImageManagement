@@ -97,4 +97,3 @@ if ($_REQUEST["type"] == "insert") {
     }
 }
 
-?>

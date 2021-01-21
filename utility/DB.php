@@ -1,7 +1,7 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/User.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/Post.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/utility/Upload.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
 
 class DB
 {
@@ -18,7 +18,7 @@ class DB
     public function __construct()
     {
 
-        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/ImageManagement/config/config.json"),
+        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
             true);
         $username = $this->config["db"]["user"];
         $password = $this->config["db"]["password"];
@@ -382,17 +382,16 @@ class DB
         }
     }
 
-    public function showRatings($id, $type): int
+    public function showRatings(int $id, int $type): int
     {
         $stmt = $this->conn->prepare("SELECT COUNT(*) FROM `rating` WHERE post_id = ? AND `type` = ?");
         $stmt->execute([$id, $type]);
         return $stmt->fetchColumn();
     }
 
-    public function addRating($path, $type)
+    public function addRating(int $post_id, int $type) : void
     {
         $id = $this->getUser($_SESSION["username"])->getId();
-        $post_id = $this->getPostId($path);
         $stmt = $this->conn->prepare("SELECT * FROM `rating` WHERE user_id = ? AND post_id = ?");
         $stmt->execute([$id, $post_id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
