@@ -8,7 +8,7 @@ class Post
     private User $user;
     private DateTime $date;
 
-public function __construct(int $id, string $title, string $path, int $restricted, int $user, string $date)
+public function __construct(int $id, string $title, string $path, int $restricted, int $user, string $date, string $text)
 {
     $db = new DB();
     $this->id = $id;
@@ -17,6 +17,7 @@ public function __construct(int $id, string $title, string $path, int $restricte
     $this->restricted = $restricted;
     $this->user = $db->getUserByID($user);
     $this->date = date_create($date);
+    $this->text = $text;
 }
 
     /**
@@ -67,6 +68,22 @@ public function __construct(int $id, string $title, string $path, int $restricte
         return $this->path;
     }
 
+
+    /**
+     * @param string $text
+     */
+    public function setText(string $text): void
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * @return string
+     */
+    public function getText(): string
+    {
+        return $this->text;
+    }
     /**
      * @param DateTime $date
      */

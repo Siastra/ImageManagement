@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 19, 2021 at 09:13 PM
+-- Generation Time: Jan 21, 2021 at 08:15 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `imagemanagement`
+-- Database: `imagemanagement1`
 --
 
 -- --------------------------------------------------------
@@ -28,9 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `comment` (
+  `id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `text` varchar(128) NOT NULL
+  `text` varchar(128) NOT NULL,
+  `createdAt` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -56,7 +58,8 @@ CREATE TABLE `post` (
   `path` varchar(128) NOT NULL,
   `restricted` char(1) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `createdAt` datetime NOT NULL
+  `createdAt` date NOT NULL,
+  `text` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -108,7 +111,8 @@ CREATE TABLE `user` (
 -- Indexes for table `comment`
 --
 ALTER TABLE `comment`
-  ADD PRIMARY KEY (`post_id`,`user_id`),
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `comment_post_fk` (`post_id`),
   ADD KEY `comment_user_fk` (`user_id`);
 
 --
@@ -148,6 +152,12 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `comment`
+--
+ALTER TABLE `comment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `post`

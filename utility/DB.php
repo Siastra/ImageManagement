@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Comment.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
 
 class DB
@@ -54,6 +55,26 @@ class DB
         return $result;
     }
 
+    public function getAllCommentsByPost(int $post_id): array
+    {
+        $result = array();
+        $sth = $this->conn->prepare("SELECT * FROM `comment` WHERE post_id=?");
+        $sth->execute([$post_id]);
+        if ($sth->rowCount() > 0) {
+            // output data of each row
+            try {
+                $comments = $sth->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($comments as $comment) {
+                    array_push($result, new Comment($comment["post_id"], $comment["user_id"], $comment["text"],
+                new DateTime($comment["createdAt"])));
+                }
+            } catch (Exception $e) {
+                echo 'Exception abgefangen: ', $e->getMessage(), "\n";
+            }
+        }
+        return $result;
+    }
+
     //Get a specific user by username
     public function getUser(string $username): ?User
     {
@@ -88,7 +109,7 @@ class DB
         if ($stmt->execute([$id])) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return new Post($row["id"], $row["title"], $row["path"], $row["restricted"], $row["user_id"],
-                $row["createdAt"]);
+                $row["createdAt"], $row["text"]);
         }
         return null;
     }
@@ -216,17 +237,31 @@ class DB
         }
     }
 
-    public function createPost(string $title, string $path, int $restricted): int
+    public function createPost(string $title, string $path, int $restricted, string $text): int
     {
         $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `title`, `path`, `restricted`, `user_id`, 
-                                                `createdAt`) VALUES (?,?,?,?,?, LOCALTIMESTAMP())");
+                                                `createdAt`,`text`) VALUES (?,?,?,?,?, LOCALTIMESTAMP(),?)");
         $id = $this->getUser($_SESSION["username"])->getId();
 
         try {
-            $sql->execute([NULL, $title, $path, $restricted, $id]);
+            $sql->execute([NULL, $title, $path, $restricted, $id, $text]);
             return $this->conn->lastInsertId();
         } catch (PDOException $e) {
             throw $e;
+        }
+    }
+
+    public function postComment(int $post_id, string $comment, DateTime $date) : ?Comment
+    {
+        $sql = $this->conn->prepare("INSERT INTO `comment`(`post_id`, `user_id`, `text`, `createdAt`) 
+                                            VALUES (?,?,?,?)");
+        $user_id = $this->getUser($_SESSION["username"])->getId();
+
+        try {
+            $sql->execute([$post_id, $user_id, $comment, (date_format($date, 'Y-m-d H:i:s'))]);
+            return new Comment($post_id, $user_id, $comment, $date);
+        } catch (PDOException $e) {
+            return null;
         }
     }
 
@@ -256,7 +291,7 @@ class DB
             $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
             foreach ($posts as $post) {
                 array_push($result, new Post($post["id"], $post["title"], $post["path"], $post["restricted"],
-                    $post["user_id"], $post["createdAt"]));
+                    $post["user_id"], $post["createdAt"], $post["text"]));
             }
         }
 
@@ -274,7 +309,7 @@ class DB
                 $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($posts as $post) {
                     array_push($result, new Post($post["id"], $post["title"], $post["path"],
-                        intval($post["restricted"]), $post["user_id"], $post["createdAt"]));
+                        intval($post["restricted"]), $post["user_id"], $post["createdAt"], $post["text"]));
                 }
             } catch (Exception $e) {
                 echo 'Exception abgefangen: ', $e->getMessage(), "\n";
@@ -292,7 +327,7 @@ class DB
             $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
             foreach ($posts as $post) {
                 array_push($result, new Post($post["id"], $post["title"], $post["path"], $post["restricted"],
-                    $post["user_id"], $post["createdAt"]));
+                    $post["user_id"], $post["createdAt"], $post["text"]));
             }
         }
 
