@@ -61,7 +61,8 @@ $users = $db->getUserList();
                 }else {
                     foreach ($posts as $post) {
                         echo '<tr>
-                            <td>' . $post->getName() . '</td>
+                            <td><a href="index.php?section=dash#post' . $post->getId() . '">' . $post->getName() .
+                            '</a></td>
                             <td>' . (($post->getRestricted()) ? 'restricted' : 'public') . '</td>
                             <td>' . $post->getDate() . '</td>
                             <td><button class="btn btn-danger" onclick="deletePost(' . $post->getId() . ')">Delete post.</button></td>
