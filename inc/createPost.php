@@ -28,7 +28,7 @@ if (isset($_POST["upload"])) {
                     <div class="row">
                         <div class="col form-group">
                             <label for="picture">Post image</label><br><br>
-                            <input type="file" id="picture" name="picture" required>
+                            <input type="file" id="picture" name="picture"   accept="image/x-png,image/jpeg"  required>
                         </div>
                     </div>
                     <div class="row">

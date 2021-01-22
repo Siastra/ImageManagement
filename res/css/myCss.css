@@ -169,6 +169,7 @@ input:focus {
 
 .tagBox{
     width:20%;
+    padding: 1%;
 }
 
 .footerBox{
@@ -208,7 +209,19 @@ height:10%;
     margin-top: 2%;
     margin-left: 2%;
 }
+.Creators{
+    height:fit-content;
+}
+.aboutYou{
+height:fit-content;
+float: left;
+width: 30%;
+}
 
+.aboutPics{
+    width:35%;
+
+}
 @media screen and (max-width: 800px){
     .galleryItem{
         margin: 1% auto;
@@ -231,6 +244,8 @@ height:10%;
     .tagBox{
         width:32%;
         overflow: auto;
+        padding: 1%;
+    margin-left: 1%;
     }
     .textBox{
         width:50%;

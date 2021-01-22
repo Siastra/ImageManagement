@@ -21,18 +21,20 @@
 Information in accordance with Section 5 TMG
 <br><br>Höchstädtplatz 6<br>1220  Wien<br>
 <h2>Represented by</h2>
-<div class="row">
-    <div class="col-4">
-Marcel Glavanits
-<img alt="Marcel Picture" class="aboutPics" src="res/images/Marcel.png">
-</div>
-<div class="col-4">
-Lukas Koller
-<img alt="Lukas Picture" class="aboutPics" src="res/images/Marcel.png">
-</div>
-<div class="col-4">
-Sebastian Schramm#
-<img alt="Sebastian Picture" class="aboutPics" src="res/images/Marcel.png">
+<div class="row Creators">
+    <div class="col-12">
+    <div class=" aboutYou">
+        <h3>Marcel Glavanits</h3>
+        <img alt="Marcel Picture" class="aboutPics" src="res/images/Marcel.png">
+    </div>
+    <div class=" aboutYou">
+        <h3>Lukas Koller</h3>
+        <img alt="Lukas Picture" class="aboutPics" src="res/images/lukas.png">
+    </div>
+    <div class=" aboutYou">
+        <h3>Sebastian Schramm</h3>
+        <img alt="Sebastian Picture" class="aboutPics" src="res/images/sebastian.png">
+    </div>
 </div>
 </div>
 <br><br>

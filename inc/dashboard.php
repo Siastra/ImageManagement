@@ -70,10 +70,11 @@
                             <span class=\"username\" >" . $post->getUser()->getUsername() . "</span>
                         </div>
                         <div class=\" headerBox headerBox2 \" >" .
+                        "<img  class=img-fluid src=\"res/images/" .
+                        (($restriction == "0") ? "public" : "private") . ".svg\" width=25px height=25px ><span class=\"username\">".
             (($restriction == "0") ? "Public" : "Private") .
-            "<img  class=img-fluid src=\"res/images/" .
-            (($restriction == "0") ? "public" : "private") . ".svg\" width=25px height=25px >
-                        </div>
+
+                        "</span></div>
                         <div class=\"headerBox3 headerBox\">
                             Created at: " . $post->getDate() . "
                         </div>
