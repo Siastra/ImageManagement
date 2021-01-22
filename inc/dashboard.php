@@ -16,26 +16,20 @@
               </div>';
     }
     echo '</div>';
-    echo '<div class="row">
-            <div class="col form-group">
-                <label for="picture">Picture:</label>
-                    <input type="checkbox" data-toggle="toggle" data-on="with" data-off="without"
-                        data-onstyle="success" data-offstyle="danger" class="col-1" data-size="small"
-                        id="picture" checked name="picture">
-            </div>
-          </div>';
+    echo '<div>';
     echo '<div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="timespan" id="timespan1" value="1d">
-            <label class="form-check-label" for="timespan1">1</label>
+            <label class="form-check-label" for="timespan1"><1d</label>
           </div>
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="timespan" id="timespan2" value="1w">
-            <label class="form-check-label" for="timespan2">2</label>
+            <label class="form-check-label" for="timespan2"><1w</label>
           </div>
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="timespan" id="timespan3" value="1m">
-            <label class="form-check-label" for="timespan3">3</label>
+            <label class="form-check-label" for="timespan3">>1w</label>
           </div>';
+    echo '</div>';
     echo '<button type="submit" class="btn btn-primary">Speichern</button>';
     echo '</div>';
     echo '</form>';
@@ -48,6 +42,9 @@
             }
             $posts = $db->checkTags($posts, $_GET['tag']);
         }
+        if(isset($_GET["timespan"])){
+            $posts = $db->filterDate($posts, $_GET["timespan"]);
+        }
     }else{
         $posts = $db->showDashboardPrivate();
         if(isset($_GET["tag"])) {
@@ -55,6 +52,9 @@
                 $_GET["tag"] = array($_GET["tag"]);
             }
             $posts = $db->checkTags($posts, $_GET['tag']);
+        }
+        if(isset($_GET["timespan"])){
+            $posts = $db->filterDate($posts, $_GET["timespan"]);
         }
     }
     $posts = array_reverse($posts);
