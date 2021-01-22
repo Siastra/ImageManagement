@@ -451,24 +451,57 @@ class DB
        }
        return $result;
    }
+
    public function checkTags(array $posts, array $tags) : array
    {
        $result = array();
         foreach($posts as $post){
             $postId = $post->getId();
-            foreach($tags as $tag){
-                $sql = $this->conn->prepare("SELECT `post_id` FROM `is_assigned` WHERE `tag_name`= ? AND `post_id` = ?");
-                $sql->execute([$tag, $postId]);
-                if ($sql->rowCount() > 0) {
-                    $resultPostIds = $sql->fetchAll(PDO::FETCH_ASSOC);
-                    $resultPost = $this->getPostById($resultPostIds[0]['post_id']);
-                    if(!in_array($resultPost, $result)){
-                        array_push($result, $resultPost);
-                    }
-
+            if(count($tags) > 1){
+                $sql = $this->conn->prepare("SELECT post_id from is_assigned WHERE tag_name = ? AND post_id= ? intersect SELECT post_id from is_assigned WHERE tag_name = ? AND post_id = ?");
+                $sql->execute([$tags[0], $postId, $tags[1], $postId]);
+            }else{
+                $sql = $this->conn->prepare("SELECT post_id from is_assigned WHERE tag_name = ? AND post_id= ?");
+                $sql->execute([$tags[0], $postId]);
+            }
+            if ($sql->rowCount() > 0) {
+                $resultPostIds = $sql->fetchAll(PDO::FETCH_ASSOC);
+                $resultPost = $this->getPostById($resultPostIds[0]['post_id']);
+                if(!in_array($resultPost, $result)){
+                    array_push($result, $resultPost);
                 }
             }
         }
         return $result;
+   }
+   public function filterDate(array $posts, string $span) : array
+   {
+       $result = array();
+       foreach ($posts as $post) {
+           $date = $post->getDate();
+           $postdate = new DateTime($date);
+           $now = new DateTime(date("d.m.Y"));
+           $age = $postdate->diff($now);
+           echo '<br>';
+           if($span == '1d'){
+               if($age->y < 1 && $age->m < 1 && $age->d < 1){
+                   var_dump($age->d);
+                   if(!in_array($post, $result)){
+                       array_push($result, $post);
+                   }
+               }
+           }elseif ($span == '1w'){
+               if($age->y < 1 && $age->m < 1 && $age->d < 8){
+                   if(!in_array($post, $result)){
+                       array_push($result, $post);
+                   }
+               }
+           }else{
+               if(!in_array($post, $result)){
+                   array_push($result, $post);
+               }
+           }
+       }
+       return $result;
    }
 }
