@@ -52,6 +52,8 @@
             }
 
             ?>
+            <li><a class="nav-link" href="index.php?section=about">
+             <img src="res/images/about.svg" alt="About icon" width="25px">About</a></li>
         </ul>
         <ul class="navbar-nav navbar-right">
             <?php
@@ -142,6 +144,9 @@
                 break;
             case 'userPage':
                 include "inc/userPage.php";
+                break;
+            case 'about':
+                include "inc/about.php";
                 break;
             default:
                 include "inc/dashboard.php";

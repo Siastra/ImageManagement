@@ -1,10 +1,41 @@
+
+
+
+<div class="container">
+<h1>Manual</h1>
+<h3>In the following Manual you will be advised on how to use our project.</h3>
+<p>When you are not logged in, you are only able to see public posts. You can't like or comment posts when you are not logged in.</p>
+<p>To register simply click on the button login  in the top right corner. Now a pop up window will appear and will ask you to provide a Username and a Password. To register simply click on register user.
+     After that you will be redirected to a register formular and you are asked to enter your information</p>
+<p>When you registered successfully, you have to login by clicking the login button in the top right corner and enter your username and password</p>
+<p>If you forgot your password you can get a new one by clicking on forgot Password in the login popup</p>
+<p>When you are logged in you can now upload your own posts, like and comment the posts of others and you can change your data</p>
+<p>To create a new post you can click on the button Upload Post in the top left corner. You can upload a picture as well as give it tags, a new name and a text that will be displayed under the picture in the dashboard.</p>
+<p>To view your profile simply click ...profile in the top right corner right next to Logout</p>
+<p>When you are on your profile page you can delete pics that you uploaded as well as change the restriction of your pictures. When you are on your profile you can now click on Edit Profile button which replaced the user page button.</p>
+<p>On the Edit profile page you can edit all your information as well as set a profile picture</p>
+<p>Pictures are displayed on the dashboard. To get to that you simply click on the button Dashboard in the top left corner</p>
+</br></br>
+
 <h1>Legal Disclosure</h1>
 Information in accordance with Section 5 TMG
 <br><br>Höchstädtplatz 6<br>1220  Wien<br>
 <h2>Represented by</h2>
-Marcel Glavanits<br />
-Lukas Koller<br />
-Sebastian Schramm<br><br>
+<div class="row">
+    <div class="col-4">
+Marcel Glavanits
+<img alt="Marcel Picture" class="aboutPics" src="res/images/Marcel.png">
+</div>
+<div class="col-4">
+Lukas Koller
+<img alt="Lukas Picture" class="aboutPics" src="res/images/Marcel.png">
+</div>
+<div class="col-4">
+Sebastian Schramm#
+<img alt="Sebastian Picture" class="aboutPics" src="res/images/Marcel.png">
+</div>
+</div>
+<br><br>
 <h2>Contact Information</h2>
 Telephone: +4369420666<br>E-Mail: <a href="mailto:sebastian_schramm@hotmail.com">sebastian_schramm@hotmail.com</a><br>Internet address: <a href="http://localhost/ImageManagement/index.php" target="_blank">http://localhost/ImageManagement/index.php</a><br><br>
 <h2>Disclaimer</h2>
@@ -28,3 +59,4 @@ The materials from these pages are copyrighted and any unauthorized use may viol
 
 <br><br>
 <i>Quelle: </i><a href="http://www.translate-24h.de" target="_blank">Englisch-Übersetzung translate-24h.de</a> <br><br>
+</div>
