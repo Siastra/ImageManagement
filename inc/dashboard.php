@@ -133,39 +133,34 @@
             $.ajax({
                 type: "POST",
                 url: 'ajax/upvote.php',
-                data: {id: post_id}
-            }).then(
-                // resolve/success callback
-                function (rating) {
-                    let jsonData = JSON.parse(rating);
-                    $('#likeCounter' + post_id).html(jsonData.like);
-                    $('#dislikeCounter' + post_id).html(jsonData.dislike);
-                },
-                // reject/failure callback
-                function () {
-                    alert('There was some error!');
+                data:{id: post_id},
+                success: function (response) {
+                    try {
+                        let jsonData = JSON.parse(response);
+                        $('#likeCounter' + post_id).html(jsonData.like);
+                        $('#dislikeCounter' + post_id).html(jsonData.dislike);
+                    }catch (e) {
+                        location.href = "index.php?fail=RatingUserNotLoggedIn";
+                    }
                 }
-            );
-
+            });
         }
 
         function downVote(post_id) {
             $.ajax({
                 type: "POST",
                 url: 'ajax/downvote.php',
-                data: {id: post_id}
-            }).then(
-                // resolve/success callback
-                function (rating) {
-                    let jsonData = JSON.parse(rating);
-                    $('#likeCounter' + post_id).html(jsonData.like);
-                    $('#dislikeCounter' + post_id).html(jsonData.dislike);
-                },
-                // reject/failure callback
-                function () {
-                    alert('There was some error!');
+                data:{id: post_id},
+                success: function (response) {
+                    try {
+                        let jsonData = JSON.parse(response);
+                        $('#likeCounter' + post_id).html(jsonData.like);
+                        $('#dislikeCounter' + post_id).html(jsonData.dislike);
+                    }catch (e) {
+                        location.href = "index.php?section=dash&fail=RatingUserNotLoggedIn";
+                    }
                 }
-            );
+            });
         }
 
         function postComment(post_id) {
@@ -179,18 +174,19 @@
                         comment: comment
                     },
                     success: function (response) {
-                        let jsonData = JSON.parse(response);
-
-                        // user is logged in successfully in the back-end
-                        // let's redirect
-                        if (jsonData.success === '1') {
-                            let old = $('#commentSection' + post_id).html();
-                            $('#commentSection' + post_id).html("<div class='comment'>" + jsonData.commentUser + "(" +
-                                jsonData.date + "): " +
-                                jsonData.commentText + "</div>" + old);
-                            $('#commentBox' + post_id).val("");
-                        } else {
-                            alert('Comment not posted!');
+                        try {
+                            let jsonData = JSON.parse(response);
+                            if (jsonData.success === '1') {
+                                let old = $('#commentSection' + post_id).html();
+                                $('#commentSection' + post_id).html("<div class='comment'>" + jsonData.commentUser + "(" +
+                                    jsonData.date + "): " +
+                                    jsonData.commentText + "</div>" + old);
+                                $('#commentBox' + post_id).val("");
+                            } else {
+                                alert('Comment not posted!');
+                            }
+                        }catch (e) {
+                            location.href = "index.php?section=dash&fail=CommentUserNotLoggedIn";
                         }
                     }
                 });

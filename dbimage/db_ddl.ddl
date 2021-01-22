@@ -28,7 +28,7 @@ CREATE TABLE Post (
     path        VARCHAR(128) NOT NULL,
     restricted  CHAR(1) NOT NULL,
     user_id     INTEGER NOT NULL,
-    createdAt   DATE NOT NULL,
+    createdAt   DATETIME NOT NULL,
     text        VARCHAR(128) NOT NULL
 );
 

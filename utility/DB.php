@@ -424,18 +424,17 @@ class DB
         return $stmt->fetchColumn();
     }
 
-    public function addRating(int $post_id, int $type): void
+    public function addRating(int $post_id, int $user_id, int $type): void
     {
-        $id = $this->getUser($_SESSION["username"])->getId();
         $stmt = $this->conn->prepare("SELECT * FROM `rating` WHERE user_id = ? AND post_id = ?");
-        $stmt->execute([$id, $post_id]);
+        $stmt->execute([$user_id, $post_id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($result) {
             $delete = $this->conn->prepare("DELETE FROM `rating` WHERE user_id = ? AND post_id = ?");
-            $delete->execute([$id, $post_id]);
+            $delete->execute([$user_id, $post_id]);
         }
         $sql = $this->conn->prepare("INSERT INTO `rating`(`user_id`, `post_id`, `type`) VALUES (?,?,?)");
-        $sql->execute([$id, $post_id, $type]);
+        $sql->execute([$user_id, $post_id, $type]);
     }
 
    public function listAllTags() : array

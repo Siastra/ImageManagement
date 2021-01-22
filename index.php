@@ -103,6 +103,10 @@
         echo MsgFactory::getWarning("Update failed!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "registerFail")) {
         echo MsgFactory::getWarning("Registration failed! Username not valid or exists!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "RatingUserNotLoggedIn")) {
+        echo MsgFactory::getWarning("Failed to give rating! User not logged in!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "CommentUserNotLoggedIn")) {
+        echo MsgFactory::getWarning("Comment could not be posted! User not logged in!");
     }
 
     //Message Banner - Successes
