@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Comment.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
 
 class DB
@@ -54,6 +55,26 @@ class DB
         return $result;
     }
 
+    public function getAllCommentsByPost(int $post_id): array
+    {
+        $result = array();
+        $sth = $this->conn->prepare("SELECT * FROM `comment` WHERE post_id=?");
+        $sth->execute([$post_id]);
+        if ($sth->rowCount() > 0) {
+            // output data of each row
+            try {
+                $comments = $sth->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($comments as $comment) {
+                    array_push($result, new Comment($comment["post_id"], $comment["user_id"], $comment["text"],
+                        new DateTime($comment["createdAt"])));
+                }
+            } catch (Exception $e) {
+                echo 'Exception abgefangen: ', $e->getMessage(), "\n";
+            }
+        }
+        return $result;
+    }
+
     //Get a specific user by username
     public function getUser(string $username): ?User
     {
@@ -62,7 +83,7 @@ class DB
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if (empty($row)) {
                 return null;
-            }else {
+            } else {
                 return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
                     $row["password"], $row["admin"], $row["activated"], $row["picture"]);
             }
@@ -209,9 +230,9 @@ class DB
                                                AND TABLE_NAME = \"post\"");
         $sql->execute();
         $res = $sql->fetchColumn();
-        if (empty($res)){
+        if (empty($res)) {
             return 1;
-        }else {
+        } else {
             return $res;
         }
     }
@@ -227,6 +248,20 @@ class DB
             return $this->conn->lastInsertId();
         } catch (PDOException $e) {
             throw $e;
+        }
+    }
+
+    public function postComment(int $post_id, string $comment, DateTime $date): ?Comment
+    {
+        $sql = $this->conn->prepare("INSERT INTO `comment`(`post_id`, `user_id`, `text`, `createdAt`) 
+                                            VALUES (?,?,?,?)");
+        $user_id = $this->getUser($_SESSION["username"])->getId();
+
+        try {
+            $sql->execute([$post_id, $user_id, $comment, (date_format($date, 'Y-m-d H:i:s'))]);
+            return new Comment($post_id, $user_id, $comment, $date);
+        } catch (PDOException $e) {
+            return null;
         }
     }
 
@@ -361,7 +396,7 @@ class DB
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($row)) {
             return -2;
-        }else {
+        } else {
             $user = $this->getUser($username);
             if ($user->isAdmin()) {
                 if ($pw == $row["password"]) {
@@ -389,7 +424,7 @@ class DB
         return $stmt->fetchColumn();
     }
 
-    public function addRating(int $post_id, int $type) : void
+    public function addRating(int $post_id, int $type): void
     {
         $id = $this->getUser($_SESSION["username"])->getId();
         $stmt = $this->conn->prepare("SELECT * FROM `rating` WHERE user_id = ? AND post_id = ?");
@@ -402,4 +437,38 @@ class DB
         $sql = $this->conn->prepare("INSERT INTO `rating`(`user_id`, `post_id`, `type`) VALUES (?,?,?)");
         $sql->execute([$id, $post_id, $type]);
     }
+
+   public function listAllTags() : array
+   {
+       $result = array();
+       $sql = $this->conn->prepare("SELECT * FROM `tag`");
+       $sql->execute();
+       if ($sql->rowCount() > 0) {
+           $tags = $sql->fetchAll(PDO::FETCH_ASSOC);
+           foreach($tags as $tag){
+               array_push($result, $tag['name']);
+           }
+       }
+       return $result;
+   }
+   public function checkTags(array $posts, array $tags) : array
+   {
+       $result = array();
+        foreach($posts as $post){
+            $postId = $post->getId();
+            foreach($tags as $tag){
+                $sql = $this->conn->prepare("SELECT `post_id` FROM `is_assigned` WHERE `tag_name`= ? AND `post_id` = ?");
+                $sql->execute([$tag, $postId]);
+                if ($sql->rowCount() > 0) {
+                    $resultPostIds = $sql->fetchAll(PDO::FETCH_ASSOC);
+                    $resultPost = $this->getPostById($resultPostIds[0]['post_id']);
+                    if(!in_array($resultPost, $result)){
+                        array_push($result, $resultPost);
+                    }
+
+                }
+            }
+        }
+        return $result;
+   }
 }

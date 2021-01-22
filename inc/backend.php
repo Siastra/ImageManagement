@@ -68,7 +68,7 @@ if ($_REQUEST["type"] == "insert") {
         } else {
             header("Location: ../index.php?section=forgotPw&fail=updatePasswordFailed");
         }
-    }else {
+    } else {
         header("Location: ../index.php?section=forgotPw&fail=userNotFound");
     }
 } elseif ($_REQUEST["type"] == "changePassword") {
@@ -92,7 +92,7 @@ if ($_REQUEST["type"] == "insert") {
 } elseif ($_REQUEST["type"] == "uploadIcon") {
     if ($db->uploadIcon($_FILES)) {
         header("Location: ../index.php?section=register&edit=true&success=uploadIcon");
-    }else{
+    } else {
         header("Location: ../index.php?section=register&edit=true&fail=UploadFail");
     }
 }
