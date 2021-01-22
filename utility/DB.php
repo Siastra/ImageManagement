@@ -437,4 +437,38 @@ class DB
         $sql = $this->conn->prepare("INSERT INTO `rating`(`user_id`, `post_id`, `type`) VALUES (?,?,?)");
         $sql->execute([$id, $post_id, $type]);
     }
+
+   public function listAllTags() : array
+   {
+       $result = array();
+       $sql = $this->conn->prepare("SELECT * FROM `tag`");
+       $sql->execute();
+       if ($sql->rowCount() > 0) {
+           $tags = $sql->fetchAll(PDO::FETCH_ASSOC);
+           foreach($tags as $tag){
+               array_push($result, $tag['name']);
+           }
+       }
+       return $result;
+   }
+   public function checkTags(array $posts, array $tags) : array
+   {
+       $result = array();
+        foreach($posts as $post){
+            $postId = $post->getId();
+            foreach($tags as $tag){
+                $sql = $this->conn->prepare("SELECT `post_id` FROM `is_assigned` WHERE `tag_name`= ? AND `post_id` = ?");
+                $sql->execute([$tag, $postId]);
+                if ($sql->rowCount() > 0) {
+                    $resultPostIds = $sql->fetchAll(PDO::FETCH_ASSOC);
+                    $resultPost = $this->getPostById($resultPostIds[0]['post_id']);
+                    if(!in_array($resultPost, $result)){
+                        array_push($result, $resultPost);
+                    }
+
+                }
+            }
+        }
+        return $result;
+   }
 }
