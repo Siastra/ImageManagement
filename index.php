@@ -42,7 +42,7 @@
             if(isset($_SESSION["username"])) {
                 $user = $db->getUser($_SESSION["username"]);
                 echo '<li><a class="nav-link" href="index.php?section=create">
-                       <img src="res/images/upload.svg" alt="Upload icon" width="25px">Upload Post</a></li>';
+                       <img src="res/images/upload.svg" alt="Upload icon" width="25px"> Upload Post</a></li>';
             }
             if(isset($_SESSION["username"]) && $user->isAdmin()) {
                 echo '<li class="nav-item">
@@ -53,7 +53,7 @@
 
             ?>
             <li><a class="nav-link" href="index.php?section=about">
-             <img src="res/images/about.svg" alt="About icon" width="25px">About</a></li>
+             <img src="res/images/about.svg" alt="About icon" width="25px"> About</a></li>
         </ul>
         <ul class="navbar-nav navbar-right">
             <?php
