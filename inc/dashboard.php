@@ -61,26 +61,7 @@
 
     foreach($posts as $post) {
         $post_id = $post->getId();
-        echo "<div class=\"post\">";
-        echo "<div class=row>";
-        echo "<div class=\"headerBox\" >";
-        echo "<img class=profilepic src=".$post->getUser()->getPicture()." >";
-        echo "<span class=\"username\" >".$post->getUser()->getUsername()."</span>";
-        echo "</div>";
-        echo "<div class=\" headerBox headerBox2 \" >";
         $restriction=$post->getRestricted();
-        if($restriction=="0"){
-            echo "Public";
-            echo "<img  class=img-fluid src=\"res/images/public.svg\" width=25px height=25px >";
-            
-        }else{
-            echo "Private";
-            echo "<img class=img-fluid src=\"res/images/private.svg\" width=25px height=25px >";
-        }
-        echo "</div>";
-        echo "<div class=\"headerBox3 headerBox\" >" ;
-        echo "Created at: ".$post->getDate();
-        echo "</div></div>";
 
         echo "<div class=\"post\" id='post" . $post_id . "'>
                     <div class=row>
