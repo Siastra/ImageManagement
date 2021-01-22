@@ -66,7 +66,7 @@ class DB
                 $comments = $sth->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($comments as $comment) {
                     array_push($result, new Comment($comment["post_id"], $comment["user_id"], $comment["text"],
-                new DateTime($comment["createdAt"])));
+                        new DateTime($comment["createdAt"])));
                 }
             } catch (Exception $e) {
                 echo 'Exception abgefangen: ', $e->getMessage(), "\n";
@@ -83,7 +83,7 @@ class DB
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if (empty($row)) {
                 return null;
-            }else {
+            } else {
                 return new User($row["id"], $row["title"], $row["fname"], $row["lname"], $row["email"], $row["username"],
                     $row["password"], $row["admin"], $row["activated"], $row["picture"]);
             }
@@ -230,9 +230,9 @@ class DB
                                                AND TABLE_NAME = \"post\"");
         $sql->execute();
         $res = $sql->fetchColumn();
-        if (empty($res)){
+        if (empty($res)) {
             return 1;
-        }else {
+        } else {
             return $res;
         }
     }
@@ -251,7 +251,7 @@ class DB
         }
     }
 
-    public function postComment(int $post_id, string $comment, DateTime $date) : ?Comment
+    public function postComment(int $post_id, string $comment, DateTime $date): ?Comment
     {
         $sql = $this->conn->prepare("INSERT INTO `comment`(`post_id`, `user_id`, `text`, `createdAt`) 
                                             VALUES (?,?,?,?)");
@@ -396,7 +396,7 @@ class DB
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (empty($row)) {
             return -2;
-        }else {
+        } else {
             $user = $this->getUser($username);
             if ($user->isAdmin()) {
                 if ($pw == $row["password"]) {
@@ -424,7 +424,7 @@ class DB
         return $stmt->fetchColumn();
     }
 
-    public function addRating(int $post_id, int $type) : void
+    public function addRating(int $post_id, int $type): void
     {
         $id = $this->getUser($_SESSION["username"])->getId();
         $stmt = $this->conn->prepare("SELECT * FROM `rating` WHERE user_id = ? AND post_id = ?");

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once $_SERVER["DOCUMENT_ROOT"]."/utility/DB.php";
+include_once $_SERVER["DOCUMENT_ROOT"] . "/utility/DB.php";
 $db = new DB();
 $comment = $db->postComment($_POST["id"], $_POST["comment"], new DateTime('now'));
 if ($comment != null) {

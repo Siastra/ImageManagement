@@ -37,8 +37,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <a class="col" href="' . $posts[$i]->getPath(). '" data-lightbox="' . $posts[$i]->getName() . '" 
-            data-title="' . $posts[$i]->getName() . '"><img alt="' . $posts[$i]->getName() .
+                        <a class="col" href="index.php?section=dash#post' . ($posts[$i]->getId()) . '"><img alt="' . $posts[$i]->getName() .
                 '" src="' . $posts[$i]->getThumbnailPath() . '"></a>
                     </div>
                 </div>';
