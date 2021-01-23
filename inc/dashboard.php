@@ -66,11 +66,11 @@
         echo "<div class=\"post\" id='post" . $post_id . "'>
                     <div class=row>
                         <div class=\"headerBox\" >
-                            <img class=profilepic src=" . $post->getUser()->getPicture() . " >
+                            <img alt=ProfilPic class=profilepic src=" . $post->getUser()->getPicture() . " >
                             <span class=\"username\" >" . $post->getUser()->getUsername() . "</span>
                         </div>
                         <div class=\" headerBox headerBox2 \" >" .
-                        "<img  class=img-fluid src=\"res/images/" .
+                        "<img  alt=Restriction class=img-fluid src=\"res/images/" .
                         (($restriction == "0") ? "public" : "private") . ".svg\" width=25px height=25px ><span class=\"username\">".
             (($restriction == "0") ? "Public" : "Private") .
 
@@ -83,7 +83,7 @@
                     <div class=\"row picBackground\">
                         <a class=\" col-12\" href=" . $post->getFullPath() . " data-lightbox=" . $post->getName() .
             " data-title=" . $post->getName() . ">
-                            <img class=img-fluid src=" . $post->getDashPath() . " alt=" . $post->getName() . ">
+                            <img alt=Post class=img-fluid src=" . $post->getDashPath() . " alt=" . $post->getName() . ">
                         </a>
                     </div>
 

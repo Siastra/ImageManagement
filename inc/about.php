@@ -2,19 +2,31 @@
 
 
 <div class="container">
-<h1>Manual</h1>
+<h1>MANUAL</h1>
 <h3>In the following Manual you will be advised on how to use our project.</h3>
-<p>When you are not logged in, you are only able to see public posts. You can't like or comment posts when you are not logged in.</p>
-<p>To register simply click on the button login  in the top right corner. Now a pop up window will appear and will ask you to provide a Username and a Password. To register simply click on register user.
-     After that you will be redirected to a register formular and you are asked to enter your information</p>
+<h4>NOT LOGGED IN </h4>
+<p>When you are not logged in, you are only able to see public posts. You can't like or comment posts when you are not logged in. </p>
+<h4>REGISTER</h4>
+<p>To register simply click on the button login  in the top right corner. Now a pop up window will appear and will ask you to provide a Username and a Password. 
+   To register simply click on register user.
+   After that you will be redirected to a register formular and you are asked to enter your information.
+   When the entered information  is  correct, your account is registered and you will be redirected to the dashboard section but you are not logged in</p>
+<h4>LOGIN</h4>
 <p>When you registered successfully, you have to login by clicking the login button in the top right corner and enter your username and password</p>
+<h4>FORGOT PASSWORD</h4>
 <p>If you forgot your password you can get a new one by clicking on forgot Password in the login popup</p>
-<p>When you are logged in you can now upload your own posts, like and comment the posts of others and you can change your data</p>
-<p>To create a new post you can click on the button Upload Post in the top left corner. You can upload a picture as well as give it tags, a new name and a text that will be displayed under the picture in the dashboard.</p>
-<p>To view your profile simply click ...profile in the top right corner right next to Logout</p>
-<p>When you are on your profile page you can delete pics that you uploaded as well as change the restriction of your pictures. When you are on your profile you can now click on Edit Profile button which replaced the user page button.</p>
-<p>On the Edit profile page you can edit all your information as well as set a profile picture</p>
-<p>Pictures are displayed on the dashboard. To get to that you simply click on the button Dashboard in the top left corner</p>
+<h4>UPLOAD POST</h4>
+<p>When you are logged in you can now upload your own posts.
+   To create a new post you can click on the button Upload Post in the top left corner. You can upload a picture as well as give it tags, a new name and a text that will be displayed under the picture in the dashboard.</p>
+<h4>SEE YOUR PROFILE</h4>
+<p>To view your profile simply click ...profile in the top right corner right next to Logout
+   When you are on your profile page you can delete pictures that you uploaded as well as change the restriction of your pictures.</p>
+<h4>EDIT YOUR INFORMATION</h4>
+<p>When you are on your profile you can now click on Edit Profile button which replaced the user page button.
+   On the Edit profile page you can edit all your information as well as set a profile picture</p>
+<h4>DASHBOARD</h4>
+<p>Pictures are displayed on the dashboard. To get to that you simply click on the button Dashboard in the top left corner. When you are logged in, you can comment pictures as well as like pictures. You can filter the dashboard 
+to find specific pictures. </p>
 </br></br>
 
 <h1>Legal Disclosure</h1>
