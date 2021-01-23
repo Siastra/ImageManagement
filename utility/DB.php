@@ -484,7 +484,6 @@ class DB
            echo '<br>';
            if($span == '1d'){
                if($age->y < 1 && $age->m < 1 && $age->d < 1){
-                   var_dump($age->d);
                    if(!in_array($post, $result)){
                        array_push($result, $post);
                    }
@@ -503,6 +502,7 @@ class DB
        }
        return $result;
    }
+
    public function checkSearchRequest(array $posts, string $searchInput): array
    {
        $result = array();

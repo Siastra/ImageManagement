@@ -37,7 +37,7 @@
         $username = $user->getUsername();
         $userId = $user->getId();
         echo '
-                    <input type="radio" class="form-radio-input" name="userid[]" value="'.$userId.'">
+                    <input type="radio" class="form-radio-input" name="userid" value="'.$userId.'">
                     <label for="'.$username.'" class="form-radio-label">'.$username.'</label>
               ';
     }
@@ -92,10 +92,8 @@
                 foreach ($posts as $post) {
                     $postUser = $post->getUser();
                     $postUserId = $postUser->getId();
-                    foreach($_GET["userid"] as $checkId){
-                        if(intval($checkId) == $postUserId){
-                            array_push($temp, $post);
-                        }
+                    if(intval($_GET["userid"]) == $postUserId){
+                        array_push($temp, $post);
                     }
                 }
                 $posts = $temp;
