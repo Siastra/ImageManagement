@@ -62,7 +62,12 @@
             type: "POST",
             url: 'ajax/deletePost.php',
             data:{id: id},
-        });
-        location.reload();
+        }).then(
+            function() {
+                location.reload();
+            }, function() {
+            }
+        );
+
     }
 </script>

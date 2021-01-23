@@ -15,7 +15,7 @@
           content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="Description" content="Author: Marcel Glavanits,
-    Sebastian Schramm, Lukas Koller | A basic social network">
+                                        Sebastian Schramm, Lukas Koller | A basic social network">
     <link rel="stylesheet" href="res/css/myCss.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <!-- Latest compiled and minified CSS -->
@@ -30,7 +30,7 @@
     <title>Usermanagement</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <a class="navbar-brand" href="index.php?section=dash"><img src="res/images/dashboard.svg" alt="Dashboard icon" width="25px">
         Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,27 +86,27 @@
 <?php
     //Message Banner - Fails
     if (isset($_GET["fail"]) && ($_GET["fail"] == "updatePasswordFailed")) {
-        echo MsgFactory::getWarning("Password-Update failed!");
+        echo MsgFactory::getWarning("<b>Password-Update failed!</b>");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "updatePasswordFailedWrong")) {
-        echo MsgFactory::getWarning("Password-Update failed! Wrong password given!");
+        echo MsgFactory::getWarning("<b>Password-Update failed!</b> Wrong password given!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "userNotFound")) {
-        echo MsgFactory::getWarning("Password-Update failed! User not found!");
+        echo MsgFactory::getWarning("<b>Password-Update failed!</b> User not found!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "loginUserNotFound")) {
-        echo MsgFactory::getWarning("Login failed! User account does not exist!");
+        echo MsgFactory::getWarning("<b>Login failed!</b> User account does not exist!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "accountDeactivated")) {
-        echo MsgFactory::getWarning("Login failed! User account deactivated!");
+        echo MsgFactory::getWarning("<b>Login failed!</b> User account deactivated!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "wrongPassword")) {
-        echo MsgFactory::getWarning("Login failed! Password incorrect!");
+        echo MsgFactory::getWarning("<b>Login failed!</b> Password incorrect!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "UploadFail")) {
-        echo MsgFactory::getWarning("Update failed! Image upload failed!");
+        echo MsgFactory::getWarning("<b>Update failed!</b> Image upload failed!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "UpdateFail")) {
-        echo MsgFactory::getWarning("Update failed!");
+        echo MsgFactory::getWarning("<b>Update failed!</b>");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "registerFail")) {
-        echo MsgFactory::getWarning("Registration failed! Username not valid or exists!");
+        echo MsgFactory::getWarning("<b>Registration failed!</b> Username not valid or exists!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "RatingUserNotLoggedIn")) {
-        echo MsgFactory::getWarning("Failed to give rating! User not logged in!");
+        echo MsgFactory::getWarning("<b>Failed to give rating!</b> User not logged in!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "CommentUserNotLoggedIn")) {
-        echo MsgFactory::getWarning("Comment could not be posted! User not logged in!");
+        echo MsgFactory::getWarning("<b>Comment could not be posted!</b> User not logged in!");
     }
 
     //Message Banner - Successes
@@ -163,7 +163,7 @@
 <script src="res/js/lightbox-plus-jquery.js"></script>
 <script src="res/js/bootstrap.bundle.min.js" ></script>
 </main>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         var url = window.location;
         $('ul.nav a[href="'+ url +'"]').parent().addClass('active');

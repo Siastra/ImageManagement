@@ -222,6 +222,11 @@ width: 30%;
     width:35%;
 
 }
+
+body {
+    padding-top: 4%;
+}
+
 @media screen and (max-width: 800px){
     .galleryItem{
         margin: 1% auto;
