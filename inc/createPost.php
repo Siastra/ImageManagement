@@ -40,7 +40,7 @@ if (isset($_POST["upload"])) {
                     <div class="row">
                         <div class="col form-group">
                             <label for="tags">Tags:</label>
-                            <input type="text" placeholder="Tags " name="tags" id="tags"/>
+                            <input type="text" placeholder="Tags " name="tags" id="tags" maxlength="16"/>
                         </div>
                     </div>
                     <div class="row">
