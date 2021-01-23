@@ -58,12 +58,25 @@
              <img src="res/images/about.svg" alt="About icon" width="25px"> About</a></li>
         </ul>
 
-        <div class="nav-center">
+        <?php
+        echo '<div class="nav-center">
             <form class="form-inline my-2 my-lg-0" method="GET" action="">
                 <input class="form-control navbar-center" type="search" name="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </div>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>';
+        if(isset($_GET["tag"])){
+            foreach($_GET["tag"] as $tag){
+                echo '<input type="hidden" name=tag[] value="'.$tag.'">';
+            }
+        }
+        if(isset($_GET["timespan"])){
+            echo '<input type="hidden" name=timespan value="'.$_GET["timespan"].'">';
+        }
+        if(isset($_GET["userid"])){
+            echo '<input type="hidden" name=userid value="'.$_GET["userid"].'">';
+        }
+            echo '</form>
+        </div>'
+        ?>
 
         <ul class="navbar-nav navbar-right">
             <?php
