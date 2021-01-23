@@ -23,10 +23,11 @@
     <link href="res/css/lightbox.css" rel="stylesheet">
 
     <script src="res/js/lightbox-plus-jquery.js"></script>
-    <script src="res/js/bootstrap.bundle.min.js" ></script>
+    <!--<script src="res/js/bootstrap.bundle.min.js" ></script>-->
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <title>Usermanagement</title>
 </head>
@@ -56,6 +57,14 @@
             <li><a class="nav-link" href="index.php?section=about">
              <img src="res/images/about.svg" alt="About icon" width="25px"> About</a></li>
         </ul>
+
+        <div class="nav-center">
+            <form class="form-inline my-2 my-lg-0" method="GET" action="">
+                <input class="form-control navbar-center" type="search" name="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+
         <ul class="navbar-nav navbar-right">
             <?php
             if (isset($_SESSION["username"]) && (isset($_GET["section"]) && ($_GET["section"] == "userPage"))) {

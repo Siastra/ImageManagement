@@ -4,7 +4,7 @@
     $db = new DB();
     $tags = $db->listAllTags();
     $users  = $db->getUserList();
-    echo '<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"> Filter </button>';
+    echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
     echo '<div class="collapse" id="collapseFilter">';
     echo '<form class="form-inline" method="get" action="">';
     //echo '<ul class="dropdown-menu checkbox-menu allow-focus">';
@@ -46,10 +46,9 @@
     echo '<button type="submit" class="btn btn-primary">Speichern</button>';
     echo '</div>';
     echo '</form>';
-    //echo '</div>';
     if(isset($_SESSION["username"])){
         $posts = $db->showDashboardPublic();
-        if(isset($_GET["tag"])) {
+        if(isset($_GET["tag"])){
             if(gettype($_GET["tag"]) == 'string'){
                 $_GET["tag"] = array($_GET["tag"]);
             }
@@ -73,9 +72,12 @@
                 $posts = $temp;
             }
         }
+        if(isset($_GET["search"])){
+            $posts = $db->checkSearchRequest($posts, $_GET["search"]);
+        }
     }else{
         $posts = $db->showDashboardPrivate();
-        if (isset($_GET["tag"])) {
+        if(isset($_GET["tag"])){
             if (gettype($_GET["tag"]) == 'string') {
                 $_GET["tag"] = array($_GET["tag"]);
             }
