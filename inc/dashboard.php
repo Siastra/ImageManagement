@@ -3,17 +3,19 @@
     include_once "utility/DB.php";
     $db = new DB();
     $tags = $db->listAllTags();
+    $users  = $db->getUserList();
     echo '<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"> Filter </button>';
     echo '<div class="collapse" id="collapseFilter">';
     echo '<form class="form-inline" method="get" action="">';
     //echo '<ul class="dropdown-menu checkbox-menu allow-focus">';
     echo '<div>';
+    //echo '<div class="form-check">';
     foreach($tags as $tag){
 
-        echo '<div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="tag[]" id="'.$tag.'" value="'.$tag.'">
+        echo '
+                    <input type="checkbox" class="form-check-input" name="tag[]" value="'.$tag.'">
                     <label for="'.$tag.'" class="form-check-label">'.$tag.'</label>
-              </div>';
+              ';
     }
     echo '</div>';
     echo '<div>';
@@ -30,6 +32,17 @@
             <label class="form-check-label" for="timespan3">>1w</label>
           </div>';
     echo '</div>';
+    echo '<div>';
+    foreach($users as $user){
+        $username = $user->getUsername();
+        $userId = $user->getId();
+        echo '
+                    <input type="radio" class="form-radio-input" name="userid[]" value="'.$userId.'">
+                    <label for="'.$username.'" class="form-radio-label">'.$username.'</label>
+              ';
+    }
+
+    echo '</div>';
     echo '<button type="submit" class="btn btn-primary">Speichern</button>';
     echo '</div>';
     echo '</form>';
@@ -45,20 +58,49 @@
         if(isset($_GET["timespan"])){
             $posts = $db->filterDate($posts, $_GET["timespan"]);
         }
+        if(isset($_GET["userid"])){
+            if (isset($_GET["userid"])) {
+                $temp = array();
+                foreach ($posts as $post) {
+                    $postUser = $post->getUser();
+                    $postUserId = $postUser->getId();
+                    foreach($_GET["userid"] as $checkId){
+                        if(intval($checkId) == $postUserId){
+                            array_push($temp, $post);
+                        }
+                    }
+                }
+                $posts = $temp;
+            }
+        }
     }else{
         $posts = $db->showDashboardPrivate();
-        if(isset($_GET["tag"])) {
-            if(gettype($_GET["tag"]) == 'string'){
+        if (isset($_GET["tag"])) {
+            if (gettype($_GET["tag"]) == 'string') {
                 $_GET["tag"] = array($_GET["tag"]);
             }
             $posts = $db->checkTags($posts, $_GET['tag']);
         }
-        if(isset($_GET["timespan"])){
+        if (isset($_GET["timespan"])) {
             $posts = $db->filterDate($posts, $_GET["timespan"]);
+        }
+        if(isset($_GET["userid"])){
+            if (isset($_GET["userid"])) {
+                $temp = array();
+                foreach ($posts as $post) {
+                    $postUser = $post->getUser();
+                    $postUserId = $postUser->getId();
+                    foreach($_GET["userid"] as $checkId){
+                        if(intval($checkId) == $postUserId){
+                            array_push($temp, $post);
+                        }
+                    }
+                }
+                $posts = $temp;
+            }
         }
     }
     $posts = array_reverse($posts);
-
     foreach($posts as $post) {
         $post_id = $post->getId();
         $restriction=$post->getRestricted();
@@ -127,7 +169,26 @@
     }
 
       ?>
+    <script>
+        //, ".form-check input"
+        var limit = 2;
+        /*$('div.form-check').on('change', function(evt) {
+            $input = $(this).find("input")
+            if($input.siblings(':checked').length <= limit) {
+                //$input.checked = false;
+                //alert($(this).children(':checked').length);
+                console.log($input.siblings());
+            }
 
+        });*/
+        $('input.form-check-input').on('change', function(evt) {
+            if($(this).siblings(':checked').length >= limit) {
+                this.checked = false;
+                //alert($(this).children(':checked').length);
+                //console.log($(this).siblings());
+            }
+        });
+    </script>
     <script>
 
         function upVote(post_id) {
