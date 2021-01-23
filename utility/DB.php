@@ -503,4 +503,22 @@ class DB
        }
        return $result;
    }
+   public function checkSearchRequest(array $posts, string $searchInput): array
+   {
+       $result = array();
+       $search = "%".$searchInput."%";
+       foreach($posts as $post){
+           $postId = $post->getId();
+           $stmt = $this->conn->prepare("SELECT post_id from comment where post_id = ? AND text like ? UNION SELECT id from post WHERE (id = ? AND title LIKE ? ) OR (id = ? AND text LIKE ?)");
+           $stmt->execute([$postId, $search, $postId, $search, $postId, $search]);
+           if ($stmt->rowCount() > 0) {
+               $resultPostIds = $stmt->fetchAll(PDO::FETCH_ASSOC);
+               $resultPost = $this->getPostById($resultPostIds[0]['post_id']);
+               if(!in_array($resultPost, $result)){
+                   array_push($result, $resultPost);
+               }
+           }
+       }
+       return $result;
+   }
 }

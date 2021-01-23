@@ -3,17 +3,19 @@
     include_once "utility/DB.php";
     $db = new DB();
     $tags = $db->listAllTags();
-    echo '<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"> Filter </button>';
+    $users  = $db->getUserList();
+    echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
     echo '<div class="collapse" id="collapseFilter">';
     echo '<form class="form-inline" method="get" action="">';
     //echo '<ul class="dropdown-menu checkbox-menu allow-focus">';
     echo '<div>';
+    //echo '<div class="form-check">';
     foreach($tags as $tag){
 
-        echo '<div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="tag[]" id="'.$tag.'" value="'.$tag.'">
+        echo '
+                    <input type="checkbox" class="form-check-input" name="tag[]" value="'.$tag.'">
                     <label for="'.$tag.'" class="form-check-label">'.$tag.'</label>
-              </div>';
+              ';
     }
     echo '</div>';
     echo '<div>';
@@ -30,13 +32,23 @@
             <label class="form-check-label" for="timespan3">>1w</label>
           </div>';
     echo '</div>';
+    echo '<div>';
+    foreach($users as $user){
+        $username = $user->getUsername();
+        $userId = $user->getId();
+        echo '
+                    <input type="radio" class="form-radio-input" name="userid[]" value="'.$userId.'">
+                    <label for="'.$username.'" class="form-radio-label">'.$username.'</label>
+              ';
+    }
+
+    echo '</div>';
     echo '<button type="submit" class="btn btn-primary">Speichern</button>';
     echo '</div>';
     echo '</form>';
-    //echo '</div>';
     if(isset($_SESSION["username"])){
         $posts = $db->showDashboardPublic();
-        if(isset($_GET["tag"])) {
+        if(isset($_GET["tag"])){
             if(gettype($_GET["tag"]) == 'string'){
                 $_GET["tag"] = array($_GET["tag"]);
             }
@@ -44,21 +56,53 @@
         }
         if(isset($_GET["timespan"])){
             $posts = $db->filterDate($posts, $_GET["timespan"]);
+        }
+        if(isset($_GET["userid"])){
+            if (isset($_GET["userid"])) {
+                $temp = array();
+                foreach ($posts as $post) {
+                    $postUser = $post->getUser();
+                    $postUserId = $postUser->getId();
+                    foreach($_GET["userid"] as $checkId){
+                        if(intval($checkId) == $postUserId){
+                            array_push($temp, $post);
+                        }
+                    }
+                }
+                $posts = $temp;
+            }
+        }
+        if(isset($_GET["search"])){
+            $posts = $db->checkSearchRequest($posts, $_GET["search"]);
         }
     }else{
         $posts = $db->showDashboardPrivate();
-        if(isset($_GET["tag"])) {
-            if(gettype($_GET["tag"]) == 'string'){
+        if(isset($_GET["tag"])){
+            if (gettype($_GET["tag"]) == 'string') {
                 $_GET["tag"] = array($_GET["tag"]);
             }
             $posts = $db->checkTags($posts, $_GET['tag']);
         }
-        if(isset($_GET["timespan"])){
+        if (isset($_GET["timespan"])) {
             $posts = $db->filterDate($posts, $_GET["timespan"]);
+        }
+        if(isset($_GET["userid"])){
+            if (isset($_GET["userid"])) {
+                $temp = array();
+                foreach ($posts as $post) {
+                    $postUser = $post->getUser();
+                    $postUserId = $postUser->getId();
+                    foreach($_GET["userid"] as $checkId){
+                        if(intval($checkId) == $postUserId){
+                            array_push($temp, $post);
+                        }
+                    }
+                }
+                $posts = $temp;
+            }
         }
     }
     $posts = array_reverse($posts);
-
     foreach($posts as $post) {
         $post_id = $post->getId();
         $restriction=$post->getRestricted();
@@ -66,11 +110,11 @@
         echo "<div class=\"post\" id='post" . $post_id . "'>
                     <div class=row>
                         <div class=\"headerBox\" >
-                            <img class=profilepic src=" . $post->getUser()->getPicture() . " >
+                            <img alt=ProfilPic class=profilepic src=" . $post->getUser()->getPicture() . " >
                             <span class=\"username\" >" . $post->getUser()->getUsername() . "</span>
                         </div>
                         <div class=\" headerBox headerBox2 \" >" .
-                        "<img  class=img-fluid src=\"res/images/" .
+                        "<img  alt=Restriction class=img-fluid src=\"res/images/" .
                         (($restriction == "0") ? "public" : "private") . ".svg\" width=25px height=25px ><span class=\"username\">".
             (($restriction == "0") ? "Public" : "Private") .
 
@@ -83,7 +127,7 @@
                     <div class=\"row picBackground\">
                         <a class=\" col-12\" href=" . $post->getFullPath() . " data-lightbox=" . $post->getName() .
             " data-title=" . $post->getName() . ">
-                            <img class=img-fluid src=" . $post->getDashPath() . " alt=" . $post->getName() . ">
+                            <img alt=Post class=img-fluid src=" . $post->getDashPath() . " alt=" . $post->getName() . ">
                         </a>
                     </div>
 
@@ -127,7 +171,26 @@
     }
 
       ?>
+    <script>
+        //, ".form-check input"
+        var limit = 2;
+        /*$('div.form-check').on('change', function(evt) {
+            $input = $(this).find("input")
+            if($input.siblings(':checked').length <= limit) {
+                //$input.checked = false;
+                //alert($(this).children(':checked').length);
+                console.log($input.siblings());
+            }
 
+        });*/
+        $('input.form-check-input').on('change', function(evt) {
+            if($(this).siblings(':checked').length >= limit) {
+                this.checked = false;
+                //alert($(this).children(':checked').length);
+                //console.log($(this).siblings());
+            }
+        });
+    </script>
     <script>
 
         function upVote(post_id) {
