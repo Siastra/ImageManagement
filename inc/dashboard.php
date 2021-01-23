@@ -4,7 +4,7 @@
     $db = new DB();
     $tags = $db->listAllTags();
     $users  = $db->getUserList();
-    echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
+    echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" id="filterButton" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
     echo '<div class="collapse" id="collapseFilter">';
     echo '<form class="form-inline" method="get" action="">';
     //echo '<ul class="dropdown-menu checkbox-menu allow-focus">';
@@ -98,8 +98,16 @@
                 $posts = $temp;
             }
         }
+        if(isset($_GET["search"])){
+            $posts = $db->checkSearchRequest($posts, $_GET["search"]);
+        }
     }
     $posts = array_reverse($posts);
+    if(empty($posts)){
+        echo MsgFactory::getWarning("<b>No posts with matching requirements</b>");
+        ?><script>$("#filterButton").hide()</script><?php
+
+    }
     foreach($posts as $post) {
         $post_id = $post->getId();
         $restriction=$post->getRestricted();
