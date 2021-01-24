@@ -13,7 +13,7 @@
     $tags = $db->listAllTags();
     $users  = $db->getUserList();
 
-    echo '<div class="nav-center">
+    echo '<div class="nav-center pt-5">
             <form class="form-inline row justify-content-md-center" method="GET" action="">
                 <input class="form-control col col-lg-2" type="search" name="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0 col col-lg-2" type="submit">Search</button>';
