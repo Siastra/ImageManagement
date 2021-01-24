@@ -34,10 +34,12 @@
     echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" id="filterButton" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
     echo '<div class="collapse" id="collapseFilter">';
     echo '<form class="" method="get" action="" style="background-color: rgba(180, 230, 255,1)">';
-    echo '<div class="row flex-fill px-5 py-2">';
+    echo '<div class="row flex-fill px-5 py-2 mb-3">
+            <label class="col-form-label col-md-12">Tags:</label>';
+
     foreach($tags as $tag){
 
-        echo '<div class="form-group mx-4 "> <!--col-sm-14-->
+        echo '<div class="ml-5 mx-4 mt-2"> <!--col-sm-14-->
                     <input type="checkbox" class="form-check-input" name="tag[]" value="'.$tag.'">                    
                     <label for="'.$tag.'" class="form-check-label">'.$tag.'</label>
              </div>';
@@ -46,26 +48,27 @@
     echo '<div class="py-2">';
     echo '<div class="flex-fill px-5 row">
              <div class="col-md-12">
-                <div class="d-flex form-group row">
-                    <div class="col-md-4 flex-fill px-4">
-                        <div class="form-group">
+                <div class="d-flex row">
+                    <div class="col-md-5 flex-fill px-4">
+                    <label class="col-form-label">Timespan:</label>
+                        <div class="form-group ml-5">
                             <input class="form-check-input" type="radio" name="timespan" id="timespan1" value="1d">
                             <label class="form-check-label" for="timespan1"><1d</label>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group ml-5">
                             <input class="form-check-input" type="radio" name="timespan" id="timespan2" value="1w">
                             <label class="form-check-label" for="timespan2"><1w</label>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group ml-5">
                            <input class="form-check-input" type="radio" name="timespan" id="timespan3" value="1m">
                            <label class="form-check-label" for="timespan3">>1w</label>
 
                         </div>
                     </div>
-                    <div class="d-inline-flex col-md-7 flex-fill">
+                    <div class="d-inline-flex col-md-6 flex-fill">
                         <div class="form-group">
-                            <label for="exampleFormControlSelect1">Users</label>
-                            <select name=userid class="form-control" id="exampleFormControlSelect1">
+                            <label for="exampleFormControlSelect1">Users:</label>
+                            <select name=userid class="form-control ml-5" id="exampleFormControlSelect1">
                             <option value=""></option>';
 
     foreach($users as $user){
@@ -76,7 +79,7 @@
     echo '</select>
                         </div> 
                     </div>
-                    <div class=" col-md-1 align-items-end">
+                    <div class="d-flex col-md-1">
                         <button type="submit" class="btn btn-primary align-self-end">Speichern</button>
                     </div>
                 </div>
