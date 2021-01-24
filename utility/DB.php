@@ -1,8 +1,8 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Comment.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/Post.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/Comment.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/utility/Upload.php';
 
 class DB
 {
@@ -19,7 +19,7 @@ class DB
     public function __construct()
     {
 
-        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
+        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/ImageManagement/config/config.json"),
             true);
         $username = $this->config["db"]["user"];
         $password = $this->config["db"]["password"];
@@ -282,7 +282,7 @@ class DB
         $sql->execute([$id]);
     }
 
-    public function showDashboardPublic(): array
+    public function showDashboardAll(): array
     {
         $result = array();
         $sql = $this->conn->prepare("SELECT * FROM `post`");
@@ -318,7 +318,7 @@ class DB
         return $result;
     }
 
-    public function showDashboardPrivate(): array
+    public function showDashboardPublic(): array
     {
         $result = array();
         $sql = $this->conn->prepare("SELECT * FROM `post` WHERE `restricted`=0");
@@ -523,4 +523,51 @@ class DB
        }
        return $result;
    }
+
+    public function getDashboardByLikes():array
+    {
+        $results = array();
+        
+            $sql = $this->conn->prepare("SELECT `post_id` ,COUNT(*) AS `rating` FROM `rating` WHERE `type`=1 GROUP BY `post_id` ORDER BY `rating` DESC");
+      
+            $sql->execute();
+        if ($sql->rowCount() > 0) {
+            $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($posts as $post) {
+                array_push($results,$this->getPostById($post["post_id"]));
+            }
+        }
+
+        return $results;
+    }
+    public function getDashboardByDislikes():array
+    {
+        $results = array();
+       
+            $sql = $this->conn->prepare("SELECT `post_id` ,COUNT(*) AS `rating` FROM `rating` WHERE `type`=0 GROUP BY `post_id` ORDER BY `rating` DESC");
+            $sql->execute();
+        if ($sql->rowCount() > 0) {
+            $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($posts as $post) {
+                array_push($results,$this->getPostById($post["post_id"]));
+            }
+        }
+
+        return $results;
+    }
+    public function getDashboardByComments():array
+    {
+        $results = array();
+        $sql = $this->conn->prepare("SELECT `post_id` ,COUNT(*) AS `comments` FROM `comment` GROUP BY `post_id` ORDER BY `comments` DESC");
+        $sql->execute();
+       
+        if ($sql->rowCount() > 0) {
+            $posts = $sql->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($posts as $post) {
+                array_push($results,$this->getPostById($post["post_id"]));
+            }
+        }
+
+        return $results;
+    }
 }
