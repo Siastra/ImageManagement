@@ -484,7 +484,6 @@ class DB
            echo '<br>';
            if($span == '1d'){
                if($age->y < 1 && $age->m < 1 && $age->d < 1){
-                   var_dump($age->d);
                    if(!in_array($post, $result)){
                        array_push($result, $post);
                    }
@@ -495,14 +494,17 @@ class DB
                        array_push($result, $post);
                    }
                }
-           }else{
-               if(!in_array($post, $result)){
-                   array_push($result, $post);
+           }elseif($span == '1m'){
+               if($age->y > 0 || $age->m > 0 || $age->d > 7) {
+                   if (!in_array($post, $result)) {
+                       array_push($result, $post);
+                   }
                }
            }
        }
        return $result;
    }
+
    public function checkSearchRequest(array $posts, string $searchInput): array
    {
        $result = array();
