@@ -12,46 +12,79 @@
     $db = new DB();
     $tags = $db->listAllTags();
     $users  = $db->getUserList();
+
+    echo '<div class="nav-center">
+            <form class="form-inline row justify-content-md-center" method="GET" action="">
+                <input class="form-control col col-lg-2" type="search" name="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0 col col-lg-2" type="submit">Search</button>';
+    if (isset($_GET["tag"])) {
+        foreach ($_GET["tag"] as $tag) {
+            echo '<input type="hidden" name=tag[] value="' . $tag . '">';
+        }
+    }
+    if (isset($_GET["timespan"])) {
+        echo '<input type="hidden" name=timespan value="' . $_GET["timespan"] . '">';
+    }
+    if (isset($_GET["userid"])) {
+        echo '<input type="hidden" name=userid value="' . $_GET["userid"] . '">';
+    }
+    echo '</form>
+        </div>';
+
     echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" id="filterButton" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
     echo '<div class="collapse" id="collapseFilter">';
-    echo '<form class="form-inline" method="get" action="">';
-    //echo '<ul class="dropdown-menu checkbox-menu allow-focus">';
-    echo '<div>';
-    //echo
+    echo '<form class="" method="get" action="" style="background-color: rgba(180, 230, 255,1)">';
+    echo '<div class="row flex-fill px-5 py-2">';
     foreach($tags as $tag){
 
-        echo '<div class="form-group col-sm-14">
-                    <input type="checkbox" class="form-check-input col-sm-1" name="tag[]" value="'.$tag.'">
-                    <label for="'.$tag.'" class="form-check-label col-sm-13">'.$tag.'</label>
-              </div>';
+        echo '<div class="form-group mx-4 "> <!--col-sm-14-->
+                    <input type="checkbox" class="form-check-input" name="tag[]" value="'.$tag.'">                    
+                    <label for="'.$tag.'" class="form-check-label">'.$tag.'</label>
+             </div>';
     }
     echo '</div>';
-    echo '<div class="form-marginRight">';
-    echo '<div class="form-group">
-            <input class="form-check-input" type="radio" name="timespan" id="timespan1" value="1d">
-            <label class="form-check-label" for="timespan1"><1d</label>
-          </div>
-          <div class="form-group">
-            <input class="form-check-input" type="radio" name="timespan" id="timespan2" value="1w">
-            <label class="form-check-label" for="timespan2"><1w</label>
-          </div>
-          <div class="form-group">
-            <input class="form-check-input" type="radio" name="timespan" id="timespan3" value="1m">
-            <label class="form-check-label" for="timespan3">>1w</label>
-          </div>';
-    echo '</div>';
-    echo '<div class="form-marginRight">';
+    echo '<div class="py-2">';
+    echo '<div class="flex-fill px-5 row">
+             <div class="col-md-12">
+                <div class="d-flex form-group row">
+                    <div class="col-md-4 flex-fill px-4">
+                        <div class="form-group">
+                            <input class="form-check-input" type="radio" name="timespan" id="timespan1" value="1d">
+                            <label class="form-check-label" for="timespan1"><1d</label>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-check-input" type="radio" name="timespan" id="timespan2" value="1w">
+                            <label class="form-check-label" for="timespan2"><1w</label>
+                        </div>
+                        <div class="form-group">
+                           <input class="form-check-input" type="radio" name="timespan" id="timespan3" value="1m">
+                           <label class="form-check-label" for="timespan3">>1w</label>
+
+                        </div>
+                    </div>
+                    <div class="d-inline-flex col-md-7 flex-fill">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Users</label>
+                            <select name=userid class="form-control" id="exampleFormControlSelect1">
+                            <option value=""></option>';
+
     foreach($users as $user){
         $username = $user->getUsername();
         $userId = $user->getId();
-        echo '<div class="form-group">
-                    <input type="radio" class="form-check-input" name="userid" value="'.$userId.'">
-                    <label for="'.$username.'" class="form-check-label">'.$username.'</label>
-              </div>';
+        echo '<option value="'.$username.'">'.$username.'</option>';
     }
-    echo '</div>';
-    echo '<button type="submit" class="btn btn-primary">Speichern</button>';
-    echo '</div>';
+    echo '</select>
+                        </div> 
+                    </div>
+                    <div class=" col-md-1 align-items-end">
+                        <button type="submit" class="btn btn-primary align-self-end">Speichern</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+    </div>';
     echo '<form method="post" action="">
         <div class="dropdown">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -162,7 +195,6 @@
     $posts = array_reverse($posts);
     if(empty($posts)){
         echo MsgFactory::getWarning("<b>No posts with matching requirements</b>");
-        ?><script>$("#filterButton").hide()</script><?php
 
     }
     foreach($posts as $post) {
