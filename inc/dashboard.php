@@ -62,10 +62,8 @@
                 foreach ($posts as $post) {
                     $postUser = $post->getUser();
                     $postUserId = $postUser->getId();
-                    foreach($_GET["userid"] as $checkId){
-                        if(intval($checkId) == $postUserId){
-                            array_push($temp, $post);
-                        }
+                    if(intval($_GET["userid"]) == $postUserId) {
+                        array_push($temp, $post);
                     }
                 }
                 $posts = $temp;
