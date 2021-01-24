@@ -1,3 +1,11 @@
+<script>
+    $(document).ready(function () {
+        var x = document.getElementsByTagName("TITLE")[0];
+        x.innerHTML = "Dashboard";
+    });
+
+</script>
+
 <div class="container">
     <?php
     include_once "utility/DB.php";
@@ -110,7 +118,7 @@
         echo "<div class=\"post\" id='post" . $post_id . "'>
                     <div class=row>
                         <div class=\"headerBox\" >
-                            <img alt=ProfilPic class=profilepic src=" . $post->getUser()->getPicture() . " >
+                            <img alt=ProfilePic class=profilepic src=" . $post->getUser()->getPicture() . " >
                             <span class=\"username\" >" . $post->getUser()->getUsername() . "</span>
                         </div>
                         <div class=\" headerBox headerBox2 \" >" .

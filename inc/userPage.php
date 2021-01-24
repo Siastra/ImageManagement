@@ -4,6 +4,14 @@
     $posts = $db->getPostsByUserID($user->getId());
 ?>
 
+<script>
+    $(document).ready(function () {
+        var x = document.getElementsByTagName("TITLE")[0];
+        x.innerHTML = "User Page";
+    });
+
+</script>
+
 <section class="container">
     <div class="row user-header">
         <div class="col-3">
@@ -11,7 +19,7 @@
         </div>
         <div class="col-9">
             <?php
-                echo '<h3>' . $user->getUsername() . '</h3>';
+                echo '<h1>' . $user->getUsername() . '</h1>';
                 echo '<p>' . $user->getFname() . ' ' . $user->getLname() . '</p>';
                 echo '<p>' . $user->getEmail() . '</p>';
                 echo '<p>' . sizeof($posts) . ' Posts</p>';

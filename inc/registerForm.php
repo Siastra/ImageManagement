@@ -3,6 +3,13 @@
 $db = new DB();
 $fill = false;
 $user = null;
+echo '<script>
+    $(document).ready(function () {
+        var x = document.getElementsByTagName("TITLE")[0];
+        x.innerHTML = "Register user";
+    });
+
+</script>';
 
 if (isset($_POST["pw"]) && ($_POST["pw"] != $_POST["pwRepeat"])) {
     echo MsgFactory::getWarning("Please make sure your password matches!");
@@ -20,6 +27,12 @@ if (isset($_POST["pw"]) && ($_POST["pw"] != $_POST["pwRepeat"])) {
 if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
     $user = $db->getUser($_SESSION["username"]);
     $fill = true;
+    echo '<script>
+            $(document).ready(function () {
+                var x = document.getElementsByTagName("TITLE")[0];
+                x.innerHTML = "Edit user";
+            });
+            </script>';
 } elseif (isset($_REQUEST["pw"])) {
     $user = new User(null, $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["email"],
         $_REQUEST["username"], " ", 0, 1, " ");

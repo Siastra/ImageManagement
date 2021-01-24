@@ -1,4 +1,10 @@
+<script>
+    $(document).ready(function () {
+        var x = document.getElementsByTagName("TITLE")[0];
+        x.innerHTML = "About";
+    });
 
+</script>
 
 
 <div class="container">

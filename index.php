@@ -33,7 +33,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <a class="navbar-brand" href="index.php?section=dash"><img src="res/images/dashboard.svg" alt="Dashboard icon" width="25px">
+    <a class="navbar-brand" href="index.php?section=dash"><img src="res/images/dashboard.svg" alt="Dashboard icon" class="navbar-icon">
         Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -44,18 +44,18 @@
             if(isset($_SESSION["username"])) {
                 $user = $db->getUser($_SESSION["username"]);
                 echo '<li><a class="nav-link" href="index.php?section=create">
-                       <img src="res/images/upload.svg" alt="Upload icon" width="25px"> Upload Post</a></li>';
+                       <img src="res/images/upload.svg" alt="Upload icon" class="navbar-icon"> Upload Post</a></li>';
             }
             if(isset($_SESSION["username"]) && $user->isAdmin()) {
                 echo '<li class="nav-item">
                     <a class="nav-link" href="index.php?section=view">
-                    <img src="res/images/administrator.svg" alt="Administration icon" width="25px">User Administration</a>
+                    <img src="res/images/administrator.svg" alt="Administration icon" class="navbar-icon">User Administration</a>
                 </li>';
             }
 
             ?>
             <li><a class="nav-link" href="index.php?section=about">
-             <img src="res/images/about.svg" alt="About icon" width="25px"> About</a></li>
+             <img src="res/images/about.svg" alt="About icon" class="navbar-icon"> About</a></li>
         </ul>
 
         <?php
@@ -82,22 +82,22 @@
             <?php
             if (isset($_SESSION["username"]) && (isset($_GET["section"]) && ($_GET["section"] == "userPage"))) {
                 echo '<li><a class="nav-link" href="index.php?section=register&edit=true">
-                        <img src="res/images/edit.svg" alt="Edit icon" width="25px">Edit profile</a></li>';
+                        <img src="res/images/edit.svg" alt="Edit icon" class="navbar-icon">Edit profile</a></li>';
             }else if (isset($_SESSION["username"])) {
                 echo '<li><a class="nav-link" href="index.php?section=userPage"><img src="' . $user->getPicture() . '" 
-                        alt="User icon" width="25px" height="25px" id="profilePic"> ' .
+                        alt="User icon" class="navbar-icon" id="profilePic"> ' .
                     (($user->isAdmin()) ? '<b>[admin]</b>' : '') .
                     $_SESSION["username"] . '\'s Profile</a></li>';
             }
             if(isset($_SESSION["username"])) {
                 echo '<li class="nav-item">
                             <a class="nav-link" href="inc/backend.php?type=logout"><img src="res/images/logout.svg" 
-                            alt="Logout" width="25px"> Logout</a>
+                            alt="Logout" class="navbar-icon"> Logout</a>
                       </li>';
             }else{
                 echo '<li class="nav-item">
                             <a class="nav-link" href="index.php?section=login"><img src="res/images/login.svg" 
-                            alt="Login" width="25px"> Login</a>
+                            alt="Login" class="navbar-icon"> Login</a>
                           </li>';
             }
 

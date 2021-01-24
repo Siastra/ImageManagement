@@ -20,6 +20,15 @@ if (isset($_POST["upload"])) {
 
 }
 ?>
+
+<script>
+    $(document).ready(function () {
+        var x = document.getElementsByTagName("TITLE")[0];
+        x.innerHTML = "Upload Post";
+    });
+
+</script>
+
     <section class="container">
         <h1>Upload your post!</h1><br><br>
         <form method="post" action="index.php?section=create" enctype="multipart/form-data">

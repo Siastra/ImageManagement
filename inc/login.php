@@ -1,3 +1,10 @@
+<script>
+    $(document).ready(function () {
+        var x = document.getElementsByTagName("TITLE")[0];
+        x.innerHTML = "Login page";
+    });
+
+</script>
 <section id="LoginBody">
     <div class="container">
         <div class="d-flex justify-content-center h-100">

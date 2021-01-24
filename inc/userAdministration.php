@@ -3,6 +3,14 @@ $db = new DB();
 $users = $db->getUserList();
 ?>
 
+<script>
+    $(document).ready(function () {
+        var x = document.getElementsByTagName("TITLE")[0];
+        x.innerHTML = "User Administration";
+    });
+
+</script>
+
 <section>
     <div class="table-responsive">
         <table class="table table-striped">

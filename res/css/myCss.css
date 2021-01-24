@@ -118,7 +118,10 @@ input:focus {
     background-color: #d0c7ff;
 }
 
-
+.navbar-icon{
+    width: 25px;
+    height: 25px;
+}
 
 .itemHeader{
     padding-left: 15px;
@@ -156,9 +159,7 @@ input:focus {
 }
 
 .ratingBox{
-  
     width: 5%;
-
 }
 
 .ratingPic{
@@ -179,21 +180,19 @@ input:focus {
 }
 
 .textBox{
-width:30%;
+    width:30%;
     border: 2px solid gray;
     word-wrap:break-word;
-
 }
 
 .commentTextBox{
-width:30%;
-
+    width:30%;
 }
 
 .commentSendBox{
-width:10%;
-text-align:left;
-height:10%;
+    width:10%;
+    text-align:left;
+    height:10%;
 }
 
 .commSection{
@@ -209,18 +208,19 @@ height:10%;
     margin-top: 2%;
     margin-left: 2%;
 }
+
 .Creators{
     height:fit-content;
 }
+
 .aboutYou{
-height:fit-content;
-float: left;
-width: 30%;
+    height:fit-content;
+    float: left;
+    width: 30%;
 }
 
 .aboutPics{
     width:35%;
-
 }
 
 body {
@@ -246,29 +246,31 @@ body {
         width: 8%;
     
     }
+
     .tagBox{
         width:32%;
         overflow: auto;
         padding: 1%;
-    margin-left: 1%;
+        margin-left: 1%;
     }
+
     .textBox{
         width:50%;
-            border: 2px solid gray;
-            word-wrap:break-word;
-            height:50px;
-            overflow: auto;
+        border: 2px solid gray;
+        word-wrap:break-word;
+        height:50px;
+        overflow: auto;
         
-        }
-        .commentSendBox{
-            width:20%;
-            text-align:left;
-            height:10%;
-            }
+    }
+
+    .commentSendBox{
+        width:20%;
+        text-align:left;
+        height:10%;
+    }
         
-.commentTextBox{
-    width:80%;
-    
+    .commentTextBox{
+        width:80%;
     }
         
 }
