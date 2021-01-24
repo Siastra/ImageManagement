@@ -226,7 +226,9 @@ width: 30%;
 body {
     padding-top: 4%;
 }
-
+.dropdown{
+    float:right;
+}
 @media screen and (max-width: 800px){
     .galleryItem{
         margin: 1% auto;

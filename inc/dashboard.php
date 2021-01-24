@@ -45,9 +45,60 @@
     echo '</div>';
     echo '<button type="submit" class="btn btn-primary">Speichern</button>';
     echo '</div>';
-    echo '</form>';
+    echo '<form method="post" action="">
+        <div class="dropdown">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        Sort by
+        </button>
+         <div class="dropdown-menu">
+        <button class="dropdown-item" type="submit" value="likesAcending" name="sort">Likes ascending</button>
+         <button class="dropdown-item" type="submit" value="likesDescending" name="sort">Likes descending</a>
+         <button class="dropdown-item" type="submit" value="dislikesAcending" name="sort">Dislikes ascending</a>
+         <button class="dropdown-item" type="submit" value="dislikesDecending" name="sort">Dislikes descending</a>
+        <button class="dropdown-item" type="submit" value="CommentsAcending" name="sort">Comments ascending</a>
+        <button class="dropdown-item" type="submit" value="CommentsDecending" name="sort">Comments descending</a>
+         </div>
+        </div>
+        </form>';
+
+
+    if(isset($_GET["sort"])){
+        switch($_GET["sort"]){
+            case 'likesAcending': $posts=$db->getDashboardByLikes();
+            
+            break;
+            case 'likesDescending':$posts=array_reverse($db->getDashboardByLikes());
+            break;
+            case 'dislikesAcending':$posts=$db->getDashboardByDislikes();
+            break;
+            case 'dislikesDecending':$posts=array_reverse($db->getDashboardByDislikes());
+            break;
+            case 'CommentsAcending':$posts=$db->getDashboardByComments();
+            break;
+            case 'CommentsDecending':$posts=array_reverse($db->getDashboardByComments());
+            break; 
+        }
+        $sorted =array();
+        if(!isset($_SESSION["username"])){
+
+            foreach ($posts as $post) {
+                if($post->getRestricted()===0){
+                    array_push($sorted,$post);
+                }
+            }
+            
+            $posts=$sorted;
+
+        
+        }  
+        }else{
+            if(!isset($_SESSION["username"])){
+                $posts=$db->showDashboardPublic();
+            }else{
+                 $posts=$db->showDashboardAll();
+            }
+    }
     if(isset($_SESSION["username"])){
-        $posts = $db->showDashboardPublic();
         if(isset($_GET["tag"])){
             if(gettype($_GET["tag"]) == 'string'){
                 $_GET["tag"] = array($_GET["tag"]);
@@ -76,7 +127,7 @@
             $posts = $db->checkSearchRequest($posts, $_GET["search"]);
         }
     }else{
-        $posts = $db->showDashboardPrivate();
+        if(!isset($posts))
         if(isset($_GET["tag"])){
             if (gettype($_GET["tag"]) == 'string') {
                 $_GET["tag"] = array($_GET["tag"]);
