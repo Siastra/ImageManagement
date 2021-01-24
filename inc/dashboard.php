@@ -4,44 +4,43 @@
     $db = new DB();
     $tags = $db->listAllTags();
     $users  = $db->getUserList();
-    echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
+    echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" id="filterButton" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
     echo '<div class="collapse" id="collapseFilter">';
     echo '<form class="form-inline" method="get" action="">';
     //echo '<ul class="dropdown-menu checkbox-menu allow-focus">';
     echo '<div>';
-    //echo '<div class="form-check">';
+    //echo
     foreach($tags as $tag){
 
-        echo '
-                    <input type="checkbox" class="form-check-input" name="tag[]" value="'.$tag.'">
-                    <label for="'.$tag.'" class="form-check-label">'.$tag.'</label>
-              ';
+        echo '<div class="form-group col-sm-14">
+                    <input type="checkbox" class="form-check-input col-sm-1" name="tag[]" value="'.$tag.'">
+                    <label for="'.$tag.'" class="form-check-label col-sm-13">'.$tag.'</label>
+              </div>';
     }
     echo '</div>';
-    echo '<div>';
-    echo '<div class="form-check form-check-inline">
+    echo '<div class="form-marginRight">';
+    echo '<div class="form-group">
             <input class="form-check-input" type="radio" name="timespan" id="timespan1" value="1d">
             <label class="form-check-label" for="timespan1"><1d</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-group">
             <input class="form-check-input" type="radio" name="timespan" id="timespan2" value="1w">
             <label class="form-check-label" for="timespan2"><1w</label>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="form-group">
             <input class="form-check-input" type="radio" name="timespan" id="timespan3" value="1m">
             <label class="form-check-label" for="timespan3">>1w</label>
           </div>';
     echo '</div>';
-    echo '<div>';
+    echo '<div class="form-marginRight">';
     foreach($users as $user){
         $username = $user->getUsername();
         $userId = $user->getId();
-        echo '
-                    <input type="radio" class="form-radio-input" name="userid" value="'.$userId.'">
-                    <label for="'.$username.'" class="form-radio-label">'.$username.'</label>
-              ';
+        echo '<div class="form-group">
+                    <input type="radio" class="form-check-input" name="userid" value="'.$userId.'">
+                    <label for="'.$username.'" class="form-check-label">'.$username.'</label>
+              </div>';
     }
-
     echo '</div>';
     echo '<button type="submit" class="btn btn-primary">Speichern</button>';
     echo '</div>';
@@ -114,10 +113,8 @@
                 foreach ($posts as $post) {
                     $postUser = $post->getUser();
                     $postUserId = $postUser->getId();
-                    foreach($_GET["userid"] as $checkId){
-                        if(intval($checkId) == $postUserId){
-                            array_push($temp, $post);
-                        }
+                    if(intval($_GET["userid"]) == $postUserId) {
+                        array_push($temp, $post);
                     }
                 }
                 $posts = $temp;
@@ -150,8 +147,16 @@
                 $posts = $temp;
             }
         }
+        if(isset($_GET["search"])){
+            $posts = $db->checkSearchRequest($posts, $_GET["search"]);
+        }
     }
     $posts = array_reverse($posts);
+    if(empty($posts)){
+        echo MsgFactory::getWarning("<b>No posts with matching requirements</b>");
+        ?><script>$("#filterButton").hide()</script><?php
+
+    }
     foreach($posts as $post) {
         $post_id = $post->getId();
         $restriction=$post->getRestricted();
@@ -223,22 +228,24 @@
     <script>
         //, ".form-check input"
         var limit = 2;
-        /*$('div.form-check').on('change', function(evt) {
-            $input = $(this).find("input")
-            if($input.siblings(':checked').length <= limit) {
-                //$input.checked = false;
-                //alert($(this).children(':checked').length);
-                console.log($input.siblings());
-            }
-
-        });*/
-        $('input.form-check-input').on('change', function(evt) {
-            if($(this).siblings(':checked').length >= limit) {
-                this.checked = false;
-                //alert($(this).children(':checked').length);
-                //console.log($(this).siblings());
+        $('div.form-group').on('change', function(evt) {
+            //alert("wallah bruder mach nicht diesen");
+            var $input = $(this).siblings(".form-group").children(".form-check-input:checked").length;
+            if($input >= limit) {
+                $(this).children(".form-check-input").prop("checked", false);
+                console.log($(this).children(".form-check-input"));
+                //alert($input);
             }
         });
+        $('div.crack').on('change', function(evt) {
+            console.log($(this).children(".form-check-input"));
+        });
+        //ich hab angst das rauszulöschen weil ich meinem code nicht vertraue
+        /*$('input.form-check-input').on('change', function(evt) {
+            if($(this).siblings(':checked').length >= limit) {
+                this.checked = false;
+            }
+        });*/
     </script>
     <script>
 

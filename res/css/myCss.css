@@ -229,6 +229,12 @@ body {
 .dropdown{
     float:right;
 }
+
+.form-marginRight{
+    margin-right: 40px;
+    margin-left: 40px;
+}
+
 @media screen and (max-width: 800px){
     .galleryItem{
         margin: 1% auto;

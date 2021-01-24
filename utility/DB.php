@@ -494,9 +494,11 @@ class DB
                        array_push($result, $post);
                    }
                }
-           }else{
-               if(!in_array($post, $result)){
-                   array_push($result, $post);
+           }elseif($span == '1m'){
+               if($age->y > 0 || $age->m > 0 || $age->d > 7) {
+                   if (!in_array($post, $result)) {
+                       array_push($result, $post);
+                   }
                }
            }
        }
