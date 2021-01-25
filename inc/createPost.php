@@ -11,7 +11,6 @@ if (isset($_POST["upload"])) {
         $tag = $_POST["tags"];
         $divide = "/[-\s:]/";
         $tag2 = preg_split($divide, $tag);
-        #
         $db->checkTag($tag2);
         $result = $db->createPost($_POST["title"], 'pictures/dashboard/' . $newName . "." . $ext, $restricted,$_POST["text"]);
         $db->setTag($result, $tag2);

@@ -55,6 +55,7 @@ class DB
         return $result;
     }
 
+    //Returns an array of all comments related to the post
     public function getAllCommentsByPost(int $post_id): array
     {
         $result = array();
@@ -103,6 +104,7 @@ class DB
         return null;
     }
 
+    //Get a specific post by id.
     public function getPostById(int $id): ?Post
     {
         $stmt = $this->conn->prepare("SELECT * FROM `post` WHERE id = ?");
@@ -114,6 +116,7 @@ class DB
         return null;
     }
 
+    //Inserts a user into the user table and returns false if unique constraint fails.
     public function registerUser(User $user): bool
     {
         $stmt = $this->conn->prepare("INSERT INTO `user` (title, fname, lname, username, password, email, 
@@ -131,7 +134,7 @@ class DB
             return true;
         } catch (PDOException $e) {
             $existingkey = "Integrity constraint violation: 1062 Duplicate entry";
-            if (strpos($e->getMessage(), $existingkey) !== FALSE) {
+            if (strpos($e->getMessage(), $existingkey) !== FALSE) { // duplicate username
                 return false;
             } else {
                 throw $e;
@@ -139,6 +142,7 @@ class DB
         }
     }
 
+    //Activates/deactivates a user account.
     public function changeStatus(string $username): bool
     {
         $value = !($this->getUser($username)->getActivated());
@@ -151,6 +155,7 @@ class DB
         }
     }
 
+    //Uploads a profile image and deletes an existing one in the process.
     public function uploadIcon(array $files): bool
     {
         if (isset($_POST["upload"])) {
@@ -176,7 +181,7 @@ class DB
         }
     }
 
-    //Checks the tags that the user writted to his post and if the tag doesnt already exists, it gets created
+    //Checks the tags that the user has assigned to his post and if the tag doesnt already exists, it gets created
     public function checkTag($tag)
     {
         $result = array();
@@ -217,14 +222,7 @@ class DB
         return $sql->fetchAll();
     }
 
-    public function getPostId(string $path): int
-    {
-        $sql = $this->conn->prepare("SELECT `id` FROM `post` WHERE `path`  = ?");
-        $sql->execute([$path]);
-        $result = $sql->fetch(PDO::FETCH_ASSOC);
-        return $result["id"];
-    }
-
+    //Returns the next auto_increment value for post_id in the DB.
     public function getNextPostId(): int
     {
         $sql = $this->conn->prepare("SELECT AUTO_INCREMENT FROM information_schema.TABLES
@@ -254,6 +252,7 @@ class DB
         }
     }
 
+    //Posts a comment assigned to a specific post.
     public function postComment(int $post_id, string $comment, DateTime $date): ?Comment
     {
         $sql = $this->conn->prepare("INSERT INTO `comment`(`post_id`, `user_id`, `text`, `createdAt`) 
@@ -268,6 +267,7 @@ class DB
         }
     }
 
+    //Deletes a post and all things related to it(comments, ratings, assignment of tags)
     public function deletePostById(int $id): void
     {
         $post = $this->getPostById($id);
@@ -302,6 +302,7 @@ class DB
         return $result;
     }
 
+    //Returns all posts of a specific user.
     public function getPostsByUserID(int $id): array
     {
         $result = array();
@@ -339,6 +340,7 @@ class DB
         return $result;
     }
 
+    //Changes the restriction of an image.
     public function changeRestriction(int $id): bool
     {
         $sql = $this->conn->prepare("SELECT `restricted` FROM `post` WHERE id=?");
@@ -358,6 +360,7 @@ class DB
         }
     }
 
+    //Updates user data in the DB.
     public function updateUser(User $user): bool
     {
         $stmt = $this->conn->prepare("UPDATE `user` SET title=?, fname=?, lname=?, username=?, email=? 
@@ -375,6 +378,7 @@ class DB
         }
     }
 
+    //Updates password in the DB.
     public function updatePassword(User $user): bool
     {
         $stmt = $this->conn->prepare("UPDATE `user` SET password=? WHERE id=?");
@@ -388,34 +392,29 @@ class DB
         }
     }
 
-    public function deleteUser(int $id): void
-    {
-        $stmt = $this->conn->prepare("DELETE FROM `user` WHERE id=?");
-        $stmt->execute([$id]);
-    }
-
+    //User-login is performed
     public function loginUser(string $username, string $pw): int
     {
         $stmt = $this->conn->prepare("SELECT password, activated FROM `user` WHERE username = :username");
         $stmt->execute([$username]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (empty($row)) {
+        if (empty($row)) { //user does not exist
             return -2;
         } else {
             $user = $this->getUser($username);
             if ($user->isAdmin()) {
-                if ($pw == $row["password"]) {
+                if ($pw == $row["password"]) { //login successful
                     return true;
-                } else {
+                } else { // login fails
                     return false;
                 }
             } else {
-                if ($row["activated"] == 0) {
+                if ($row["activated"] == 0) { // user deactivated
                     return -1;
                 }
-                if (password_verify($pw, $row["password"])) {
+                if (password_verify($pw, $row["password"])) { //login successful
                     return true;
-                } else {
+                } else { // login fails
                     return false;
                 }
             }
@@ -456,6 +455,7 @@ class DB
        return $result;
    }
 
+
    public function checkTags(array $posts, array $tags) : array
    {
        $result = array();
@@ -478,6 +478,8 @@ class DB
         }
         return $result;
    }
+
+
    public function filterDate(array $posts, string $span) : array //gets date and checks each post if its date is the same
    {
        $result = array();
@@ -509,6 +511,7 @@ class DB
        }
        return $result;
    }
+
 
    public function checkSearchRequest(array $posts, string $searchInput): array
    {

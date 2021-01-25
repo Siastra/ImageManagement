@@ -12,6 +12,7 @@
 ?>
 
 <section class="container">
+    <!--User header-->
     <div class="row user-header">
         <div class="col-3">
             <img src="<?php echo $user->getPicture(); ?>" alt="Profile Picture" class="img-fluid user-picture">
@@ -25,8 +26,8 @@
             ?>
         </div>
     </div>
-
     <?php
+        //Post thumbnails
         for ($i = 0; $i < sizeof($posts); $i++) {
             if ($i == 0) {
                 echo '<div class="galleryRow row">';

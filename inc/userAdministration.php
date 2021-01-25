@@ -5,7 +5,7 @@ $users = $db->getUserList();
 
 <script>
     $(document).ready(function () {
-        var x = document.getElementsByTagName("TITLE")[0];
+        let x = document.getElementsByTagName("TITLE")[0];
         x.innerHTML = "User Administration";
     });
 
@@ -50,7 +50,7 @@ $users = $db->getUserList();
                 }
                 echo '</tr>';
                 $posts = $db->getPostsByUserID($user->getId());
-
+                //User posts table header
                 echo '<tr>
                           <td colspan="6">
                             <table class="table mb-0 table-success table-striped">
@@ -63,7 +63,7 @@ $users = $db->getUserList();
                                 </tr>
                                 </thead>
                                 <tbody>';
-
+                //User posts table body
                 if (empty($posts)) {
                     echo '<tr><td>No posts uploaded.</td></tr>';
                 }else {
@@ -93,7 +93,11 @@ $users = $db->getUserList();
             type: "POST",
             url: 'ajax/deletePost.php',
             data:{id: id},
-        });
-        location.reload();
+        }).then(
+            function() {
+                location.reload();
+            }, function() {
+            }
+        );
     }
 </script>

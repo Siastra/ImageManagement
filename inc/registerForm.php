@@ -5,12 +5,13 @@ $fill = false;
 $user = null;
 echo '<script>
     $(document).ready(function () {
-        var x = document.getElementsByTagName("TITLE")[0];
+        let x = document.getElementsByTagName("TITLE")[0];
         x.innerHTML = "Register user";
     });
 
 </script>';
 
+//Password does not match
 if (isset($_POST["pw"]) && ($_POST["pw"] != $_POST["pwRepeat"])) {
     echo MsgFactory::getWarning("Please make sure your password matches!");
 } else if ((isset($_POST["type"]) && $_POST["type"] == "update") || //Update is performed
@@ -24,6 +25,7 @@ if (isset($_POST["pw"]) && ($_POST["pw"] != $_POST["pwRepeat"])) {
     echo '<script type="text/javascript">document.getElementById("myForm").submit();</script>';
 }
 
+//Edit user is performed
 if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
     $user = $db->getUser($_SESSION["username"]);
     $fill = true;
@@ -33,7 +35,8 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
                 x.innerHTML = "Edit user";
             });
             </script>';
-} elseif (isset($_REQUEST["pw"])) {
+
+} elseif (isset($_REQUEST["pw"])) { //password has not matched, so form must be filled
     $user = new User(null, $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["email"],
         $_REQUEST["username"], " ", 0, 1, " ");
     $fill = true;
@@ -42,7 +45,7 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
 ?>
 <section class="container">
     <?php
-    if (isset($_REQUEST["edit"])) {
+    if (isset($_REQUEST["edit"])) { // Edit -> User picture is updatable
         echo '
         <h1>Upload a profile image</h1>
         <hr>
@@ -51,7 +54,7 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
             <div class="row">
                 <div class="form-group col">
                     <label for="picture">Profile image</label><br><br>
-                    <input type="file" id="picture" name="picture" required>
+                    <input type="file" id="picture" name="picture" required accept="image/x-png,image/jpeg">
                 </div>
                 <div class="form-group col">
                     <label for="previewImg">Preview</label><br><br>
@@ -162,7 +165,8 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
                                 <div class="invalid-feedback">Please fill out this field correctly.</div>
                             </div>
                         </div>';
-        if (!isset($_REQUEST["edit"])) {
+
+        if (!isset($_REQUEST["edit"])) { //registerForm -> password is in one form with rest of user data
             echo $passwordInput;
         }
         ?>
@@ -170,7 +174,7 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
         <button type="submit" class="btn btn-success submit">Submit</button>
     </form>
     <?php
-    if (isset($_REQUEST["edit"])) {
+    if (isset($_REQUEST["edit"]) && (!($user->isAdmin()))) { //editForm -> password is not in one form with rest of user data
         echo '<hr><form id="myForm" action="index.php?section=register&edit=true" method="post" enctype="multipart/form-data">
                             <h1>Change password</h1>
                             <hr>
@@ -192,17 +196,18 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
 </section>
 
 <script>
-    $('#pw, #pwRepeat').on('keyup', function () {
+    $('#pw, #pwRepeat').on('keyup', function () { //Shows on key-input, if the two passwords match
         if ($('#pw').val() === $('#pwRepeat').val()) {
             $('#message').html('Matching').css('color', '#28a745');
             $('.submit').disabled = false;
 
-        } else
+        } else {
             $('#message').html('Not Matching').css('color', '#dc3545');
-        $('.submit').disabled = false;
+            $('.submit').disabled = false;
+        }
     });
 
-    function readURL(input) {
+    function readURL(input) { //Image-Preview
         if (input.files && input.files[0]) {
             let reader = new FileReader();
 
@@ -214,7 +219,7 @@ if (isset($_REQUEST["edit"]) && ($_REQUEST["edit"] == "true")) {
         }
     }
 
-    $("#picture").change(function() {
+    $("#picture").change(function() { //Image-Preview
         readURL(this);
     });
 </script>

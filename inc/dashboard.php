@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function () {
-        var x = document.getElementsByTagName("TITLE")[0];
+        let x = document.getElementsByTagName("TITLE")[0];
         x.innerHTML = "Dashboard";
     });
 
@@ -48,12 +48,12 @@
         Sort by
         </button>
          <div class="dropdown-menu dropdown-menu-right">
-        <button class="dropdown-item" type="submit" value="likesAcending" name="sort">Likes ascending</button>
+        <button class="dropdown-item" type="submit" value="likesAscending" name="sort">Likes ascending</button>
          <button class="dropdown-item" type="submit" value="likesDescending" name="sort">Likes descending</button>
-         <button class="dropdown-item" type="submit" value="dislikesAcending" name="sort">Dislikes ascending</button>
-         <button class="dropdown-item" type="submit" value="dislikesDecending" name="sort">Dislikes descending</button>
-        <button class="dropdown-item" type="submit" value="CommentsAcending" name="sort">Comments ascending</button>
-        <button class="dropdown-item" type="submit" value="CommentsDecending" name="sort">Comments descending</button>
+         <button class="dropdown-item" type="submit" value="dislikesAscending" name="sort">Dislikes ascending</button>
+         <button class="dropdown-item" type="submit" value="dislikesDescending" name="sort">Dislikes descending</button>
+        <button class="dropdown-item" type="submit" value="CommentsAscending" name="sort">Comments ascending</button>
+        <button class="dropdown-item" type="submit" value="CommentsDescending" name="sort">Comments descending</button>
          </div>
         </div>
         </form>';
@@ -119,23 +119,23 @@
     //
     if (isset($_POST["sort"])) {
         switch ($_POST["sort"]) {
-            case 'likesAcending':
+            case 'likesAscending':
                 $posts = $db->getDashboardByLikes();
 
                 break;
             case 'likesDescending':
                 $posts = array_reverse($db->getDashboardByLikes());
                 break;
-            case 'dislikesAcending':
+            case 'dislikesAscending':
                 $posts = $db->getDashboardByDislikes();
                 break;
-            case 'dislikesDecending':
+            case 'dislikesDescending':
                 $posts = array_reverse($db->getDashboardByDislikes());
                 break;
-            case 'CommentsAcending':
+            case 'CommentsAscending':
                 $posts = $db->getDashboardByComments();
                 break;
-            case 'CommentsDecending':
+            case 'CommentsDescending':
                 $posts = array_reverse($db->getDashboardByComments());
                 break;
         }

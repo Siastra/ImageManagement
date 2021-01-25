@@ -15,7 +15,10 @@ function generateRandomString($length = 10): string
 }
 
 $db = new DB();
+
+
 if ($_REQUEST["type"] == "insert") {
+
     $newUser = new User(1, $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"], $_REQUEST["email"],
         $_REQUEST["username"], $_REQUEST["pwRepeat"], 0, 1, $_REQUEST["picture"]);
 
@@ -24,10 +27,10 @@ if ($_REQUEST["type"] == "insert") {
     } else {
         header("Location: ../index.php?section=register&fail=registerFail");
     }
-} elseif ($_REQUEST["type"] == "delete") {
-    $db->deleteUser($_REQUEST["id"]);
-    header("Location: ../index.php?section=view");
+
+
 } elseif ($_REQUEST["type"] == "update") {
+
     $user = new User($_REQUEST["id"], $_REQUEST["title"], $_REQUEST["fname"], $_REQUEST["lname"],
         $_REQUEST["username"], '', $_REQUEST["email"], 0, 1, NULL);
     $_SESSION["username"] = $_REQUEST["username"]; //if username is updated
@@ -36,7 +39,10 @@ if ($_REQUEST["type"] == "insert") {
     } else {
         header("Location: ../index.php?section=register&type=edit&fail=updateFail");
     }
+
+
 } elseif ($_REQUEST["type"] == "login") {
+
     switch ($db->loginUser($_REQUEST["username"], $_REQUEST["pw"])) {
         case 0:
             header("Location: ../index.php?section=login&fail=wrongPassword");
@@ -53,17 +59,23 @@ if ($_REQUEST["type"] == "insert") {
             header("Location: ../index.php?section=login&fail=loginUserNotFound");
             break;
     }
+
+
 } elseif ($_REQUEST["type"] == "logout") {
+
     $_SESSION = array();
     session_destroy();
     header("Location: ../index.php?success=logout");
+
+
 } elseif ($_REQUEST["type"] == "forgotPassword") {
+
     $newPw = generateRandomString();
     $user = $db->getUser($_REQUEST["username"]);
     if ($user != NULL) {
         $user->setPassword($newPw);
         if ($db->updatePassword($user)) {
-            Email::sendnewPw($user);
+            Email::sendNewPw($user);
             header("Location: ../index.php?success=updatePassword");
         } else {
             header("Location: ../index.php?section=forgotPw&fail=updatePasswordFailed");
@@ -71,7 +83,10 @@ if ($_REQUEST["type"] == "insert") {
     } else {
         header("Location: ../index.php?section=forgotPw&fail=userNotFound");
     }
+
+
 } elseif ($_REQUEST["type"] == "changePassword") {
+
     if ($db->loginUser($_REQUEST["username"], $_REQUEST["oldPw"])) {
         $newPw = $_REQUEST["pw"];
         $user = $db->getUser($_REQUEST["username"]);
@@ -85,11 +100,18 @@ if ($_REQUEST["type"] == "insert") {
     } else {
         header("Location: ../index.php?section=register&edit=true&fail=updatePasswordFailedWrong");
     }
+
+
 } elseif ($_REQUEST["type"] == "changeStatus") {
+
     if ($db->changeStatus($_REQUEST["username"])) {
         header("Location: ../index.php?section=view");
+    }else {
+        header("Location: ../index.php?section=view&fail=fail");
     }
+
 } elseif ($_REQUEST["type"] == "uploadIcon") {
+
     if ($db->uploadIcon($_FILES)) {
         header("Location: ../index.php?section=register&edit=true&success=uploadIcon");
     } else {

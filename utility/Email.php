@@ -5,7 +5,7 @@ class Email
 {
 
 
-    public static function sendnewPw(User $user) : void
+    public static function sendNewPw(User $user) : void
     {
         $config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"), true);
         $to = $user->getEmail();

@@ -109,6 +109,8 @@
         echo MsgFactory::getWarning("<b>Failed to give rating!</b> User not logged in!");
     }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "CommentUserNotLoggedIn")) {
         echo MsgFactory::getWarning("<b>Comment could not be posted!</b> User not logged in!");
+    }elseif (isset($_GET["fail"]) && ($_GET["fail"] == "fail")) {
+        echo MsgFactory::getWarning("<b>Ein Fehler ist aufgetreten!</b>");
     }
 
     //Message Banner - Successes

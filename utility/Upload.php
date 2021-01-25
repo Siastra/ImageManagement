@@ -28,7 +28,6 @@ class Upload
                 $imageResourceId1 = imagecreatefrompng($file);
                 $targetLayer1 = self::imageResizeDash($imageResourceId1, $sourceProperties[0], $sourceProperties[1]);
                 imagepng($targetLayer1, $fullPathDash . $fileNewName . "." . $ext);
-
                 break;
 
 
@@ -39,7 +38,6 @@ class Upload
                 $imageResourceId1 = imagecreatefromjpeg($file);
                 $targetLayer1 = self::imageResizeDash($imageResourceId1, $sourceProperties[0], $sourceProperties[1]);
                 imagejpeg($targetLayer1, $fullPathDash . $fileNewName . "." . $ext);
-
                 break;
 
 
