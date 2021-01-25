@@ -226,11 +226,6 @@ input:focus {
 body {
     padding-top: 4%;
 }
-
-.dropdown{
-    float:right;
-}
-
 .form-marginRight{
     margin-right: 40px;
     margin-left: 40px;
