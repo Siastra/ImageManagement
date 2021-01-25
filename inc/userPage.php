@@ -2,15 +2,14 @@
     $db = new DB();
     $user = $db->getUser($_SESSION["username"]);
     $posts = $db->getPostsByUserID($user->getId());
+    echo '<script>
+            $(document).ready(function () {
+                var x = document.getElementsByTagName("TITLE")[0];
+                x.innerHTML = "' . $user->getUsername() . '\'s Profile";
+            });
+
+        </script>';
 ?>
-
-<script>
-    $(document).ready(function () {
-        var x = document.getElementsByTagName("TITLE")[0];
-        x.innerHTML = "User Page";
-    });
-
-</script>
 
 <section class="container">
     <div class="row user-header">

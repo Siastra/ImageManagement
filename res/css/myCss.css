@@ -226,6 +226,7 @@ input:focus {
 body {
     padding-top: 4%;
 }
+
 .dropdown{
     float:right;
 }
@@ -280,5 +281,8 @@ body {
     .commentTextBox{
         width:80%;
     }
-        
+
+    body {
+        padding-top: 14%;
+    }
 }

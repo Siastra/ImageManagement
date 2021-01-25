@@ -1,8 +1,8 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/User.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/Post.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/model/Comment.php';
-include_once $_SERVER['DOCUMENT_ROOT'] . '/ImageManagement/utility/Upload.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/User.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Post.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/model/Comment.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/utility/Upload.php';
 
 class DB
 {
@@ -19,7 +19,7 @@ class DB
     public function __construct()
     {
 
-        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/ImageManagement/config/config.json"),
+        $this->config = json_decode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/config/config.json"),
             true);
         $username = $this->config["db"]["user"];
         $password = $this->config["db"]["password"];
