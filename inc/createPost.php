@@ -27,7 +27,9 @@ if (isset($_POST["upload"])) {
     });
 
 </script>
-
+<!-- Here the user can upload pictures. Alongside the picture the user is also able to set tags for the post as well as
+set a new title and a text which will be displayed under the picture. When the user chose a picture there is a preview window
+for the user so he can see what picture he is about to upload-->
     <section class="container">
         <h1>Upload your post!</h1><br><br>
         <form method="post" action="index.php?section=create" enctype="multipart/form-data">

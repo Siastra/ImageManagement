@@ -41,7 +41,7 @@
     echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" id="filterButton"> Filter </button>';
     echo '</div>';
     echo "<div class=\"col-3 offset-4  \">";
-    //Dropdown sort button. Every button click  creates a new get parameter
+    //Dropdown sort button. Every button click  creates a new  parameter
     echo '<form method="post">
         <div class="dropDown float-right" id="dropDown">
         <button type="button" class="btn btn-primary dropdown-toggle sortBy" data-toggle="dropdown">
@@ -116,7 +116,8 @@
     </div></div>';
 
 
-    //
+    //Checks if a sort Button was pressed
+    //if it was the right case gets selected and sorts the dashboard
     if (isset($_POST["sort"])) {
         switch ($_POST["sort"]) {
             case 'likesAscending':
@@ -186,10 +187,11 @@
         echo MsgFactory::getWarning("<b>No posts with matching requirements</b>");
 
     }
+    
     foreach ($posts as $post) {
         $post_id = $post->getId();
         $restriction = $post->getRestricted();
-
+        //this is the first row in which the restriction, the username,the profilpic and the creation time is displayed.
         echo "<div class=\"post\" id='post" . $post_id . "'>
                     <div class=row>
                         <div class=\"headerBox\" >
@@ -205,16 +207,19 @@
                         <div class=\"headerBox3 headerBox\">
                             Created at: " . $post->getDate() . "
                         </div>
-                    </div>
-                    
-                    <div class=\"row picBackground\">
+                    </div>"
+                //Now the picture is displayed with a integrated lightbox
+                    "<div class=\"row picBackground\">
                         <a class=\" col-12\" href=" . $post->getFullPath() . " data-lightbox=" . $post->getName() .
             " data-title=" . $post->getName() . ">
                             <img alt=Post class=img-fluid src=" . $post->getDashPath() . " alt=" . $post->getName() . ">
                         </a>
-                    </div>
-
-                    <div class=row>
+                    </div>"
+                    //after the picture is displayed, there is a like and dislike box with a counter.
+                    //besides that there is a tag box and a text box where the information which was given by the user when
+                    //creating the post is displayed
+                    //Right beside that is a text field where you can write a comment and a button which sends the comment
+                    "<div class=row>
                         <div class=\"ratingBox footerBox\">
                             <img class=\"ratingPic\" alt=\"Like Button\" src=\"res/images/thumb-up.svg\" 
                                  onclick=\"upVote(" . $post_id . ")\" />
