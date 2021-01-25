@@ -3,7 +3,6 @@
         let x = document.getElementsByTagName("TITLE")[0];
         x.innerHTML = "Dashboard";
     });
-
 </script>
 
 <div class="container">
@@ -184,14 +183,14 @@
 
     $posts = array_reverse($posts);
     if (empty($posts)) {
-        echo MsgFactory::getWarning("<b>No posts with matching requirements</b>");
+        echo MsgFactory::getWarning("<b>No posts to show</b>");
 
     }
     
     foreach ($posts as $post) {
         $post_id = $post->getId();
         $restriction = $post->getRestricted();
-        //this is the first row in which the restriction, the username,the profilpic and the creation time is displayed.
+        //this is the first row in which the restriction, the username,the profile-pic and the creation time is displayed.
         echo "<div class=\"post\" id='post" . $post_id . "'>
                     <div class=row>
                         <div class=\"headerBox\" >
@@ -207,14 +206,14 @@
                         <div class=\"headerBox3 headerBox\">
                             Created at: " . $post->getDate() . "
                         </div>
-                    </div>"
+                    </div>" .
                 //Now the picture is displayed with a integrated lightbox
                     "<div class=\"row picBackground\">
                         <a class=\" col-12\" href=" . $post->getFullPath() . " data-lightbox=" . $post->getName() .
             " data-title=" . $post->getName() . ">
                             <img alt=Post class=img-fluid src=" . $post->getDashPath() . " alt=" . $post->getName() . ">
                         </a>
-                    </div>"
+                    </div>" .
                     //after the picture is displayed, there is a like and dislike box with a counter.
                     //besides that there is a tag box and a text box where the information which was given by the user when
                     //creating the post is displayed
@@ -261,9 +260,9 @@
     ?>
     <script>
         //, ".form-check input"
-        var limit = 2;
+        let limit = 2;
         $('div.form-group').on('change', function (evt) {//if form-group is clicked on
-            var $input = $(this).siblings(".form-group").children(".form-check-input:checked").length; //get number of the children of the siblings where checked = true
+            let $input = $(this).siblings(".form-group").children(".form-check-input:checked").length; //get number of the children of the siblings where checked = true
             if ($input >= limit) {//if this amount is more or equal to limit set checked of the currently clicked on to false;
                 $(this).children(".form-check-input").prop("checked", false);
             }

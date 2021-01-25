@@ -1,6 +1,7 @@
 {
   "email" : "if20b235@technikum-wien.at",
   "db" : {
+    "db_name": "imagemanagement",
     "user" : "phpFormApplication",
     "password" : "CuTXhYO9STA2j88w"
   }

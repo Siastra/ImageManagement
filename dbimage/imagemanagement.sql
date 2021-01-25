@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 21, 2021 at 08:15 PM
+-- Generation Time: Jan 25, 2021 at 06:30 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -18,8 +18,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `imagemanagement1`
+-- Database: `imagemanagement`
 --
+CREATE DATABASE IF NOT EXISTS `imagemanagement` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `imagemanagement`;
 
 -- --------------------------------------------------------
 
@@ -32,7 +34,7 @@ CREATE TABLE `comment` (
   `post_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `text` varchar(128) NOT NULL,
-  `createdAt` date NOT NULL
+  `createdAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -58,7 +60,7 @@ CREATE TABLE `post` (
   `path` varchar(128) NOT NULL,
   `restricted` char(1) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `createdAt` date NOT NULL,
+  `createdAt` datetime NOT NULL,
   `text` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -102,6 +104,13 @@ CREATE TABLE `user` (
   `activated` char(1) NOT NULL,
   `picture` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `title`, `fname`, `lname`, `email`, `username`, `password`, `admin`, `activated`, `picture`) VALUES
+(2, 'Mr.', 'Admin', 'Admin', 'admin@admin.at', 'admin', 'admin', '1', '1', 'res/images/user.svg');
 
 --
 -- Indexes for dumped tables
@@ -157,19 +166,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -201,8 +210,3 @@ ALTER TABLE `post`
 ALTER TABLE `rating`
   ADD CONSTRAINT `rating_post_fk` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`),
   ADD CONSTRAINT `rating_user_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

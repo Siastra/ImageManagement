@@ -23,7 +23,8 @@ class DB
             true);
         $username = $this->config["db"]["user"];
         $password = $this->config["db"]["password"];
-        $dsn = "mysql:host=localhost;dbname=imagemanagement;charset=$this->charset";
+        $db_name = $this->config["db"]["db_name"];
+        $dsn = "mysql:host=localhost;dbname=$db_name;charset=$this->charset";
         try {
 
             $this->conn = new PDO($dsn, $username, $password, $this->options);
