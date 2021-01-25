@@ -12,6 +12,8 @@
     $db = new DB();
     $tags = $db->listAllTags();
     $users  = $db->getUserList();
+    echo "<div class=row>";
+    echo "<div class=col-6>";
     echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" id="filterButton" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
     echo '<div class="collapse" id="collapseFilter">';
     echo '<form class="form-inline" method="get" action="">';
@@ -52,12 +54,15 @@
     echo '</div>';
     echo '<button type="submit" class="btn btn-primary">Speichern</button>';
     echo '</div>';
+    echo "</div>";
+    echo "<div class=\"col-1 offset-5\">";
+    //Dropdown sort button. Every button click  creates a new get parameter
     echo '<form method="post" action="">
-        <div class="dropdown">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <div class="dropDown"id="dropDown">
+        <button type="button" class="btn btn-primary dropdown-toggle " data-toggle="dropdown">
         Sort by
         </button>
-         <div class="dropdown-menu">
+         <div class="dropdown-menu dropdown-menu-right">
         <button class="dropdown-item" type="submit" value="likesAcending" name="sort">Likes ascending</button>
          <button class="dropdown-item" type="submit" value="likesDescending" name="sort">Likes descending</a>
          <button class="dropdown-item" type="submit" value="dislikesAcending" name="sort">Dislikes ascending</a>
@@ -67,8 +72,9 @@
          </div>
         </div>
         </form>';
+        echo "</div>";
 
-
+    //
     if(isset($_GET["sort"])){
         switch($_GET["sort"]){
             case 'likesAcending': $posts=$db->getDashboardByLikes();

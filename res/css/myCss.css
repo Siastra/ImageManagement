@@ -226,10 +226,6 @@ input:focus {
 body {
     padding-top: 4%;
 }
-.dropdown{
-    float:right;
-}
-
 .form-marginRight{
     margin-right: 40px;
     margin-left: 40px;
@@ -240,7 +236,9 @@ body {
         margin: 1% auto;
         background-color: #d0c7ff;
     }
-
+    .dropDown {
+        position: absolute;
+        right:40%}
     #previewPost{
         width: 200px;
         height: 200px;
@@ -279,6 +277,9 @@ body {
         
     .commentTextBox{
         width:80%;
+    }
+    body {
+        padding-top: 14%;
     }
         
 }

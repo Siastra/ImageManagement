@@ -176,6 +176,7 @@ class DB
         }
     }
 
+    //Checks the tags that the user writted to his post and if the tag doesnt already exists, it gets created
     public function checkTag($tag)
     {
         $result = array();
@@ -196,6 +197,7 @@ class DB
         return $result;
     }
 
+    //Connects the given tags with the uploaded picture
     public function setTag(int $p_id, $tag): bool
     {
         $size = count($tag);
@@ -237,6 +239,7 @@ class DB
         }
     }
 
+    //Creates a post
     public function createPost(string $title, string $path, int $restricted, string $text): int
     {
         $sql = $this->conn->prepare("INSERT INTO `post`(`id`, `title`, `path`, `restricted`, `user_id`, 
@@ -282,6 +285,7 @@ class DB
         $sql->execute([$id]);
     }
 
+    //Gives back an array of all posts
     public function showDashboardAll(): array
     {
         $result = array();
@@ -318,6 +322,7 @@ class DB
         return $result;
     }
 
+    //Gives back an array of all posts with no restriction
     public function showDashboardPublic(): array
     {
         $result = array();
@@ -523,7 +528,8 @@ class DB
        }
        return $result;
    }
-
+    
+   //Function gets array of post_ids ordered by the likes that were given to the post 
     public function getDashboardByLikes():array
     {
         $results = array();
@@ -540,6 +546,7 @@ class DB
 
         return $results;
     }
+    //Function gets array of post_ids ordered by the Dislikes that were given to the post 
     public function getDashboardByDislikes():array
     {
         $results = array();
@@ -555,6 +562,7 @@ class DB
 
         return $results;
     }
+    //Function gets array of post_ids ordered by the comments that were written under the post 
     public function getDashboardByComments():array
     {
         $results = array();
