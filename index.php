@@ -57,27 +57,6 @@
             <li><a class="nav-link" href="index.php?section=about">
              <img src="res/images/about.svg" alt="About icon" class="navbar-icon"> About</a></li>
         </ul>
-
-        <?php
-        echo '<div class="nav-center">
-            <form class="form-inline my-2 my-lg-0" method="GET" action="">
-                <input class="form-control navbar-center" type="search" name="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>';
-        if(isset($_GET["tag"])){
-            foreach($_GET["tag"] as $tag){
-                echo '<input type="hidden" name=tag[] value="'.$tag.'">';
-            }
-        }
-        if(isset($_GET["timespan"])){
-            echo '<input type="hidden" name=timespan value="'.$_GET["timespan"].'">';
-        }
-        if(isset($_GET["userid"])){
-            echo '<input type="hidden" name=userid value="'.$_GET["userid"].'">';
-        }
-            echo '</form>
-        </div>'
-        ?>
-
         <ul class="navbar-nav navbar-right">
             <?php
             if (isset($_SESSION["username"]) && (isset($_GET["section"]) && ($_GET["section"] == "userPage"))) {

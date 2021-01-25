@@ -434,7 +434,7 @@ class DB
         $stmt = $this->conn->prepare("SELECT * FROM `rating` WHERE user_id = ? AND post_id = ?");
         $stmt->execute([$user_id, $post_id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($result) {
+        if ($result) {//if a rating from the same user on the same post is already set delete existing rating
             $delete = $this->conn->prepare("DELETE FROM `rating` WHERE user_id = ? AND post_id = ?");
             $delete->execute([$user_id, $post_id]);
         }
@@ -461,10 +461,10 @@ class DB
        $result = array();
         foreach($posts as $post){
             $postId = $post->getId();
-            if(count($tags) > 1){
+            if(count($tags) > 1){ //if 2 tags are set check if both tags
                 $sql = $this->conn->prepare("SELECT post_id from is_assigned WHERE tag_name = ? AND post_id= ? intersect SELECT post_id from is_assigned WHERE tag_name = ? AND post_id = ?");
                 $sql->execute([$tags[0], $postId, $tags[1], $postId]);
-            }else{
+            }else{//if 1 tag is set check only for that tag
                 $sql = $this->conn->prepare("SELECT post_id from is_assigned WHERE tag_name = ? AND post_id= ?");
                 $sql->execute([$tags[0], $postId]);
             }
@@ -478,7 +478,7 @@ class DB
         }
         return $result;
    }
-   public function filterDate(array $posts, string $span) : array
+   public function filterDate(array $posts, string $span) : array //gets date and checks each post if its date is the same
    {
        $result = array();
        foreach ($posts as $post) {
@@ -516,7 +516,7 @@ class DB
        $search = "%".$searchInput."%";
        foreach($posts as $post){
            $postId = $post->getId();
-           $stmt = $this->conn->prepare("SELECT post_id from comment where post_id = ? AND text like ? UNION SELECT id from post WHERE (id = ? AND title LIKE ? ) OR (id = ? AND text LIKE ?)");
+           $stmt = $this->conn->prepare("SELECT post_id from comment where post_id = ? AND text like ? UNION SELECT id from post WHERE (id = ? AND title LIKE ? ) OR (id = ? AND text LIKE ?)");//checks comments title and text for the search term
            $stmt->execute([$postId, $search, $postId, $search, $postId, $search]);
            if ($stmt->rowCount() > 0) {
                $resultPostIds = $stmt->fetchAll(PDO::FETCH_ASSOC);
