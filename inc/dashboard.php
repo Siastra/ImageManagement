@@ -11,13 +11,18 @@
     include_once "utility/DB.php";
     $db = new DB();
     $tags = $db->listAllTags();
-    $users  = $db->getUserList();
+    $users = $db->getUserList();
+    if (!isset($_SESSION["username"])) {
+        $posts = $db->showDashboardPublic();
+    } else {
+        $posts = $db->showDashboardAll();
+    }
 
     echo '<div class="nav-center pt-5">
-            <form class="form-inline row justify-content-md-center" method="GET" action=""> <!--searchbar-->
+            <form class="form-inline row justify-content-md-center" method="GET"> <!--searchbar-->
                 <input class="form-control col col-lg-2" type="search" name="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0 col col-lg-2" type="submit">Search</button>';
-    if (isset($_GET["tag"])) { //if any filter is set it gets coppied
+    if (isset($_GET["tag"])) { //if any filter is set it gets copied
         foreach ($_GET["tag"] as $tag) {
             echo '<input type="hidden" name=tag[] value="' . $tag . '">';
         }
@@ -33,17 +38,37 @@
         ';
     echo "<div class=row>";
     echo "<div class=col-5>";
-    echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" id="filterButton" <!--aria-expanded="false" aria-controls="collapseFilter-->"> Filter </button>';
+    echo '<button class="btn btn-primary collapsed" type="button" data-toggle="collapse" data-target="#collapseFilter" id="filterButton"> Filter </button>';
+    echo '</div>';
+    echo "<div class=\"col-3 offset-4  \">";
+    //Dropdown sort button. Every button click  creates a new get parameter
+    echo '<form method="post">
+        <div class="dropDown float-right" id="dropDown">
+        <button type="button" class="btn btn-primary dropdown-toggle sortBy" data-toggle="dropdown">
+        Sort by
+        </button>
+         <div class="dropdown-menu dropdown-menu-right">
+        <button class="dropdown-item" type="submit" value="likesAcending" name="sort">Likes ascending</button>
+         <button class="dropdown-item" type="submit" value="likesDescending" name="sort">Likes descending</button>
+         <button class="dropdown-item" type="submit" value="dislikesAcending" name="sort">Dislikes ascending</button>
+         <button class="dropdown-item" type="submit" value="dislikesDecending" name="sort">Dislikes descending</button>
+        <button class="dropdown-item" type="submit" value="CommentsAcending" name="sort">Comments ascending</button>
+        <button class="dropdown-item" type="submit" value="CommentsDecending" name="sort">Comments descending</button>
+         </div>
+        </div>
+        </form>';
+    echo "</div></div>";
+
     echo '<div class="collapse" id="collapseFilter">';
-    echo '<form class="" method="get" action="" style="background-color: rgba(180, 230, 255,1)">';//filterform
+    echo '<form method="get" style="background-color: rgba(180, 230, 255,1)">';//filterform
     echo '<div class="row flex-fill px-5 py-2 mb-3">
             <label class="col-form-label col-md-12">Tags:</label>';
 
-    foreach($tags as $tag){//for each tag in the database a checkbox
+    foreach ($tags as $tag) {//for each tag in the database a checkbox
 
         echo '<div class="form-group ml-5 mx-4 mt-2"> <!--col-sm-14-->
-                    <input type="checkbox" class="form-check-input" name="tag[]" value="'.$tag.'">                    
-                    <label for="'.$tag.'" class="form-check-label">'.$tag.'</label>
+                    <input type="checkbox" class="form-check-input" name="tag[]" value="' . $tag . '" id="' . $tag . '">                    
+                    <label for="' . $tag . '" class="form-check-label">' . $tag . '</label>
              </div>';
     }
     echo '</div>';
@@ -71,12 +96,12 @@
                         <div class="form-group">
                             <label for="exampleFormControlSelect1">Users:</label>
                             <select name=userid class="form-control ml-5" id="exampleFormControlSelect1">
-                            <option value=""></option>';
+                            <option value="all">All users</option>';
 
-    foreach($users as $user){//for each user a select option
+    foreach ($users as $user) {//for each user a select option
         $username = $user->getUsername();
         $userId = $user->getId();
-        echo '<option value="'.$username.'">'.$username.'</option>';
+        echo '<option value="' . $username . '">' . $username . '</option>';
     }
     echo '</select>
                         </div> 
@@ -88,130 +113,82 @@
             </div>
         </div>
     </form>
-    </div>
-    
-    </div>
-    </div>';
-    echo "<div class=\"col-3 offset-4  \">";
-    //Dropdown sort button. Every button click  creates a new get parameter
-    echo '<form method="post" action="">
-        <div class="dropDown float-right"id="dropDown">
-        <button type="button" class="btn btn-primary dropdown-toggle sortBy  " data-toggle="dropdown">
-        Sort by
-        </button>
-         <div class="dropdown-menu dropdown-menu-right">
-        <button class="dropdown-item" type="submit" value="likesAcending" name="sort">Likes ascending</button>
-         <button class="dropdown-item" type="submit" value="likesDescending" name="sort">Likes descending</a>
-         <button class="dropdown-item" type="submit" value="dislikesAcending" name="sort">Dislikes ascending</a>
-         <button class="dropdown-item" type="submit" value="dislikesDecending" name="sort">Dislikes descending</a>
-        <button class="dropdown-item" type="submit" value="CommentsAcending" name="sort">Comments ascending</a>
-        <button class="dropdown-item" type="submit" value="CommentsDecending" name="sort">Comments descending</a>
-         </div>
-        </div>
-        </form>';
-echo "</div></div>";
+    </div></div>';
+
+
     //
-    if(isset($_GET["sort"])){
-        switch($_GET["sort"]){
-            case 'likesAcending': $posts=$db->getDashboardByLikes();
-            
-            break;
-            case 'likesDescending':$posts=array_reverse($db->getDashboardByLikes());
-            break;
-            case 'dislikesAcending':$posts=$db->getDashboardByDislikes();
-            break;
-            case 'dislikesDecending':$posts=array_reverse($db->getDashboardByDislikes());
-            break;
-            case 'CommentsAcending':$posts=$db->getDashboardByComments();
-            break;
-            case 'CommentsDecending':$posts=array_reverse($db->getDashboardByComments());
-            break; 
+    if (isset($_POST["sort"])) {
+        switch ($_POST["sort"]) {
+            case 'likesAcending':
+                $posts = $db->getDashboardByLikes();
+
+                break;
+            case 'likesDescending':
+                $posts = array_reverse($db->getDashboardByLikes());
+                break;
+            case 'dislikesAcending':
+                $posts = $db->getDashboardByDislikes();
+                break;
+            case 'dislikesDecending':
+                $posts = array_reverse($db->getDashboardByDislikes());
+                break;
+            case 'CommentsAcending':
+                $posts = $db->getDashboardByComments();
+                break;
+            case 'CommentsDecending':
+                $posts = array_reverse($db->getDashboardByComments());
+                break;
         }
-        $sorted =array();
-        if(!isset($_SESSION["username"])){
+        $sorted = array();
+        if (!isset($_SESSION["username"])) {
 
             foreach ($posts as $post) {
-                if($post->getRestricted()===0){
-                    array_push($sorted,$post);
+                if ($post->getRestricted() === 0) {
+                    array_push($sorted, $post);
                 }
             }
-            
-            $posts=$sorted;
 
-        
-        }  
-        }else{
-            if(!isset($_SESSION["username"])){
-                $posts=$db->showDashboardPublic();
-            }else{
-                 $posts=$db->showDashboardAll();
-            }
+            $posts = $sorted;
+        }
     }
-    //if(isset($_SESSION["username"])){
-        if(isset($_GET["tag"])){
-            if(gettype($_GET["tag"]) == 'string'){//checkTags expects an array so if $_GET["tag"] is a string put it in an array
-                $_GET["tag"] = array($_GET["tag"]);
-            }
-            $posts = $db->checkTags($posts, $_GET['tag']);
-        }
-        if(isset($_GET["timespan"])){
-            $posts = $db->filterDate($posts, $_GET["timespan"]);
-        }
-        if(isset($_GET["userid"])){
-            if ($_GET["userid"] != "") {
-                $user = $db->getUser($_GET["userid"]);
-                $userId= $user->getId();
-                $temp = array();
-                foreach ($posts as $post) {//check if user id of each post is the same as the one filtered for
-                    $postUser = $post->getUser();
-                    $postUserId = $postUser->getId();
-                    if($userId == $postUserId) {
 
-                        array_push($temp, $post);
-                    }
+    if (isset($_GET["tag"])) {
+        if (gettype($_GET["tag"]) == 'string') {//checkTags expects an array so if $_GET["tag"] is a string put it in an array
+            $_GET["tag"] = array($_GET["tag"]);
+        }
+        $posts = $db->checkTags($posts, $_GET['tag']);
+    }
+    if (isset($_GET["timespan"])) {
+        $posts = $db->filterDate($posts, $_GET["timespan"]);
+    }
+    if (isset($_GET["userid"])) {
+        if ($_GET["userid"] != "all") {
+            $user = $db->getUser($_GET["userid"]);
+            $userId = $user->getId();
+            $temp = array();
+            foreach ($posts as $post) {//check if user id of each post is the same as the one filtered for
+                $postUser = $post->getUser();
+                $postUserId = $postUser->getId();
+                if ($userId == $postUserId) {
+
+                    array_push($temp, $post);
                 }
-                $posts = $temp;
             }
+            $posts = $temp;
         }
-        if(isset($_GET["search"])){
-            $posts = $db->checkSearchRequest($posts, $_GET["search"]);
-        }
-    /*}else{
-        if(!isset($posts))
-        if(isset($_GET["tag"])){
-            if (gettype($_GET["tag"]) == 'string') {
-                $_GET["tag"] = array($_GET["tag"]);
-            }
-            $posts = $db->checkTags($posts, $_GET['tag']);
-        }
-        if (isset($_GET["timespan"])) {
-            $posts = $db->filterDate($posts, $_GET["timespan"]);
-        }
-        if(isset($_GET["userid"])){
-            if (isset($_GET["userid"])) {
-                $temp = array();
-                foreach ($posts as $post) {
-                    $postUser = $post->getUser();
-                    $postUserId = $postUser->getId();
-                    if(intval($_GET["userid"]) == $postUserId){
-                        array_push($temp, $post);
-                    }
-                }
-                $posts = $temp;
-            }
-        }
-        if(isset($_GET["search"])){
-            $posts = $db->checkSearchRequest($posts, $_GET["search"]);
-        }*/
+    }
+    if (isset($_GET["search"])) {
+        $posts = $db->checkSearchRequest($posts, $_GET["search"]);
+    }
 
     $posts = array_reverse($posts);
-    if(empty($posts)){
+    if (empty($posts)) {
         echo MsgFactory::getWarning("<b>No posts with matching requirements</b>");
 
     }
-    foreach($posts as $post) {
+    foreach ($posts as $post) {
         $post_id = $post->getId();
-        $restriction=$post->getRestricted();
+        $restriction = $post->getRestricted();
 
         echo "<div class=\"post\" id='post" . $post_id . "'>
                     <div class=row>
@@ -220,11 +197,11 @@ echo "</div></div>";
                             <span class=\"username\" >" . $post->getUser()->getUsername() . "</span>
                         </div>
                         <div class=\" headerBox headerBox2 \" >" .
-                        "<img  alt=Restriction class=img-fluid src=\"res/images/" .
-                        (($restriction == "0") ? "public" : "private") . ".svg\" width=25px height=25px ><span class=\"username\">".
+            "<img  alt=Restriction class=navbar-icon src=\"res/images/" .
+            (($restriction == "0") ? "public" : "private") . ".svg\" ><span class=\"username\">" .
             (($restriction == "0") ? "Public" : "Private") .
 
-                        "</span></div>
+            "</span></div>
                         <div class=\"headerBox3 headerBox\">
                             Created at: " . $post->getDate() . "
                         </div>
@@ -276,13 +253,13 @@ echo "</div></div>";
         echo "</div>"; //End of post
     }
 
-      ?>
+    ?>
     <script>
         //, ".form-check input"
         var limit = 2;
-        $('div.form-group').on('change', function(evt) {//if form-group is clicked on
+        $('div.form-group').on('change', function (evt) {//if form-group is clicked on
             var $input = $(this).siblings(".form-group").children(".form-check-input:checked").length; //get number of the children of the siblings where checked = true
-            if($input >= limit) {//if this amount is more or equal to limit set checked of the currently clicked on to false;
+            if ($input >= limit) {//if this amount is more or equal to limit set checked of the currently clicked on to false;
                 $(this).children(".form-check-input").prop("checked", false);
             }
         });
@@ -293,13 +270,13 @@ echo "</div></div>";
             $.ajax({
                 type: "POST",
                 url: 'ajax/upvote.php',
-                data:{id: post_id},
+                data: {id: post_id},
                 success: function (response) {
                     try {
                         let jsonData = JSON.parse(response);
                         $('#likeCounter' + post_id).html(jsonData.like);
                         $('#dislikeCounter' + post_id).html(jsonData.dislike);
-                    }catch (e) {
+                    } catch (e) {
                         location.href = "index.php?fail=RatingUserNotLoggedIn";
                     }
                 }
@@ -310,13 +287,13 @@ echo "</div></div>";
             $.ajax({
                 type: "POST",
                 url: 'ajax/downvote.php',
-                data:{id: post_id},
+                data: {id: post_id},
                 success: function (response) {
                     try {
                         let jsonData = JSON.parse(response);
                         $('#likeCounter' + post_id).html(jsonData.like);
                         $('#dislikeCounter' + post_id).html(jsonData.dislike);
-                    }catch (e) {
+                    } catch (e) {
                         location.href = "index.php?section=dash&fail=RatingUserNotLoggedIn";
                     }
                 }
@@ -345,7 +322,7 @@ echo "</div></div>";
                             } else {
                                 alert('Comment not posted!');
                             }
-                        }catch (e) {
+                        } catch (e) {
                             location.href = "index.php?section=dash&fail=CommentUserNotLoggedIn";
                         }
                     }

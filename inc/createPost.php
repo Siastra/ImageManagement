@@ -69,7 +69,7 @@ if (isset($_POST["upload"])) {
                     <button class="btn btn-success submit" type="submit" name="upload">Upload</button>
                 </div>
                 <div class="form-group col">
-                    <label for="previewPost">Preview</label><br><br>
+                    <span>Preview</span><br><br>
                     <img id="previewPost" src="res/images/user.svg" alt="Placeholder" width="450px"
                          height="450px">
                 </div>
